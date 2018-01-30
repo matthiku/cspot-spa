@@ -1,0 +1,97 @@
+/** Stylus Styles */
+
+@import '../../../node_modules/vuetify/src/stylus/main'
+
+/* to properly indicate the input area of the 'info' field in a plan */
+.textbox-recessed>div>textarea {
+  background-color: white;
+  padding: 2px;
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+  border-right: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.align-items-center {
+  align-items: center;
+}
+.flex-direction-row {
+  flex-direction: row;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+.white-space-nowrap {
+  white-space: nowrap;
+}
+.white-space-pre {
+  white-space: pre;
+}
+
+.on-hover-only {
+    display: none;
+}
+.show-on-hover:hover .on-hover-only {
+    display: inline;
+}
+.invisible {
+    display: none;
+}
+
+.youtube-link {
+  text-decoration: none;
+  color: red !important;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.cursor-n-resize {
+  cursor: n-resize;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.custom-loader {
+  animation: loader 1s infinite;
+  display: flex;
+}
+.checkbox>.input-group__details {
+  min-height: initial;
+}
+@-moz-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-o-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

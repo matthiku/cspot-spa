@@ -10,7 +10,7 @@
       absolute
       app>
       <v-list>
-        <v-list-tile
+        <v-list-tile ripple
             v-for="(item, i) in menuItems"
             :key="i"
             :to="{ name: item.link }"
@@ -99,7 +99,9 @@
         </v-layout>
       </v-container>
 
-      <router-view></router-view>
+      <transition name="fade">
+        <router-view></router-view>
+      </transition>
 
       <v-snackbar
         transition="fade-transition"
@@ -157,6 +159,7 @@
 
   </v-app>
 </template>
+
 
 <script>
   import genericMixins from './mixins/'
@@ -255,18 +258,6 @@
       },
       userIsVerified () {
         return this.$store.getters.user && this.$store.getters.user.verified
-      },
-      loading () {
-        return this.$store.getters.loading
-      },
-      message () {
-        return this.$store.getters.message
-      },
-      error () {
-        return this.$store.getters.error
-      },
-      userIsAdmin  () {
-        return this.$store.getters.userIsAdmin
       }
     },
     watch: {
@@ -278,11 +269,17 @@
       onLogout () {
         this.rightDrawer = false
         this.$store.dispatch('signUserOut')
-      },
-      onDismissed (what) {
-        this.$store.dispatch(what)
       }
     }
   }
 
 </script>
+
+<style>
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+  }
+</style>

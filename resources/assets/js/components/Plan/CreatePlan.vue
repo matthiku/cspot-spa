@@ -314,6 +314,7 @@ export default {
     // then open the new plan
     planId () {
       if (!this.planId) return
+      console.log('opening new plan, id', this.planId)
       this.$router.push({ name: 'plan', params: { planId: this.planId } })
     },
 

@@ -2,11 +2,11 @@
   <v-container fluid>
     <v-slide-y-transition mode="out-in">
 
-      <v-layout>
-        <v-tabs dark grow v-model="admin.selectedTab">
-          <v-toolbar color="cyan" dark>
+      <div>
+          <v-toolbar color="cyan" dark tabs>
 
             <v-toolbar-side-icon></v-toolbar-side-icon>
+
             <v-toolbar-title>Admin Page</v-toolbar-title>
             <v-spacer></v-spacer>
 
@@ -16,41 +16,48 @@
               single-line hide-details
               v-model="search.filter"
             ></v-text-field>
+
             <v-btn icon @click="searchField = !searchField">
               <v-icon>search</v-icon>
             </v-btn>
+
             <v-btn icon>
               <v-icon>more_vert</v-icon>
             </v-btn>
 
-            <v-tabs-bar class="cyan" slot="extension">
+            <v-tabs 
+                color="cyan"
+                slot="extension"
+                grow
+                v-model="admin.selectedTab"
+              >
               <v-tabs-slider color="yellow"></v-tabs-slider>
 
-              <v-tabs-item href="#tab-0">
+              <v-tab href="#tab-0">
                 User List
-              </v-tabs-item>
+              </v-tab>
 
-              <v-tabs-item href="#tab-1">
+              <v-tab href="#tab-1">
                 User Roles
-              </v-tabs-item>
+              </v-tab>
 
-              <v-tabs-item href="#tab-2">
+              <v-tab href="#tab-2">
                 Plan Types
-              </v-tabs-item>
+              </v-tab>
 
-              <v-tabs-item
+              <v-tab
                   v-for="(item, i) in items"
                   :key="i"
                   :href="'#tabo-' + (i + 1)"
                 >
                 {{ item }}
-              </v-tabs-item>
+              </v-tab>
 
               <v-menu :nudge-width="100" right bottom>
-                <v-tabs-item slot="activator">
+                <v-tab slot="activator">
                   Menu
                   <v-icon>arrow_drop_down</v-icon>
-                </v-tabs-item>
+                </v-tab>
                 <v-list class="grey lighten-3">
                   <v-list-tile
                       tag="a"
@@ -58,28 +65,29 @@
                       :key="n"
                       @click=""
                     >
-                    Item {{ n }}
+                    Sample Item {{ n }}
                   </v-list-tile>
                 </v-list>
               </v-menu>
-            </v-tabs-bar>
-
+            </v-tabs>
           </v-toolbar>
-          <v-tabs-items>
 
-            <v-tabs-content id="tab-0">
+          <v-tabs-items
+              v-model="admin.selectedTab">
+
+            <v-tab-item id="tab-0">
               <app-admin-user-list></app-admin-user-list>
-            </v-tabs-content>
+            </v-tab-item>
 
-            <v-tabs-content id="tab-1">
+            <v-tab-item id="tab-1">
               <app-admin-role-list></app-admin-role-list>
-            </v-tabs-content>
+            </v-tab-item>
 
-            <v-tabs-content id="tab-2">
+            <v-tab-item id="tab-2">
               <app-admin-type-list></app-admin-type-list>
-            </v-tabs-content>
+            </v-tab-item>
 
-            <v-tabs-content
+            <v-tab-item
               v-for="i in 2"
               :key="i"
               :id="'tabo-' + i"
@@ -87,11 +95,10 @@
               <v-card flat>
                 <v-card-text>{{ text }}</v-card-text>
               </v-card>
-            </v-tabs-content>
+            </v-tab-item>
           </v-tabs-items>
 
-        </v-tabs>
-      </v-layout>
+      </div>
 
     </v-slide-y-transition>
   </v-container>

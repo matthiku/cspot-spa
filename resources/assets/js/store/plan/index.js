@@ -52,9 +52,9 @@ export default {
 
     // create a new Plan item and possibly upload an image file
     createPlan ({commit, dispatch}, payload) {
-      // reach out to our DB and store it
       let imageUrl
       let key
+      // reach out to our DB and store it
       let planData = Object.assign({}, payload.planData)
       plansRef.push(planData)
         .then(data => {
@@ -245,9 +245,9 @@ export default {
     },
 
     plans (state) {
-      // return all plans ordered by date
+      // return all plans ordered by date, descending
       return state.plans.sort((planA, planB) => {
-        return planA.date < planB.date
+        return moment(planB.date).unix() - moment(planA.date).unix()
       })
     },
 

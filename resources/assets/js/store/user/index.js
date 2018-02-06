@@ -1,6 +1,8 @@
 import firebase from 'firebase'
 import { firebaseApp, usersRef, rolesRef } from '../../firebaseApp'
 
+import axios from 'axios'
+
 export default {
   state: {
     oldRoute: null,
@@ -129,14 +131,32 @@ export default {
     signUserIn ({state, commit, dispatch}, payload) {
       commit('setLoading', true)
       commit('clearError')
-      firebaseApp
-        .auth()
-        .signInWithEmailAndPassword(payload.email, payload.password)
-        .then(user => {
-          commit('setLoading', false)
-          commit('setMessage', '')
-        })
-        .catch(error => dispatch('errorHandling', error))
+      axios({
+        method: 'post',
+        url: '/login',
+        data: {
+          email: payload.email,
+          password: payload.password,
+          _token: window.csrf_token
+        },
+        // `validateStatus` defines whether to resolve or reject the promise for a given
+        // HTTP response status code. If `validateStatus` returns `true` (or is set to `null`
+        // or `undefined`), the promise will be resolved; otherwise, the promise will be rejected.
+        validateStatus: function (status) {
+          return status >= 200 && status < 500; // default
+        }
+      })
+      .then(user => {
+        commit('setLoading', false)
+        if (user.status != 200) {
+          dispatch('errorHandling', user.data)
+        }
+        commit('setMessage', '')
+        state.user.user = JSON.parse(window.cspot2_server_data)
+      })
+      .catch((error) => {
+        dispatch('errorHandling', error)
+      })
     },
 
     sendEmailVerification ({commit, dispatch}) {

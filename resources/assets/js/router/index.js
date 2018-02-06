@@ -95,13 +95,13 @@ export default new Router({
       beforeEnter: AuthGuard
     },
     {
-      path: '/signin',
+      path: '/login',
       name: 'signin',
       meta: {title: 'Sign In'},
       component: Signin
     },
     {
-      path: '/signup',
+      path: '/register',
       name: 'signup',
       meta: {title: 'Sign Up'},
       component: Signup

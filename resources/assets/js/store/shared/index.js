@@ -105,6 +105,7 @@ export default {
     errorHandling ({ commit }, payload) {
       let text = payload
       // show typical attributes of error messages if available
+      if (text.errors) text = text.errors
       if (text.message) text = text.message
       if (text.code) text = text.code
       commit('setError', text)

@@ -17,7 +17,7 @@ export default function startUpActions (store, router) {
         from = false
       }
       // router.replace('./signin' + from ? from : '')
-      router.replace('/signin')
+      router.replace('/login')
       console.log('No user is signed in. FROM: ', from)
     }
   })
@@ -56,4 +56,11 @@ export default function startUpActions (store, router) {
   usersRef.on('value', snap => {
     store.dispatch('loadUsers', snap)
   })
+
+  // check if we need to load some backend data
+  router.beforeEach((from, to, next) => {
+    // no data needed for the auth pages
+    if (to.name === 'signin') next()
+  })
+
 }

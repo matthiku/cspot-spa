@@ -242,10 +242,10 @@ export default {
     nextSunday (state) {
       let nextSunday = moment().isoWeekday(7).startOf('day')
       return state.plans.find(plan => {
-        // console.log(moment(plan.date).startOf('day').isSame(nextSunday, 'day'))
+        // console.log(moment(plan.date).startOf('day'))
         return (
           moment(plan.date).startOf('day').isSame(nextSunday, 'day') &&
-          (plan.typeId * 1 === 0 || plan.typeId * 1 === 1)
+          (plan.type_id * 1 === 0 || plan.type_id * 1 === 1)
         )
       })
     },

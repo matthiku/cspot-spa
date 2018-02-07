@@ -17,7 +17,6 @@ class SongController extends Controller
     {
         //
         $songs = Song::orderBy('title', 'asc')->take(10)->get();
-        dd($songs);
         return response($songs->jsonSerialize(), Response::HTTP_OK);
     }
 

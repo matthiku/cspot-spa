@@ -27,10 +27,12 @@ export default {
 
   actions: {
     refreshUsers ({commit, dispatch}) {
-      console.log('updating local USERS list with full one-off snapshot from Server')
+      console.log('updating local USERS list from Server')
       axios.get('api/user')
         .then((data) => {
-          commit('setUsers', data.data)
+          if (data.data) {
+            commit('setUsers', data.data)
+          }
         })
         .catch((error) => dispatch('errorHandling', error))
     },
@@ -71,17 +73,6 @@ export default {
       // update project-specific user table
       dispatch('updateUser', payload)
       commit('appendMessage', 'This user\'s profile was updated')
-    },
-
-    loadUsers ({commit, dispatch}) {
-      commit('setLoading', true)
-      axios.get('api/user')
-        .then(data => {
-          const values = data.val()
-          commit('setUsers', values)
-          commit('setLoading', false)
-        })
-        .catch(error => dispatch('errorHandling', error))
     },
 
     fetchUserData ({commit, dispatch}, payload) {
@@ -175,7 +166,7 @@ export default {
         .catch(error => dispatch('errorHandling', error))
     },
 
-    singinViaProvider ({commit, dispatch}, provider) {
+    signinViaProvider ({commit, dispatch}, provider) {
       if (provider === 'google') {
         provider = new firebase.auth.GoogleAuthProvider()
         firebaseApp
@@ -254,7 +245,7 @@ export default {
     userIsAdmin (state) {
       if (!state.user) { return false }
       if (state.user.roles) {
-        return state.user.roles.indexOf('admin') > -1
+        return state.user.roles.find(elem => elem.id === 1 || elem.name === 'administrator') ? true : false
       }
       if (!state.users) { return false }
       if (!state.users[state.user.id]) { return false }

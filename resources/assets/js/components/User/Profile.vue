@@ -200,8 +200,8 @@
     },
 
     created () {
-      this.createRolesArrays()
       this.refreshInitRoles()
+      this.createRolesArrays()
     },
 
     methods: {
@@ -218,14 +218,14 @@
       createRolesArrays () {
         // create list of possible roles
         this.rolesList = []
-        for (let role in this.roles) {
-          this.rolesList.push(role)
-        }
+        this.roles.forEach(element => {
+          this.rolesList.push(element.name)
+        })
         // create list of roles actually assigned to this user
         if (this.userData.roles) {
           this.userRoles = []
           this.userData.roles.forEach(element => {
-            this.userRoles.push(element)
+            this.userRoles.push(element.name)
           })
         }
       },

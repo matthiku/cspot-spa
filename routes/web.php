@@ -15,8 +15,9 @@ Route::get('/', 'HomeController@index');
 Route::get('/login', 'HomeController@index');
 Route::get('/signin', 'HomeController@index');
 Route::get('/profile', 'HomeController@index');
-Route::get('/nextSunday', 'HomeController@index');
+Route::get('/nextsunday', 'HomeController@index');
 Route::get('/songs', 'HomeController@index');
 Route::get('/plans', 'HomeController@index');
+Route::get('/createplan', 'HomeController@index');
 
 Auth::routes();

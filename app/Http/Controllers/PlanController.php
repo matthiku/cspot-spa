@@ -16,7 +16,7 @@ class PlanController extends Controller
     public function index()
     {
         // get the last 100 plans only
-        $plans = Plan::orderBy('date', 'desc')->take(100)->get();
+        $plans = Plan::with('items')->orderBy('date', 'desc')->take(100)->get();
         return response($plans->jsonSerialize(), Response::HTTP_OK);
     }
 

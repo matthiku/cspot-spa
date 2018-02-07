@@ -26,7 +26,8 @@ class HomeController extends Controller
     {
         $data = [];
         if (Auth::user()) {
-            $data['user'] = Auth::user();
+            $user = \App\Models\User::with('roles')->where('id', Auth::user()->id)->first();
+            $data['user'] = $user;
         }
         return view('app', ['data' => $data]);
     }

@@ -16,6 +16,7 @@ class RoleController extends Controller
     public function index()
     {
         //
+        return response(Role::all()->jsonSerialize(), Response::HTTP_OK);
     }
 
     /**
@@ -27,7 +28,6 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         //
-        return response(Role::all()->jsonSerialize(), Response::HTTP_OK);
     }
 
 

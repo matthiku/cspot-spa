@@ -19,7 +19,7 @@
 
           <v-data-table
               :headers="headers"
-              :items="songs"
+              :items="songsArray"
               itemKey="id"
               :search="searchString"
               :rows-per-page-items="[10, 15, 25, { text: 'All', value: -1 }]"
@@ -385,6 +385,16 @@
     computed: {
       upcomingPlans () {
         return this.$store.getters.futurePlans
+      },
+      songsArray () {
+        let songs = []
+        for (const key in this.songs) {
+          if (this.songs.hasOwnProperty(key)) {
+            const element = this.songs[key];
+            songs.push(element)
+          }
+        }
+        return songs
       }
     },
     watch: {

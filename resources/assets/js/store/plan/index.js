@@ -29,8 +29,7 @@ export default {
   // A C T I O N S  (dispatches)
   actions: {
     refreshPlans ({commit, dispatch}) {
-      console.log('updating local list of PLANS with full one-off snapshot from Server')
-      commit('setLoading', true)
+      console.log('updating local list of PLANS from Server')
       axios.get('api/plan')
         .then((data) => {
           commit('setPlans', data.data)

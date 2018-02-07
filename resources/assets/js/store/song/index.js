@@ -18,10 +18,18 @@ export default {
 
   actions: {
     refreshSongs ({commit, dispatch}) {
-      console.log('updating local list of SONGS with full one-off snapshot from Server')
+      console.log('updating local list of SONGS from Server')
       axios.get('api/song')
         .then(data => {
-          commit('setSongs', data.data)
+          if (data.data) {
+            let songs = {}
+            // turn array into an object
+            data.data.forEach(elem => {
+              let obj = elem
+              songs[obj.id] = elem
+            })
+            commit('setSongs', songs)
+          }
         })
         .catch(error => dispatch('errorHandling', error))
     },

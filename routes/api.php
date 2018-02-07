@@ -19,6 +19,22 @@ Route::middleware('auth:api')->get(
     }
 );
 
+// with Authentication
+// Route::middleware('auth:api')->group(
+//     function () {
+//         Route::apiResources(
+//             [
+//                 'user' => 'UserController',
+//                 'type' => 'TypeController',
+//                 'role' => 'RoleController',
+//                 'plan' => 'PlanController',
+//                 'song' => 'SongController'
+//             ]
+//         );
+//     }
+// );
+
+// no authentication
 Route::apiResources(
     [
         'user' => 'UserController',

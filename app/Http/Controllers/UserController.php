@@ -16,7 +16,7 @@ class UserController extends Controller
     public function index()
     {
         //
-        return response(User::all()->jsonSerialize(), Response::HTTP_OK);
+        return response(User::with('roles')->get()->jsonSerialize(), Response::HTTP_OK);
     }
 
     /**

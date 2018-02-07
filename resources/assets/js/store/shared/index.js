@@ -51,7 +51,7 @@ export default {
   actions: {
     loadAllItems ({rootState, dispatch}) {
       if (!rootState.user.user) {
-        console.log('user not signed in!', rootState.user.user)
+        console.log('(loadAllItems) user not signed in!', rootState.user.user)
         return
       }
       if (!rootState.user.users) {

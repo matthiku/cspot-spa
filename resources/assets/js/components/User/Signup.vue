@@ -64,7 +64,7 @@
                       </v-btn>
                       <v-spacer></v-spacer>
                       Already have an account?
-                      <router-link :to="{ name: 'signin'}">Sign in</router-link>
+                      <router-link to="/login">Sign in</router-link>
                     </v-card-actions>
                   </v-flex>
                 </v-layout>

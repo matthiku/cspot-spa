@@ -44,7 +44,7 @@ export default {
     // contains data from the Firebase Auth DB, not our own!
     setUser ({ commit, dispatch }, payload) {
       const userData = {
-        id: payload.uid,
+        id: payload.id,
         email: payload.email,
         verified: payload.emailVerified,
         name: payload.displayName,
@@ -116,16 +116,20 @@ export default {
     signUserOut ({commit, dispatch}) {
       commit('setLoading', true)
       commit('clearError')
-      firebaseApp
-        .auth()
-        .signOut()
-        .then(() => {
-          // Sign-out successful.
-          commit('setLoading', false)
-          // clear the local state
-          dispatch('clearAllItems')
-        })
-        .catch(error => dispatch('errorHandling', error))
+      axios({
+        method: 'post',
+        url: '/logout',
+        data: {
+          _token: window.csrf_token
+        }
+      })
+      .then(() => {
+        // Sign-out successful.
+        commit('setLoading', false)
+        // clear the local state
+        dispatch('clearAllItems')
+      })
+      .catch(error => dispatch('errorHandling', error))
     },
 
     signUserIn ({state, commit, dispatch}, payload) {
@@ -139,6 +143,7 @@ export default {
           password: payload.password,
           _token: window.csrf_token
         },
+        headers: { 'Content-Type': 'application/json' },
         // `validateStatus` defines whether to resolve or reject the promise for a given
         // HTTP response status code. If `validateStatus` returns `true` (or is set to `null`
         // or `undefined`), the promise will be resolved; otherwise, the promise will be rejected.
@@ -146,13 +151,25 @@ export default {
           return status >= 200 && status < 500; // default
         }
       })
-      .then(user => {
+      .then(data => {
         commit('setLoading', false)
-        if (user.status != 200) {
-          dispatch('errorHandling', user.data)
+        if (data.status && data.status != 200) {
+          dispatch('errorHandling', data.data.errors)
+          return
         }
-        commit('setMessage', '')
-        state.user.user = JSON.parse(window.cspot2_server_data)
+        if (data.data) {
+          /**
+           * object 'data.data' contains -
+           * auth : true
+           * intended : "/" 
+           * user : {…}
+           */
+          commit('setMessage', '')
+          commit('setUser', data.data.user)
+        } else {
+          commit('setMessage', 'log in error')
+          console.log(data)         
+        }
       })
       .catch((error) => {
         dispatch('errorHandling', error)

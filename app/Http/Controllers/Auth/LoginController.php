@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
@@ -38,6 +39,30 @@ class LoginController extends Controller
     }
 
     /**
+     * The user has been authenticated.
+     *
+     * @param \Illuminate\Http\Request $request request
+     * @param mixed                    $user    user object
+     *
+     * @return mixed various
+     */
+    protected function authenticated(\Illuminate\Http\Request $request, $user)
+    {
+        if ($request->ajax() || $request->expectsJson()) {
+
+            $auth = auth()->check();
+            return response()->json(
+                [
+                    'auth' => $auth,
+                    'user' => $user,
+                    'intended' => $this->redirectPath(),
+                ]
+            );
+
+        }
+    }
+
+    /**
      * Let the frontend handle the login form provisioning
      *
      * @return view
@@ -46,4 +71,16 @@ class LoginController extends Controller
     {
         return view('app', ['data' => []]);
     }
+
+
+
+    public function logout()
+    {
+        Auth::logout();
+        return response()
+        ->json([
+            'logout' => true
+        ]);
+    }
+
 }

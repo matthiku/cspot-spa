@@ -145,7 +145,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-footer fixed app>
+    <v-footer fixed app class="ml-2">
       c-SPOT-ify
       <span class="hidden-sm-and-down"><a target="new" href="https://github.com/matthiku/cspot-ify" class="mx-2">GitHub</a>
         <a target="new" href="https://github.com/matthiku/cspot-ify/issues">Issues</a>
@@ -263,6 +263,12 @@
     watch: {
       message () {
         this.showMessage = this.message
+      },
+      user (val) {
+        // push the user to the login page if the user object is gone 
+        // e.g. due to a logout
+        if (this.$route.name === 'login') return
+        if (!val) this.$router.push('/login')
       }
     },
     methods: {

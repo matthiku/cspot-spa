@@ -15,4 +15,5 @@ mix.js('resources/assets/js/main.js', 'public/js')
    .sass('resources/assets/sass/app.scss', 'public/css')
    .stylus('resources/assets/stylus/main.styl', 'public/css')
    .copyDirectory('resources/assets/static', 'public/static')
-   .sourceMaps();
+   .sourceMaps()
+   .browserSync('cspot2.oo');

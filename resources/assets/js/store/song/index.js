@@ -1,4 +1,4 @@
-import { songsRef, binRef } from '../../firebaseApp'
+import axios from 'axios'
 
 // import { songsRef } from '../../firebaseApp'
 
@@ -19,25 +19,11 @@ export default {
   actions: {
     refreshSongs ({commit, dispatch}) {
       console.log('updating local list of SONGS with full one-off snapshot from Server')
-      songsRef
-        .once('value')
+      axios.get('api/song')
         .then(data => {
-          dispatch('loadSongs', data)
+          commit('setSongs', data.data)
         })
         .catch(error => dispatch('errorHandling', error))
-    },
-
-    // load existing songs from the DB
-    loadSongs ({commit}, payload) {
-      let songs = []
-      // payload is a firebase data snapshot, we add the 'key' as identifier to the dataset
-      payload.forEach(song => {
-        let item = song.val()
-        item.key = song.key
-        songs.push(item)
-      })
-      commit('setLoading', false)
-      commit('setSongs', songs)
     },
 
     addDummySong ({commit}, payload) {

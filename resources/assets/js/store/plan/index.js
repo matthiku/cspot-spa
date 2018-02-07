@@ -1,4 +1,4 @@
-import { plansRef, firebaseApp, binRef } from '../../firebaseApp'
+import axios from 'axios'
 import * as moment from 'moment'
 
 import bibleBooks from './bibleBooks.js'
@@ -31,23 +31,11 @@ export default {
     refreshPlans ({commit, dispatch}) {
       console.log('updating local list of PLANS with full one-off snapshot from Server')
       commit('setLoading', true)
-      plansRef.once('value')
+      axios.get('api/plan')
         .then((data) => {
-          dispatch('loadPlans', data)
+          commit('setPlans', data.data)
         })
         .catch((error) => dispatch('errorHandling', error))
-    },
-    // load existing plans from the DB
-    loadPlans ({commit}, payload) {
-      let plans = []
-      // payload is a firebase data snapshot
-      payload.forEach(plan => {
-        let pl = plan.val()
-        pl.id = plan.key
-        plans.push(pl)
-      })
-      commit('setPlans', plans)
-      commit('setLoading', false)
     },
 
     // create a new Plan item and possibly upload an image file

@@ -13,10 +13,18 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::middleware('auth:api')->get(
+    '/user', function (Request $request) {
+        return $request->user();
+    }
+);
 
-Route::get('/users', function () {
-    return factory('App\Models\User', 10)->make();
-});
+Route::apiResources(
+    [
+        'user' => 'UserController',
+        'type' => 'TypeController',
+        'role' => 'RoleController',
+        'plan' => 'PlanController',
+        'song' => 'SongController'
+    ]
+);

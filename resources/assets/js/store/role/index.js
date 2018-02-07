@@ -1,4 +1,4 @@
-import { rolesRef, binRef } from '../../firebaseApp'
+import axios from 'axios'
 
 export default {
   state: {
@@ -17,17 +17,11 @@ export default {
   actions: {
     refreshRoles ({commit, dispatch}) {
       console.log('updating local list of ROLES with full one-off snapshot from Server')
-      rolesRef.once('value')
+      axios.get('api/role')
       .then((data) => {
-        dispatch('loadRoles', data)
+        commit('setRoles', data.data)
       })
       .catch((error) => dispatch('errorHandling', error))
-    },
-
-    // load existing roles from the DB (called from startUpActions)
-    loadRoles ({commit}, payload) {
-      commit('setRoles', payload.val())
-      commit('setLoading', false)
     },
 
     updateRole ({state, commit, dispatch}, payload) {

@@ -1,6 +1,3 @@
-import firebase from 'firebase'
-import { firebaseApp, usersRef, rolesRef } from '../../firebaseApp'
-
 import axios from 'axios'
 
 export default {
@@ -31,35 +28,27 @@ export default {
   actions: {
     refreshUsers ({commit, dispatch}) {
       console.log('updating local USERS list with full one-off snapshot from Server')
-      usersRef
-        .once('value')
+      axios.get('api/user')
         .then((data) => {
-          commit('setUsers', data.val())
+          commit('setUsers', data.data)
         })
         .catch((error) => dispatch('errorHandling', error))
     },
 
     // called from -> startUpActions <- only!
-    // Triggered by a change in the Auth state of firebase
-    // contains data from the Firebase Auth DB, not our own!
     setUser ({ commit, dispatch }, payload) {
-      const userData = {
-        id: payload.id,
-        email: payload.email,
-        verified: payload.emailVerified,
-        name: payload.displayName,
-        providerData: payload.providerData
-      }
-      commit('setUser', userData)
+      commit('setUser', payload)
       // here we should check the Vuex store with dispatch(loadallitems)
-      dispatch('loadAllItems')
-      dispatch('updateUser', userData)
+      // dispatch('loadAllItems')
+      // dispatch('updateUser', userData)
     },
 
     // update firebase user table
     updateUser ({commit, dispatch}, payload) {
       if (!payload.id) return
-      usersRef.child(payload.id).update(payload)
+      console.log(payload)
+      // usersRef.child(payload.id).update(payload)
+      axios.post(`api/user/${payload.id}/update/`)
         .then(() => {
           commit('setLoading', false)
         })
@@ -86,8 +75,7 @@ export default {
 
     loadUsers ({commit, dispatch}) {
       commit('setLoading', true)
-      usersRef
-        .once('value')
+      axios.get('api/user')
         .then(data => {
           const values = data.val()
           commit('setUsers', values)
@@ -100,9 +88,8 @@ export default {
       if (!payload) {
         return
       }
-      usersRef
-        .child(payload.uid)
-        .once('value')
+      console.log(payload)
+      axios.get(`/api/user/${payload.id}/get`)
         .then(data => {
           const values = data.val()
           if (values && values.roles) {
@@ -271,6 +258,7 @@ export default {
       }
       if (!state.users) { return false }
       if (!state.users[state.user.id]) { return false }
+      if (!state.users[state.user.id].roles) { return false }
       return state.users[state.user.id].roles.indexOf('admin') > -1
     }
   }

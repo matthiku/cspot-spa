@@ -16,7 +16,7 @@ class SongController extends Controller
     public function index()
     {
         //
-        $songs = Song::orderBy('title', 'asc')->take(10)->get();
+        $songs = Song::orderBy('title', 'asc')->take(30)->get();
         return response($songs->jsonSerialize(), Response::HTTP_OK);
     }
 

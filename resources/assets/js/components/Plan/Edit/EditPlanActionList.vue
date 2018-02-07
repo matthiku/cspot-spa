@@ -9,7 +9,7 @@
         <template v-for="(item, index) in actionList">
 
           <v-list-tile
-              :id="'activity-item-' + index"
+              :id="'activity-item-' + item.key"
               :draggable="userOwnsThisPlan" 
               :key="index"
               @dragstart="drag"
@@ -21,7 +21,7 @@
               avatar>
 
             <v-list-tile-action title="drag items to re-arrange sequence"
-                :id="'drop-item-' + index"
+                :id="'drop-item-' + item.key"
                 v-if="userOwnsThisPlan"
                 class="cursor-n-resize"
               ><v-icon>swap_vert</v-icon>
@@ -429,15 +429,16 @@
         if (!this.plans) return
         this.plan = this.getPlan()
         if (!this.plan.id) return
-        this.actionList = []
+        let actionList = []
         let planItems = this.plan.items
         if (!planItems || !this.songs) return
 
         for (let key in planItems) {
           let action = planItems[key]
           let obj = {
-            seqNo: action.seq_no,
-            key,
+            seqNo: parseInt(action.seq_no),
+            key: action.id,
+            value: 0,
             warning: false
           }
           if (action.song_id) {
@@ -445,26 +446,25 @@
             obj.value = action.song_id
             obj.color = this.activityColours.song
             obj.icon = 'record_voice_over'
-            obj.title = this.songs[action.song_id].title
-            obj.book_ref = this.songs[action.song_id].book_ref
+            obj.title = this.songs[action.song_id] ? this.songs[action.song_id].title : action.song_id
+            obj.book_ref = this.songs[action.song_id] ? this.songs[action.song_id].book_ref : action.song_id
           }
           else if (action.comment && this.isScriptureRef(action.comment)) {
             obj.type === 'read'
-            obj.value = action.comment
+            obj.title = action.comment
             obj.color = 'cyan lighten-3'
             obj.icon = 'local_library'
-            obj.title = action.value
           }
           else {
             obj.type = 'text'
-            obj.value = action.comment
+            obj.title = action.comment
             obj.color = 'lime darken-2'
             obj.icon = 'label'
-            obj.title = action.value
           }
-          this.actionList.push(obj)
+          actionList.push(obj)
         }
-        this.sortActionList()
+        this.actionList = actionList.sort((elemA, elemB) => elemA.seqNo > elemB.seqNo)
+        // this.sortActionList()
       },
       sortActionList () {
         this.plan.actionList = this.actionList.sort((elemA, elemB) => elemA.seqNo > elemB.seqNo)

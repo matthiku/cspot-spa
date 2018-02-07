@@ -189,7 +189,7 @@ export default {
   data () {
     return {
       type: {},
-      typeId: null,
+      type_id: null,
       title: '',
       staff: {},
       info: '',
@@ -213,7 +213,7 @@ export default {
       return this.$store.getters.newPlanId
     },
     formIsValid () {
-      return this.typeId && this.dateTime && this.$moment(this.dateTime).isValid()
+      return this.type_id && this.dateTime && this.$moment(this.dateTime).isValid()
     },
     dateTime () {
       if (!this.date || !this.time) return null
@@ -261,7 +261,7 @@ export default {
       const planData = {
         date: this.dateTime.format(),
         end: this.endDateTime.format(),
-        typeId: this.typeId,
+        type_id: this.type_id,
         staff: {},
         info: this.info
       }
@@ -280,7 +280,7 @@ export default {
   watch: {
     // once the user selects a type, we can use some default values from the type object:
     type () {
-      this.typeId = this.type.id
+      this.type_id = this.type.id
       if (this.type.start !== '00:00:00') this.time = this.type.start
       if (this.type.end !== '00:00:00') this.endTime = this.type.end.substr(0, 5)
       this.info = this.type.subtitle
@@ -300,7 +300,7 @@ export default {
         do {
           ctrl -= 1
           check = this.plans.find(plan => {
-            return this.$moment(plan.date).isSame(newDate, 'day') && plan.typeId === this.typeId
+            return this.$moment(plan.date).isSame(newDate, 'day') && plan.type_id === this.type_id
           })
           // add more days to check for a free day
           if (check && check.date) newDate.add(7, 'd')

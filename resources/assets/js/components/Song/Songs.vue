@@ -20,7 +20,7 @@
           <v-data-table
               :headers="headers"
               :items="songs"
-              itemKey="key"
+              itemKey="id"
               :search="searchString"
               :rows-per-page-items="[10, 15, 25, { text: 'All', value: -1 }]"
               no-results-text="No matching songs found"
@@ -424,7 +424,7 @@
             this.planList.push({
               id: element.id,
               date: element.date,
-              type: this.types[element.typeId].name,
+              type: this.types[element.type_id].name,
               items: element.items ? Object.keys(element.items).length : 0,
               leader: leader ? leader.name : 'none',
               teacher: teacher ? teacher.name : 'none'

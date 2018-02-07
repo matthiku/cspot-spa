@@ -147,9 +147,8 @@
 
     <v-footer fixed app class="ml-2">
       c-SPOT-ify
-      <span class="hidden-sm-and-down"><a target="new" href="https://github.com/matthiku/cspot-ify" class="mx-2">GitHub</a>
-        <a target="new" href="https://github.com/matthiku/cspot-ify/issues">Issues</a>
-        <a target="new" class="ml-3" href="https://console.firebase.google.com/project/cspot-ify/database/cspot-ify/data">Firebase</a>
+      <span class="hidden-sm-and-down"><a target="new" href="https://github.com/matthiku/cspot2" class="mx-2">GitHub</a>
+        <a target="new" href="https://github.com/matthiku/cspot2/issues">Issues</a>
       </span>
       <v-spacer></v-spacer>
       <small class="hidden-xs-only">the <a target="new" href="https://github.com/matthiku/cspot">c-SPOT</a> Frontend Project</small>

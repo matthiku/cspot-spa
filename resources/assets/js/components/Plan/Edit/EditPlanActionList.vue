@@ -430,32 +430,36 @@
         this.plan = this.getPlan()
         if (!this.plan.id) return
         this.actionList = []
-        let planItems = this.plan.actions
+        let planItems = this.plan.items
         if (!planItems || !this.songs) return
 
         for (let key in planItems) {
           let action = planItems[key]
           let obj = {
-            type: action.type,
-            value: action.value ? action.value : 0,
+            seqNo: action.seq_no,
             key,
-            seqNo: action.seqNo,
             warning: false
           }
-          if (action.type === 'song' && this.songs[action.value]) {
+          if (action.song_id) {
+            obj.type = 'song'
+            obj.value = action.song_id
             obj.color = this.activityColours.song
             obj.icon = 'record_voice_over'
-            obj.title = this.songs[action.value].title
-            obj.book_ref = this.songs[action.value].book_ref
+            obj.title = this.songs[action.song_id].title
+            obj.book_ref = this.songs[action.song_id].book_ref
           }
-          if (action.type === 'text') {
-            obj.color = 'lime darken-2'
-            obj.icon = 'label'
-            obj.title = action.value
-          }
-          if (action.type === 'read') {
+          else if (action.comment && this.isScriptureRef(action.comment)) {
+            obj.type === 'read'
+            obj.value = action.comment
             obj.color = 'cyan lighten-3'
             obj.icon = 'local_library'
+            obj.title = action.value
+          }
+          else {
+            obj.type = 'text'
+            obj.value = action.comment
+            obj.color = 'lime darken-2'
+            obj.icon = 'label'
             obj.title = action.value
           }
           this.actionList.push(obj)
@@ -464,6 +468,13 @@
       },
       sortActionList () {
         this.plan.actionList = this.actionList.sort((elemA, elemB) => elemA.seqNo > elemB.seqNo)
+      },
+      isScriptureRef(text) {
+        let found = false
+        this.bibleBooksList.forEach(elem => {
+          if (text.indexOf(elem) >= 0) found = true
+        })
+        return found
       }
     },
 
@@ -491,4 +502,5 @@
       }
     }
   }
+
 </script>

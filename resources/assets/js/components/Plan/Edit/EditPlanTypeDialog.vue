@@ -66,10 +66,10 @@ export default {
     saveType () {
       this.typeEditingDlg = false
       if (this.type.id === this.oldType) return
-      this.plan.typeId = this.type.id
+      this.plan.type_id = this.type.id
       this.$store.dispatch('updatePlan', {
         id: this.plan.id,
-        field: 'typeId',
+        field: 'type_id',
         value: this.type.id
       })
     }
@@ -77,9 +77,9 @@ export default {
 
   created () {
     if (!this.plan) return
-    this.oldType = this.plan.typeId
+    this.oldType = this.plan.type_id
     this.$store.dispatch('hideDialog')
-    this.type = { id: this.plan.typeId, name: this.types[this.plan.typeId].name }
+    this.type = { id: this.plan.type_id, name: this.types[this.plan.type_id].name }
   },
 
   watch: {

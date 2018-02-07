@@ -252,16 +252,19 @@ export default {
 
     futurePlans (state, getters) {
       // return only future plans (ordered by date)
-      return getters.plans.filter(plan => {
+      let plans = getters.plans.filter(plan => {
         return moment(plan.date).isSameOrAfter(moment(), 'day')
+      })
+      return plans.sort((planA, planB) => {
+        return moment(planA.date).unix() - moment(planB.date).unix()
       })
     },
 
     // return a plan when a proper planId was given as an argument
     plan (state) {
-      return planId => {
+      return plan_id => {
         return state.plans.find(plan => {
-          return plan.id === planId
+          return plan.id === plan_id
         })
       }
     }

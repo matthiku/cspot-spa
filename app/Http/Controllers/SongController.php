@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use App\Models\Song;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -15,9 +16,10 @@ class SongController extends Controller
      */
     public function index()
     {
-        //
-        $songs = Song::orderBy('title', 'asc')->take(30)->get();
-        return response($songs->jsonSerialize(), Response::HTTP_OK);
+        //orderBy('title', 'asc')->
+        $songs = DB::table('songs')->get();
+        return response($songs->toArray(), Response::HTTP_OK);
+        // return response($songs->jsonSerialize(), Response::HTTP_OK);
     }
 
 

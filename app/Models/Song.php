@@ -290,7 +290,8 @@ class Song extends Model
     public function getLyricsAttribute( $value )
     {
         // return full value for all PD songs and for users >= Leaders
-        if ($this->license=='PD' || Auth::user()->isMusician() ) {
+        // if ($this->license=='PD' || Auth::user()->isMusician() ) {
+        if ($this->license=='PD') {
             return $value;
         }
 
@@ -309,7 +310,8 @@ class Song extends Model
     public function getChordsAttribute( $value )
     {
         // return full value for all PD songs and for users >= Leaders
-        if ($this->license=='PD' || Auth::user()->isMusician() ) {
+        // if ($this->license=='PD' || Auth::user()->isMusician() ) {
+        if ($this->license=='PD') {
             return $value;
         }
 

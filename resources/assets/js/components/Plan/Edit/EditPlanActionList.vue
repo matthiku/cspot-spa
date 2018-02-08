@@ -199,9 +199,6 @@
     props: ['planId', 'userOwnsThisPlan'],
 
     computed: {
-      plans () {
-        return this.$store.getters.plans
-      },
       activitiesCount () {
         if (!this.plan || !this.plan.actionList) return 0
         return this.plan.actionList.length
@@ -429,6 +426,7 @@
         if (!this.plans) return
         this.plan = this.getPlan()
         if (!this.plan.id) return
+
         let actionList = []
         let planItems = this.plan.items
         if (!planItems || !this.songs) return
@@ -463,11 +461,11 @@
           }
           actionList.push(obj)
         }
-        this.actionList = actionList.sort((elemA, elemB) => elemA.seqNo > elemB.seqNo)
+        this.actionList = actionList.sort((elemA, elemB) => elemA.seqNo - elemB.seqNo)
         // this.sortActionList()
       },
       sortActionList () {
-        this.plan.actionList = this.actionList.sort((elemA, elemB) => elemA.seqNo > elemB.seqNo)
+        this.plan.actionList = this.actionList.sort((elemA, elemB) => elemA.seqNo - elemB.seqNo)
       },
       isScriptureRef(text) {
         let found = false

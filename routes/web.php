@@ -21,5 +21,6 @@ Route::get('/plans', 'HomeController@index');
 Route::get('/plans/{plan_id}', 'HomeController@index');
 Route::get('/createplan', 'HomeController@index');
 Route::get('/admin', 'HomeController@index');
+Route::get('/admin/{any}', 'HomeController@index');
 
 Auth::routes();

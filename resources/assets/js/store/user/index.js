@@ -28,7 +28,7 @@ export default {
   actions: {
     refreshUsers ({commit, dispatch}) {
       console.log('updating local USERS list from Server')
-      axios.get('api/user')
+      axios.get('/api/user')
         .then((data) => {
           if (data.data) {
             commit('setUsers', data.data)

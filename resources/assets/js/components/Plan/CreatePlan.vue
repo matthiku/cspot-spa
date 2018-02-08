@@ -308,19 +308,17 @@ export default {
         newDate.add(diff, 'day')
 
         // check if there is already a plan of the same type on that day
-        let ctrl = 19 // test max 19 iterations
+        let ctrl = 9 // test max 9 iterations
         var check
         do {
-          console.log(ctrl, newDate.format())
           ctrl -= 1
           check = this.plans.find(plan => {
             return this.$moment(plan.date).isSame(newDate, 'day') && plan.type_id === this.type_id
           })
           // add more days to check for a the next free day
           if (check && check.date) newDate.add(7, 'd')
-          console.log(check.date, ctrl, newDate.format())
-
-        } while (check && (!check.date || ctrl < 0))
+        } 
+        while (check && ctrl > 0)
 
         // fill the form with the next free day
         this.date = newDate.format('YYYY-MM-DD')

@@ -34,7 +34,7 @@
                 <v-icon :color="props.item.verified ? 'green' : 'red'">{{ props.item.verified ? 'check' : 'close' }}</v-icon>
               </td>
 
-              <td class="text-xs-right">
+              <td class="text-xs-right small">
                 <span v-for="(role, key) in props.item.roles" :key="role.id">
                   {{ role.name | ucFirst }}<span v-if="key + 1 < props.item.roles.length">, </span>
                 </span>
@@ -47,6 +47,13 @@
     </v-slide-y-transition>
   </v-container>
 </template>
+
+<style>
+  .small {
+    font-size: 75% !important;
+  }
+</style>
+
 
 <script>
   import genericMixins from '../../mixins/'

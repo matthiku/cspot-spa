@@ -145,13 +145,13 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-footer fixed app class="ml-2">
-      c-SPOT-ify
+    <v-footer fixed app class="mx-2">
+      c-SPOT-SPA
       <span class="hidden-sm-and-down"><a target="new" href="https://github.com/matthiku/cspot2" class="mx-2">GitHub</a>
         <a target="new" href="https://github.com/matthiku/cspot2/issues">Issues</a>
       </span>
       <v-spacer></v-spacer>
-      <small class="hidden-xs-only">the <a target="new" href="https://github.com/matthiku/cspot">c-SPOT</a> Frontend Project</small>
+      <small class="hidden-xs-only">the <a target="new" href="https://github.com/matthiku/cspot">c-SPOT</a> SPA Project</small>
       <v-spacer></v-spacer>
       <span>&copy; 2017 <a href="https://github.com/matthiku" target="new">Matthias Kuhs</a></span>
     </v-footer>

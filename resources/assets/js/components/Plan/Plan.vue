@@ -308,14 +308,14 @@ export default {
       return plan
     },
     planType () {
-      if (this.plan.type_id) {
-        if (this.types.length) {
+      if (this.plan) {
+        if (this.types && this.types.length) {
           return this.types[this.plan.type_id].name 
         } else {
           return this.plan.type_id
         } 
       }
-      return 'Plan gone' + this.plan.type_id
+      return 'Plan gone'
     },
     userOwnsThisPlan () {
       return this.userOwnsPlan(this.plan)

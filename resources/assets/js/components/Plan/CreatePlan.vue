@@ -34,6 +34,8 @@
                       persistent
                       v-model="modalDate"
                       ref="dateDialog"
+                      full-width
+                      width="330px"
                       lazy>
                     <v-text-field
                         slot="activator"
@@ -73,6 +75,8 @@
                       persistent
                       v-model="modalTime"
                       ref="startTimeDialog"
+                      full-width
+                      width="330px"
                       lazy>
                     <v-text-field
                         slot="activator"
@@ -103,6 +107,8 @@
                       persistent
                       v-model="modalEndTime"
                       ref="endTimeDialog"
+                      full-width
+                      width="330px"
                       lazy>
                     <v-text-field
                         slot="activator"
@@ -290,6 +296,7 @@ export default {
       if (this.type.start !== '00:00:00') this.time = this.type.start
       if (this.type.end !== '00:00:00') this.endTime = this.type.end.substr(0, 5)
       this.info = this.type.subtitle
+
       // possible date of event can be calculated by checking for
       // the next >>type.weekday<<, with consideration of >>type.repeat<<
       // and the presence of plans on those possible dates
@@ -301,17 +308,20 @@ export default {
         newDate.add(diff, 'day')
 
         // check if there is already a plan of the same type on that day
-        let ctrl = 9 // test max 9 iterations
+        let ctrl = 19 // test max 19 iterations
         var check
         do {
+          console.log(ctrl, newDate.format())
           ctrl -= 1
           check = this.plans.find(plan => {
             return this.$moment(plan.date).isSame(newDate, 'day') && plan.type_id === this.type_id
           })
-          console.log(check)
-          // add more days to check for a free day
+          // add more days to check for a the next free day
           if (check && check.date) newDate.add(7, 'd')
+          console.log(check.date, ctrl, newDate.format())
+
         } while (check && (!check.date || ctrl < 0))
+
         // fill the form with the next free day
         this.date = newDate.format('YYYY-MM-DD')
       }

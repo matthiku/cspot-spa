@@ -5,6 +5,7 @@ import bibleBooks from './bibleBooks.js'
 
 export default {
   state: {
+    plan: {},
     plans: [],
     bibleBooks,
     newPlanId: null
@@ -23,6 +24,10 @@ export default {
     },
     clearNewPlanId (state) {
       state.newPlanId = null
+    },
+
+    setSinglePlan (state, payload) {
+      state.plan = payload
     }
   },
 
@@ -261,9 +266,9 @@ export default {
 
     // return a plan when a proper planId was given as an argument
     plan (state) {
-      return plan_id => {
+      return planId => {
         return state.plans.find(plan => {
-          return plan.id === plan_id
+          return plan.id === planId
         })
       }
     }

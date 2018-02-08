@@ -3,13 +3,19 @@
 export default function startUpActions (store, router) {
   // run actions at the start of the App
 
-  // check if a user is already logged on in the browser session
-  var user
+  // read server data
+  let serverData
   try {
-    user = JSON.parse(window.cspot2_server_data).user
+    serverData = JSON.parse(window.cspot2_server_data)
   } catch (error) {
     console.log(error, 'No user is signed in. FROM: ', from)
   }
+  if (serverData.plan) {
+    store.commit('setSinglePlan', serverData.plan)
+  }
+
+  // check if a user is already logged on in the browser session
+  var user = serverData.user
   if (user) {
     store.commit('setUser', user)
     // store.dispatch('fetchUserData', user)

@@ -76,7 +76,7 @@ export default {
   },
 
   created () {
-    if (!this.plan) return
+    if (!this.plan || !this.types.length || isNaN(this.plan.type_id) ) return
     this.oldType = this.plan.type_id
     this.$store.dispatch('hideDialog')
     this.type = { id: this.plan.type_id, name: this.types[this.plan.type_id].name }

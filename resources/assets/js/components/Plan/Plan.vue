@@ -292,7 +292,11 @@ export default {
         this.pageTitle = 'This Sunday\'s Plan'
         plan = this.$store.getters.nextSunday
       } else {
-        plan = this.$store.getters.plan(this.$route.params.planId)
+        let planId = this.$route.params.planId
+        plan = this.$store.getters.plan(planId)
+        if (!plan && this.$store.state.plan && this.$store.state.plan.plan ) {
+          plan = this.$store.state.plan.plan
+        }
       }
 
       // create Staff List property of plan

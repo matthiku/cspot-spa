@@ -147,8 +147,8 @@
 
     <v-footer fixed app class="mx-2">
       c-SPOT-SPA
-      <span class="hidden-sm-and-down"><a target="new" href="https://github.com/matthiku/cspot2" class="mx-2">GitHub</a>
-        <a target="new" href="https://github.com/matthiku/cspot2/issues">Issues</a>
+      <span class="hidden-sm-and-down"><a target="new" href="https://github.com/matthiku/cspot-spa" class="mx-2">GitHub</a>
+        <a target="new" href="https://github.com/matthiku/cspot-spa/issues">Issues</a>
       </span>
       <v-spacer></v-spacer>
       <small class="hidden-xs-only">the <a target="new" href="https://github.com/matthiku/cspot">c-SPOT</a> SPA Project</small>

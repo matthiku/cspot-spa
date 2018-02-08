@@ -425,7 +425,7 @@
       createPlanActionsList () {
         if (!this.plans) return
         this.plan = this.getPlan()
-        if (!this.plan.id) return
+        if (!this.plan || !this.plan.id) return
 
         let actionList = []
         let planItems = this.plan.items

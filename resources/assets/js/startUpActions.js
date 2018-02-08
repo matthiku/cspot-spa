@@ -11,7 +11,7 @@ export default function startUpActions (store, router) {
     console.log(error, 'No user is signed in. FROM: ', from)
   }
   if (user) {
-    store.dispatch('setUser', user)
+    store.commit('setUser', user)
     // store.dispatch('fetchUserData', user)
   } else {
     // user is not signed in yet, so we store the desired page and let the user sign in first

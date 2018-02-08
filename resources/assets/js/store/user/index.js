@@ -37,14 +37,6 @@ export default {
         .catch((error) => dispatch('errorHandling', error))
     },
 
-    // called from -> startUpActions <- only!
-    setUser ({ commit, dispatch }, payload) {
-      commit('setUser', payload)
-      // here we should check the Vuex store with dispatch(loadallitems)
-      // dispatch('loadAllItems')
-      // dispatch('updateUser', userData)
-    },
-
     // update firebase user table
     updateUser ({commit, dispatch}, payload) {
       if (!payload.id) return

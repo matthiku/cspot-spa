@@ -20,5 +20,6 @@ Route::get('/songs', 'HomeController@index');
 Route::get('/plans', 'HomeController@index');
 Route::get('/plans/{plan_id}', 'HomeController@index');
 Route::get('/createplan', 'HomeController@index');
+Route::get('/admin', 'HomeController@index');
 
 Auth::routes();

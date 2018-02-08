@@ -7,6 +7,17 @@ export default (to, from, next) => {
   // reset any old app messages
   store.dispatch('clearMessage')
 
+  // check if user data was send in the header of the page
+  var user
+  try {
+    user = JSON.parse(window.cspot2_server_data).user
+  } catch (error) {
+    console.log(error, 'No user is signed in. FROM: ', from)
+  }
+  if (user) {
+    store.commit('setUser', user)
+  }
+
   if (store.getters.user) {
     next()
   } else {

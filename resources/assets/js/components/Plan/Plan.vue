@@ -53,7 +53,7 @@
                   v-model="fab" bottom right hover
                   slot="activator"
                   direction="left"
-                  transition="slide-x-transition"
+                  transition="slide-x-reverse-transition"
                 >
                   <v-btn
                     v-model="fab" dark fab hover

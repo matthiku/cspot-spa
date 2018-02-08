@@ -28,7 +28,7 @@
             </v-list-tile-action>
 
             <v-list-tile-avatar :title="item.type">
-              <v-icon :class="item.color" class="white--text">{{ item.icon }}</v-icon>
+              <v-icon :class="[item.color]" class="white--text">{{ item.icon }}</v-icon>
             </v-list-tile-avatar>
 
             <!-- show actual item detail -->

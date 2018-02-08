@@ -50,6 +50,8 @@
                         first-day-of-week="0"
                         :min="onlyFutureDays.min"
                         :max="onlyFutureDays.max"
+                        event-color="yellow darken-1"
+                        :events="arrayEvents"
                         scrollable
                         actions>
                       <template slot-scope="{ save, cancel }">
@@ -136,7 +138,7 @@
             </v-flex>
           </v-layout>
 
-          <!-- Type-specific Details (Read-Only) -->
+          <!-- Type-specific Details (Display-Only) -->
           <v-layout row v-if="type.repeat && type.weekday >= 0">
             <v-flex xs12 md6 offset-md3>
               <h3 class="secondary--text">Type-specific Details:</h3>
@@ -228,6 +230,7 @@ export default {
       imageB64: null,
       image: null,
       date: null,
+      arrayEvents: null,
       onlyFutureDays: {min: this.$moment().format('YYYY-MM-DD'), max: '2099-12-31'},
       time: '',
       endTime: '',
@@ -353,6 +356,13 @@ export default {
       }
     },
 
+    plans (val) {
+      // on the date picker show a dot on each day that contains a plan
+      this.arrayEvents = val.map((pl) => {
+        return pl.date.substr(0, 10)
+      })
+    },
+
     // wait until the new plan was added to the array of plans
     // then open the new plan
     planId () {
@@ -372,9 +382,3 @@ export default {
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-
-
-</style>

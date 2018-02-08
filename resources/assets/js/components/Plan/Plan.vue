@@ -39,7 +39,7 @@
                 <v-chip large color="success" class="mr-0" elevation-4
                   :class="[ userIsAdmin ? 'cursor-pointer' : '' ]"
                   @click="openEditDialog('type')">
-                  {{ (plan && plan.type_id) ? types.length ? types[plan.type_id].name : plan.type_id : 'Plan gone' }}</v-chip>
+                  {{ planType }}</v-chip>
                 <app-edit-plan-type-dialog
                   v-if="userIsAdmin"
                   :plan="plan"
@@ -306,6 +306,16 @@ export default {
         this.showDetails.activities = true
       }
       return plan
+    },
+    planType () {
+      if (this.plan.type_id) {
+        if (this.types.length) {
+          return this.types[this.plan.type_id].name 
+        } else {
+          return this.plan.type_id
+        } 
+      }
+      return 'Plan gone' + this.plan.type_id
     },
     userOwnsThisPlan () {
       return this.userOwnsPlan(this.plan)

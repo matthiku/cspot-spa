@@ -14,9 +14,12 @@ export const weekdayName = (value) => {
 }
 
 export const time = (value) => {
-  let tm = moment(value)
-  if (!tm.isValid()) {
+  // show the time part of a date value
+  let tm
+  if (value.length <= 8) {
     tm = moment(value, 'HH:mm:ss')
+  } else {
+    tm = moment(value)
   }
   return tm.format('HH:mm')
 }

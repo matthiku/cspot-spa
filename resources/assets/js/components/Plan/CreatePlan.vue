@@ -3,7 +3,7 @@
 
     <v-layout row>
       <v-flex xs12 md6 offset-md3>
-        <h4 class="secondary--text">Create New Plan</h4 class="text--primary">
+        <h2 class="secondary--text">Create New Plan</h2>
       </v-flex>
     </v-layout>
 
@@ -136,6 +136,24 @@
             </v-flex>
           </v-layout>
 
+          <!-- Type-specific Details (Read-Only) -->
+          <v-layout row v-if="type.repeat && type.weekday >= 0">
+            <v-flex xs12 md6 offset-md3>
+              <h3 class="secondary--text">Type-specific Details:</h3>
+              <v-layout row wrap>
+                <v-flex xs11 sm5>
+                  <span>Usual weekday:</span>
+                  <strong>{{ type.weekday |weekdayName }}</strong>
+                </v-flex>
+                <v-spacer></v-spacer>
+                <v-flex xs11 sm5>
+                  <span>Repeated:</span>
+                  <strong>{{ type.repeat }}</strong>
+                </v-flex>
+              </v-layout>
+            </v-flex>
+          </v-layout>
+
           <!-- Description -->
           <v-layout row>
             <v-flex xs12 md6 offset-md3>
@@ -239,6 +257,13 @@ export default {
       // end time is not required - just use the start time
       if (!this.endTime) return this.dateTime
       return this.$moment(this.date + 'T' + this.endTime)
+    },
+    distanceDays () {
+      if (!this.type) return {amount: 1, type: 'd'}
+      if (this.type.repeat === 'weekly') return {amount: 7, type: 'd'}
+      if (this.type.repeat === 'biweekly') return {amount: 14, type: 'd'}
+      if (this.type.repeat === 'monthly') return {amount: 1, type: 'm'}
+      if (this.type.repeat === 'yearly') return {amount: 1, type: 'y'}
     }
   },
 
@@ -310,15 +335,18 @@ export default {
         // check if there is already a plan of the same type on that day
         let ctrl = 9 // test max 9 iterations
         var check
+        // depending on the repeat value of the type, we will be adding 
+        // a certain amount of days to the proposed date if there is
+        // already a plan of the same type on that day
         do {
           ctrl -= 1
           check = this.plans.find(plan => {
             return this.$moment(plan.date).isSame(newDate, 'day') && plan.type_id === this.type_id
           })
           // add more days to check for a the next free day
-          if (check && check.date) newDate.add(7, 'd')
+          if (check && check.date) newDate.add(this.distanceDays.amount, this.distanceDays.type)
         } 
-        while (check && ctrl > 0)
+        while (check && ctrl > 0 && this.distanceDays.amount > 0)
 
         // fill the form with the next free day
         this.date = newDate.format('YYYY-MM-DD')

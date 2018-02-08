@@ -31,27 +31,30 @@
 
                 <v-flex xs11 sm5>
                   <v-dialog
-                    persistent
-                    v-model="modalDate"
-                    lazy
-                    >
+                      persistent
+                      v-model="modalDate"
+                      ref="dateDialog"
+                      lazy>
                     <v-text-field
-                      slot="activator"
-                      label="Select the date"
-                      v-model="date"
-                      prepend-icon="event"                      
-                      readonly required
-                    ></v-text-field>
+                        slot="activator"
+                        label="Select the date"
+                        v-model="date"
+                        prepend-icon="event"                      
+                        readonly required
+                      ></v-text-field>
                     <v-date-picker 
-                      v-model="date" no-title
-                      first-day-of-week="0"
-                      :allowed-dates="onlyFutureDays"
-                      scrollable actions>
+                        v-model="date" 
+                        no-title
+                        first-day-of-week="0"
+                        :min="onlyFutureDays.min"
+                        :max="onlyFutureDays.max"
+                        scrollable
+                        actions>
                       <template slot-scope="{ save, cancel }">
                         <v-card-actions>
                           <v-spacer></v-spacer>
-                          <v-btn flat color="primary" @click="cancel">Cancel</v-btn>
-                          <v-btn flat color="primary" @click="save">OK</v-btn>
+                          <v-btn flat color="primary" @click="modalDate = false">Cancel</v-btn>
+                          <v-btn flat color="primary" @click="$refs.dateDialog.save(date)">OK</v-btn>
                         </v-card-actions>
                       </template>
                     </v-date-picker>
@@ -67,24 +70,28 @@
               <v-layout row wrap>
                 <v-flex xs11 sm5>
                   <v-dialog
-                    persistent
-                    v-model="modalTime"
-                    lazy
-                  >
+                      persistent
+                      v-model="modalTime"
+                      ref="startTimeDialog"
+                      lazy>
                     <v-text-field
-                      slot="activator"
-                      label="Select start time"
-                      v-model="time"                      
-                      prepend-icon="schedule"
-                      readonly required
-                    ></v-text-field>
+                        slot="activator"
+                        label="Select start time"
+                        v-model="time"                      
+                        prepend-icon="schedule"
+                        readonly
+                        required
+                      ></v-text-field>
                     <v-time-picker 
-                      v-model="time" format="24hr" scrollable actions>
+                        v-model="time"
+                        format="24hr"
+                        scrollable
+                        actions>
                       <template slot-scope="{ save, cancel }">
                         <v-card-actions>
                           <v-spacer></v-spacer>
-                          <v-btn flat color="primary" @click="cancel">Cancel</v-btn>
-                          <v-btn flat color="primary" @click="save">OK</v-btn>
+                          <v-btn flat color="primary" @click="modalTime = false">Cancel</v-btn>
+                          <v-btn flat color="primary" @click="$refs.startTimeDialog.save(time)">OK</v-btn>
                         </v-card-actions>
                       </template>
                     </v-time-picker>
@@ -93,26 +100,27 @@
                 <v-spacer></v-spacer>
                 <v-flex xs11 sm5>
                   <v-dialog
-                    persistent
-                    v-model="modalEndTime"
-                    lazy
-                  >
+                      persistent
+                      v-model="modalEndTime"
+                      ref="endTimeDialog"
+                      lazy>
                     <v-text-field
-                      slot="activator"
-                      label="Select end time"
-                      v-model="endTime"                      
-                      prepend-icon="schedule"
-                      readonly
-                    ></v-text-field>
+                        slot="activator"
+                        label="Select end time"
+                        v-model="endTime"                      
+                        prepend-icon="schedule"
+                        readonly
+                      ></v-text-field>
                     <v-time-picker
-                      v-model="endTime"
-                      :allowed-hours="minMaxHourValues" 
-                      format="24hr" scrollable actions>
+                        v-model="endTime"
+                        :min="minTimeValue" 
+                        format="24hr" 
+                        scrollable actions>
                       <template slot-scope="{ save, cancel }">
                         <v-card-actions>
                           <v-spacer></v-spacer>
-                          <v-btn flat color="primary" @click="cancel">Cancel</v-btn>
-                          <v-btn flat color="primary" @click="save">OK</v-btn>
+                          <v-btn flat color="primary" @click="modalEndTime = false">Cancel</v-btn>
+                          <v-btn flat color="primary" @click="$refs.endTimeDialog.save(endTime)">OK</v-btn>
                         </v-card-actions>
                       </template>
                     </v-time-picker>
@@ -199,7 +207,7 @@ export default {
       onlyFutureDays: {min: this.$moment().format('YYYY-MM-DD'), max: '2099-12-31'},
       time: '',
       endTime: '',
-      minMaxHourValues: {min: 0, max: 23},
+      minTimeValue: '0:00',
       modalDate: false,
       modalTime: false,
       modalEndTime: false
@@ -213,7 +221,8 @@ export default {
       return this.$store.getters.newPlanId
     },
     formIsValid () {
-      return this.type_id && this.dateTime && this.$moment(this.dateTime).isValid()
+      if (!isNaN(this.type_id) && this.dateTime && this.$moment(this.dateTime).isValid()) return true
+      return false
     },
     dateTime () {
       if (!this.date || !this.time) return null
@@ -224,9 +233,6 @@ export default {
       // end time is not required - just use the start time
       if (!this.endTime) return this.dateTime
       return this.$moment(this.date + 'T' + this.endTime)
-    },
-    plans () {
-      return this.$store.getters.plans
     }
   },
 
@@ -287,7 +293,7 @@ export default {
       // possible date of event can be calculated by checking for
       // the next >>type.weekday<<, with consideration of >>type.repeat<<
       // and the presence of plans on those possible dates
-      if (this.type.weekday && this.type.weekday * 1 > -1) {
+      if (!isNaN(this.type.weekday) && this.type.weekday * 1 > -1) {
         let weekday = this.type.weekday * 1
         let newDate = this.$moment()
         let diff = weekday - newDate.weekday()
@@ -302,6 +308,7 @@ export default {
           check = this.plans.find(plan => {
             return this.$moment(plan.date).isSame(newDate, 'day') && plan.type_id === this.type_id
           })
+          console.log(check)
           // add more days to check for a free day
           if (check && check.date) newDate.add(7, 'd')
         } while (check && (!check.date || ctrl < 0))
@@ -320,7 +327,7 @@ export default {
 
     time () {
       // set the minimal hour for the end time to be the same as the start time hour
-      this.minMaxHourValues.min = (this.time).substr(0, 2) * 1
+      this.minTimeValue = (this.time).substr(0, 5)
       // if the start time is changed and the end time not set yet,
       // set the end time to the start time
       if (this.endTime && this.endTime > this.time) return

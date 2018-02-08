@@ -1,6 +1,6 @@
 export default {
   state: {
-    appName: 'c-SPOT-ify',
+    appName: 'c-SPOT-SPA',
     loading: false,
     message: '',
     error: '',

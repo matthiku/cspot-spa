@@ -34,8 +34,6 @@
         v-if="userIsAuthenticated"
         @click.stop="drawer = !drawer"
       ></v-toolbar-side-icon>
-      <!-- REMOVED:
-        :class="[ userIsAdmin ? '' : 'hidden-lg-and-up' ]" -->
 
       <v-btn icon :to="{ name: 'home' }" class="mr-3">
         <img src="/static/cspoticon36.png" alt="c-SPOT icon" width="30px">
@@ -145,15 +143,15 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-footer fixed app class="mx-2">
-      c-SPOT-SPA
+    <v-footer fixed app>
+      <strong class="ml-2">c-SPOT-SPA</strong>
       <span class="hidden-sm-and-down"><a target="new" href="https://github.com/matthiku/cspot-spa" class="mx-2">GitHub</a>
         <a target="new" href="https://github.com/matthiku/cspot-spa/issues">Issues</a>
       </span>
       <v-spacer></v-spacer>
       <small class="hidden-xs-only">the <a target="new" href="https://github.com/matthiku/cspot">c-SPOT</a> SPA Project</small>
       <v-spacer></v-spacer>
-      <span>&copy; 2017 <a href="https://github.com/matthiku" target="new">Matthias Kuhs</a></span>
+      <span class="mr-2">&copy; 2017 <a href="https://github.com/matthiku" target="new">Matthias Kuhs</a></span>
     </v-footer>
 
   </v-app>
@@ -169,7 +167,7 @@
 
     data () {
       return {
-        appTitle: 'c-SPOT',
+        appTitle: 'c-SPOT-SPA',
         rightDrawer: false,
         clipped: true,
         drawer: true,

@@ -27,6 +27,13 @@ export default {
     },
 
     setSinglePlan (state, payload) {
+      console.log('setSinglePlan:', payload)
+      if (!payload) return
+      // is this the same plan?
+      if (payload.id === state.plan.id) {
+        console.log('same plan!')
+        return
+      }
       // add Staff List property
       payload.staffList = []
       let items = []

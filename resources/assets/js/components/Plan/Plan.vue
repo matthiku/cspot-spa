@@ -307,6 +307,35 @@ export default {
   },
 
   methods: {
+    loadCurrentPlan () {
+      let plan = {}
+      // get plan depending on current route!
+      if (this.$route && this.$route.name === 'nextsunday') {
+        this.pageTitle = 'This Sunday\'s Plan'
+        plan = this.$store.getters.nextSunday
+        console.log('nextsunday', plan)
+      } else {
+        let planId = this.$route.params.planId
+        plan = this.$store.getters.planById(planId)
+        // perhaps the plan is already in the state
+        if (!plan && this.$store.state.plan && this.$store.state.plan.plan ) {
+          plan = this.$store.state.plan.plan
+        }
+        console.log(planId, plan)
+      }
+
+      // open the staff list panel if no staff is assigned yet
+      if (plan && !plan.staffList && !this.pageStatus.hasOwnProperty(plan.id)) {
+        this.showDetails.staff = true
+        this.showDetails.activities = false
+      } else if (plan && !this.pageStatus.hasOwnProperty(plan.id)) {
+        this.showDetails.staff = false
+        this.showDetails.activities = true
+      }
+
+      // save current plan to the state
+      this.$store.commit('setSinglePlan', plan)
+    },
     openPlanSubtitleEdit () {
       if (!this.userOwnsThisPlan) return
       this.showDetails.planDetails = true
@@ -351,6 +380,7 @@ export default {
 
   watch: {
     plan (val) {
+      console.log('plan changed!', val)
       // check which expansion panel is open
       if (!val) return
       if (this.pageStatus.hasOwnProperty(this.plan.id)) this.showDetails = this.pageStatus[this.plan.id].showDetails
@@ -361,34 +391,13 @@ export default {
       if (this.plan.id) return
       // return to list of plans if this plan became void meanwhile
       this.$router.push({name: 'plans'})
+    },
+    plans () {
+      this.loadCurrentPlan()
     }
   },
   mounted () {
-    let plan
-    // get plan depending on current route!
-    if (this.$route && this.$route.name === 'nextsunday') {
-      this.pageTitle = 'This Sunday\'s Plan'
-      plan = this.$store.getters.nextSunday
-    } else {
-      let planId = this.$route.params.planId
-      plan = this.$store.getters.planById(planId)
-      // perhaps the plan is already in the state
-      if (!plan && this.$store.state.plan && this.$store.state.plan.plan ) {
-        plan = this.$store.state.plan.plan
-      }
-    }
-
-    // open the staff list panel if no staff is assigned yet
-    if (plan && !plan.staffList && !this.pageStatus.hasOwnProperty(plan.id)) {
-      this.showDetails.staff = true
-      this.showDetails.activities = false
-    } else if (plan && !this.pageStatus.hasOwnProperty(plan.id)) {
-      this.showDetails.staff = false
-      this.showDetails.activities = true
-    }
-
-    // save current plan to the state
-    this.$store.commit('setSinglePlan', plan)
+    this.loadCurrentPlan()
 
     // check which expansion panel should be open
     if (this.plan === undefined) return
@@ -401,6 +410,7 @@ export default {
   },
 
   updated () {
+    this.loadCurrentPlan()
     this.savePageStatus()
   },
   beforeDestroy () {

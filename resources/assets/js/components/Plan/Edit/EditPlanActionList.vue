@@ -204,7 +204,7 @@
         return this.plan.actionList.length
       },
       actionList () {
-        return this.plan.actionList
+        return this.plan.actionList || []
       }
     },
 

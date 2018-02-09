@@ -50,9 +50,11 @@
 
 <script>
 export default {
-  props: ['plan'],
 
   computed: {
+    plan() {
+      return this.$store.state.plan.plan
+    },
     songsCount () {
       return this.getCounter(this.plan.actionList, 'song')
     },

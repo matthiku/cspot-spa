@@ -8,7 +8,12 @@ export default {
     plan: {},
     plans: [],
     bibleBooks,
-    newPlanId: null
+    newPlanId: null,
+    activityColours: {
+      song: 'indigo lighten-3',
+      read: 'cyan lighten-3',
+      text: 'lime darken-2'
+    }
   },
 
   // M U T A T I O N S  (commits)
@@ -24,34 +29,6 @@ export default {
     },
     clearNewPlanId (state) {
       state.newPlanId = null
-    },
-
-    setSinglePlan (state, payload) {
-      console.log('setSinglePlan:', payload)
-      if (!payload) return
-      // is this the same plan?
-      if (payload.id === state.plan.id) {
-        console.log('same plan!')
-        return
-      }
-      // add Staff List property
-      payload.staffList = []
-      let items = []
-      let staff = payload.staff
-      for (let key in staff) {
-        let item = staff[key]
-        if (!this.users || !this.users[item.userId]) continue
-        items.push({
-          id: key,
-          icon: this.roles[item.role].icon,
-          role: item.role,
-          userName: this.users[item.userId].name || this.users[item.userId].email,
-          warning: false
-        })
-      }
-      payload.staffList = items
-      // add plan activities list property
-      state.plan = payload
     }
   },
 
@@ -233,6 +210,84 @@ export default {
     },
     clearNewPlanId ({commit}) {
       commit('clearNewPlanId')
+    },
+
+    setSinglePlan({state, rootState}, payload) {
+      console.log('setSinglePlan:', payload)
+      if (!payload) return
+
+      // is this the same plan?
+      if (payload.id === state.plan.id) {
+        console.log('same plan!')
+        return
+      }
+
+      // add Staff List property
+      payload.staffList = []
+      let items = []
+      let staff = payload.staff
+      let users = rootState.user.users
+      let roles = rootState.user.roles
+      for (let key in staff) {
+        if (staff.hasOwnProperty(key)) {
+          let item = staff[key]
+          if (!users || !users[item.userId]) continue
+          items.push({
+            id: key,
+            icon: roles[item.role].icon,
+            role: item.role,
+            userName: users[item.userId].name || users[item.userId].email,
+            warning: false
+          })
+        }
+      }
+      payload.staffList = items
+
+      // add plan activities list property
+      let actionList = []
+      let planItems = payload.items
+      let songs = rootState.song.songs
+      for (let key in planItems) {
+        if (planItems.hasOwnProperty(key)) {
+          let action = planItems[key]
+          let isScriptureRef = false
+          let bb = state.bibleBooks
+          for (const key in bb) {
+            if (bb.hasOwnProperty(key)) {
+              if (action.comment.indexOf(key) >= 0) isScriptureRef = true
+            }
+          }
+          let obj = {
+            seqNo: parseInt(action.seq_no),
+            key: action.id,
+            value: 0,
+            warning: false
+          }
+          if (action.song_id) {
+            obj.type = 'song'
+            obj.value = action.song_id
+            obj.color = state.activityColours.song
+            obj.icon = 'record_voice_over'
+            obj.title = songs[action.song_id] ? songs[action.song_id].title : action.song_id
+            obj.book_ref = songs[action.song_id] ? songs[action.song_id].book_ref : action.song_id
+          } else if (action.comment && isScriptureRef) {
+            obj.type = 'read'
+            obj.title = action.comment
+            obj.color = 'cyan lighten-3'
+            obj.icon = 'local_library'
+          } else {
+            obj.type = 'text'
+            obj.title = action.comment
+            obj.color = 'lime darken-2'
+            obj.icon = 'label'
+          }
+          actionList.push(obj)
+        }
+      }
+      payload.actionList = actionList.sort((elemA, elemB) => elemA.seqNo - elemB.seqNo)
+
+      // no write everyting to the state
+      state.plan = payload
     }
   },
 

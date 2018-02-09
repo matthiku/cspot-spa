@@ -427,7 +427,6 @@
     },
 
     created () {
-      this.createPlanActionsList(this.plan)
       this.$store.dispatch('hideDialog')
     },
     watch: {
@@ -435,18 +434,6 @@
         if (val.field === 'scriptureRef' && val.value) {
           this.addScriptureRefItem()
         }
-      },
-      planId () {
-        this.createPlanActionsList(this.plan)
-      },
-      plan () {
-        this.createPlanActionsList(this.plan)
-      },
-      plans () {
-        this.createPlanActionsList(this.plan)
-      },
-      users () {
-        this.createPlanActionsList(this.plan)
       }
     }
   }

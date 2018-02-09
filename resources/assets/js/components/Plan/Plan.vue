@@ -334,7 +334,7 @@ export default {
       }
 
       // save current plan to the state
-      this.$store.commit('setSinglePlan', plan)
+      this.$store.dispatch('setSinglePlan', plan)
     },
     openPlanSubtitleEdit () {
       if (!this.userOwnsThisPlan) return
@@ -402,11 +402,6 @@ export default {
     // check which expansion panel should be open
     if (this.plan === undefined) return
     if (this.pageStatus.hasOwnProperty(this.plan.id)) this.showDetails = this.pageStatus[this.plan.id].showDetails
-  },
-
-  created () {
-    // create actionList
-    this.createPlanActionsList(this.plan)
   },
 
   updated () {

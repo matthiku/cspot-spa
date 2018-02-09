@@ -27,9 +27,11 @@ export default {
       // state.plans.push(payload) // not needed, as we get an update through firebase!
       state.newPlanId = payload.id
     },
+
     clearNewPlanId (state) {
       state.newPlanId = null
     }
+
   },
 
   // A C T I O N S  (dispatches)

@@ -11,7 +11,7 @@ export default function startUpActions (store, router) {
     console.log(error, 'No user is signed in. FROM: ', from)
   }
   if (serverData.plan) {
-    store.commit('setSinglePlan', serverData.plan)
+    store.dispatch('setSinglePlan', serverData.plan)
   }
 
   // check if a user is already logged on in the browser session

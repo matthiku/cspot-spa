@@ -27,6 +27,23 @@ export default {
     },
 
     setSinglePlan (state, payload) {
+      // add Staff List property
+      payload.staffList = []
+      let items = []
+      let staff = payload.staff
+      for (let key in staff) {
+        let item = staff[key]
+        if (!this.users || !this.users[item.userId]) continue
+        items.push({
+          id: key,
+          icon: this.roles[item.role].icon,
+          role: item.role,
+          userName: this.users[item.userId].name || this.users[item.userId].email,
+          warning: false
+        })
+      }
+      payload.staffList = items
+      // add plan activities list property
       state.plan = payload
     }
   },
@@ -265,7 +282,7 @@ export default {
     },
 
     // return a plan when a proper planId was given as an argument
-    plan (state) {
+    planById (state) {
       return planId => {
         return state.plans.find(plan => {
           return plan.id === planId

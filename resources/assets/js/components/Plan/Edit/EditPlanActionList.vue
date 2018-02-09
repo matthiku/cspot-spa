@@ -202,17 +202,18 @@
       activitiesCount () {
         if (!this.plan || !this.plan.actionList) return 0
         return this.plan.actionList.length
+      },
+      actionList () {
+        return this.plan.actionList
       }
     },
 
     data () {
       return {
-        plan: {},
         show: false,
         editGenericItem: false,
         genItemText: '',
         showMenu: false,
-        actionList: [],
         targetId: null,
         menuItems: [
           { title: 'Edit this item' },
@@ -366,6 +367,7 @@
         if (what !== undefined && what !== '' & what !== null) return false
         return true
       },
+
       addGenItem () {
         if (!this.genItemText) return
         this.editGenericItem = false
@@ -377,6 +379,7 @@
         })
         this.genItemText = ''
       },
+
       addSong () {
         this.$store.dispatch('setDialog', {
           selectedPlan: this.plan.id,
@@ -384,6 +387,7 @@
         })
         this.$router.push({name: 'addsongtoplan'})
       },
+
       addScriptureRefItem () {
         this.$store.dispatch('addActionItemToPlan', {
           planId: this.plan.id,
@@ -392,6 +396,7 @@
           seqNo: this.activitiesCount
         })
       },
+
       addScriptureRefDlg () {
         this.$store.dispatch('setDialog', {field: 'scriptureDlg'})
         if (this.dialog) {
@@ -400,6 +405,7 @@
         }
         this.$store.dispatch('showDialog')
       },
+
       removeAction (item) {
         this.$store.dispatch('removeActionFromPlan', {
           planId: this.plan.id,
@@ -415,69 +421,13 @@
         this.$store.commit('showDialog')
       },
 
-      // populate the local plan by finding it with the given plan ID
-      getPlan () {
-        return this.plans.find(plan => {
-          return plan.id === this.planId
-        })
-      },
-      // create a copy of the list of actions for this plan - this enables better handling in this view
-      createPlanActionsList () {
-        if (!this.plans) return
-        this.plan = this.getPlan()
-        if (!this.plan || !this.plan.id) return
-
-        let actionList = []
-        let planItems = this.plan.items
-        if (!planItems || !this.songs) return
-
-        for (let key in planItems) {
-          let action = planItems[key]
-          let obj = {
-            seqNo: parseInt(action.seq_no),
-            key: action.id,
-            value: 0,
-            warning: false
-          }
-          if (action.song_id) {
-            obj.type = 'song'
-            obj.value = action.song_id
-            obj.color = this.activityColours.song
-            obj.icon = 'record_voice_over'
-            obj.title = this.songs[action.song_id] ? this.songs[action.song_id].title : action.song_id
-            obj.book_ref = this.songs[action.song_id] ? this.songs[action.song_id].book_ref : action.song_id
-          }
-          else if (action.comment && this.isScriptureRef(action.comment)) {
-            obj.type === 'read'
-            obj.title = action.comment
-            obj.color = 'cyan lighten-3'
-            obj.icon = 'local_library'
-          }
-          else {
-            obj.type = 'text'
-            obj.title = action.comment
-            obj.color = 'lime darken-2'
-            obj.icon = 'label'
-          }
-          actionList.push(obj)
-        }
-        this.actionList = actionList.sort((elemA, elemB) => elemA.seqNo - elemB.seqNo)
-        // this.sortActionList()
-      },
       sortActionList () {
         this.plan.actionList = this.actionList.sort((elemA, elemB) => elemA.seqNo - elemB.seqNo)
       },
-      isScriptureRef(text) {
-        let found = false
-        this.bibleBooksList.forEach(elem => {
-          if (text.indexOf(elem) >= 0) found = true
-        })
-        return found
-      }
     },
 
     created () {
-      this.createPlanActionsList()
+      this.createPlanActionsList(this.plan)
       this.$store.dispatch('hideDialog')
     },
     watch: {
@@ -487,16 +437,16 @@
         }
       },
       planId () {
-        this.createPlanActionsList()
+        this.createPlanActionsList(this.plan)
       },
       plan () {
-        this.createPlanActionsList()
+        this.createPlanActionsList(this.plan)
       },
       plans () {
-        this.createPlanActionsList()
+        this.createPlanActionsList(this.plan)
       },
       users () {
-        this.createPlanActionsList()
+        this.createPlanActionsList(this.plan)
       }
     }
   }

@@ -19,6 +19,9 @@ export default {
     plans () {
       return this.$store.getters.plans
     },
+    plan() {
+      return this.$store.state.plan.plan
+    },
     bibleBooks () {
       return this.$store.state.plan.bibleBooks
     },
@@ -54,25 +57,50 @@ export default {
       return (this.users && user.id && this.users[user.id]) ? this.users[user.id] : user
     },
 
-    createStaffList (plan) {
-      if (!plan) return
-      plan.staffList = []
-      this.items = []
-      let staff = plan.staff
-      if (!staff) return
+    createPlanActionsList() {
+      if (!this.plans || !this.plan || !this.plan.id) return
 
-      for (let key in staff) {
-        let item = staff[key]
-        if (!this.users || !this.users[item.userId]) continue
-        this.items.push({
-          id: key,
-          icon: this.roles[item.role].icon,
-          role: item.role,
-          userName: this.users[item.userId].name || this.users[item.userId].email,
+      let actionList = []
+      let planItems = this.plan.items
+
+      if (!planItems || !this.songs) return
+
+      for (let key in planItems) {
+        let action = planItems[key]
+        let obj = {
+          seqNo: parseInt(action.seq_no),
+          key: action.id,
+          value: 0,
           warning: false
-        })
+        }
+        if (action.song_id) {
+          obj.type = 'song'
+          obj.value = action.song_id
+          obj.color = this.activityColours.song
+          obj.icon = 'record_voice_over'
+          obj.title = this.songs[action.song_id] ? this.songs[action.song_id].title : action.song_id
+          obj.book_ref = this.songs[action.song_id] ? this.songs[action.song_id].book_ref : action.song_id
+        } else if (action.comment && this.isScriptureRef(action.comment)) {
+          obj.type = 'read'
+          obj.title = action.comment
+          obj.color = 'cyan lighten-3'
+          obj.icon = 'local_library'
+        } else {
+          obj.type = 'text'
+          obj.title = action.comment
+          obj.color = 'lime darken-2'
+          obj.icon = 'label'
+        }
+        actionList.push(obj)
       }
-      plan.staffList = this.items
+      this.plan.actionList = actionList.sort((elemA, elemB) => elemA.seqNo - elemB.seqNo)
+    },
+    isScriptureRef(text) {
+      let found = false
+      this.bibleBooksList.forEach(elem => {
+        if (text.indexOf(elem) >= 0) found = true
+      })
+      return found
     }
   },
 

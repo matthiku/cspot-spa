@@ -214,12 +214,15 @@
                                     <span class="body-2 mr-3">
                                       <v-icon class="mr-3">list</v-icon>
                                       Order of Service
-                                      <span v-if="plan.actionList && plan.actionList.length">({{ plan.actionList.length }})</span>
+                                      <span v-if="plan.items && plan.items.length">({{ plan.items.length }})</span>
                                     </span>
                                     <app-show-action-chips v-if="!showDetails.activities" :plan="plan"></app-show-action-chips>
                                   </div>
 
-                                  <app-edit-plan-action-list :planId="plan.id" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-action-list>
+                                  <app-edit-plan-action-list 
+                                      :planId="plan.id"
+                                      :userOwnsThisPlan="userOwnsThisPlan"
+                                    ></app-edit-plan-action-list>
 
                                 </v-expansion-panel-content>
 
@@ -285,34 +288,8 @@ export default {
   },
 
   computed: {
-    plan () {
-      let plan
-      // get plan depending on current route!
-      if (this.$route && this.$route.name === 'nextsunday') {
-        this.pageTitle = 'This Sunday\'s Plan'
-        plan = this.$store.getters.nextSunday
-      } else {
-        let planId = this.$route.params.planId
-        plan = this.$store.getters.plan(planId)
-        if (!plan && this.$store.state.plan && this.$store.state.plan.plan ) {
-          plan = this.$store.state.plan.plan
-        }
-      }
-
-      // create Staff List property of plan
-      this.createStaffList(plan)
-      // open the staff list panel if no staff is assigned yet
-      if (plan && !plan.staffList.length && !this.pageStatus.hasOwnProperty(plan.id)) {
-        this.showDetails.staff = true
-        this.showDetails.activities = false
-      } else if (plan && !this.pageStatus.hasOwnProperty(plan.id)) {
-        this.showDetails.staff = false
-        this.showDetails.activities = true
-      }
-      return plan
-    },
     planType () {
-      if (this.plan) {
+      if (this.plan.id) {
         if (this.types && this.types.length) {
           return this.types[this.plan.type_id].name 
         } else {
@@ -373,21 +350,56 @@ export default {
   },
 
   watch: {
-    plan () {
+    plan (val) {
+      // check which expansion panel is open
+      if (!val) return
       if (this.pageStatus.hasOwnProperty(this.plan.id)) this.showDetails = this.pageStatus[this.plan.id].showDetails
       if (this.plan && !this.plan.staffList.length && !this.pageStatus.hasOwnProperty(this.plan.id)) {
         this.showDetails.staff = true
         this.showDetails.activities = false
       }
-      if (this.plan) return
+      if (this.plan.id) return
       // return to list of plans if this plan became void meanwhile
       this.$router.push({name: 'plans'})
     }
   },
   mounted () {
+    let plan
+    // get plan depending on current route!
+    if (this.$route && this.$route.name === 'nextsunday') {
+      this.pageTitle = 'This Sunday\'s Plan'
+      plan = this.$store.getters.nextSunday
+    } else {
+      let planId = this.$route.params.planId
+      plan = this.$store.getters.planById(planId)
+      // perhaps the plan is already in the state
+      if (!plan && this.$store.state.plan && this.$store.state.plan.plan ) {
+        plan = this.$store.state.plan.plan
+      }
+    }
+
+    // open the staff list panel if no staff is assigned yet
+    if (plan && !plan.staffList && !this.pageStatus.hasOwnProperty(plan.id)) {
+      this.showDetails.staff = true
+      this.showDetails.activities = false
+    } else if (plan && !this.pageStatus.hasOwnProperty(plan.id)) {
+      this.showDetails.staff = false
+      this.showDetails.activities = true
+    }
+
+    // save current plan to the state
+    this.$store.commit('setSinglePlan', plan)
+
+    // check which expansion panel should be open
     if (this.plan === undefined) return
     if (this.pageStatus.hasOwnProperty(this.plan.id)) this.showDetails = this.pageStatus[this.plan.id].showDetails
   },
+
+  created () {
+    // create actionList
+    this.createPlanActionsList(this.plan)
+  },
+
   updated () {
     this.savePageStatus()
   },

@@ -63,7 +63,6 @@ import planMixins from '../mixins'
 
 export default {
   name: 'editPlanStaffDialog',
-  props: ['plan'],
   mixins: [genericMixins, planMixins],
 
   data () {

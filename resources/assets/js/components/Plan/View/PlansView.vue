@@ -18,9 +18,9 @@
 
                   <div>
                     <strong>Staff: </strong>
-                    <app-show-staff-chips :plan="plan"></app-show-staff-chips>
-                    <span v-if="plan.actions">
-                      {{ Object.keys(plan.actions).length }} items</span>
+                    <app-show-staff-chips :single-plan="plan"></app-show-staff-chips>
+                    <span v-if="plan.items">
+                      {{ Object.keys(plan.items).length }} items</span>
                     <small v-else>(empty plan)</small>
                   </div>
 

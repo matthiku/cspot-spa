@@ -34,12 +34,12 @@ import planMixins from '../mixins'
 export default {
   mixins: [genericMixins, planMixins],
 
-  props: ['plan', 'showDetails'],
+  props: ['single-plan', 'showDetails'],
 
   computed: {
     staffList () {
-      if (!this.plan.staffList || !this.plan.staffList.length) this.createStaffList(this.plan)
-      return this.plan.staffList
+      if (!this.singlePlan || !this.singlePlan.id) return []
+      return this.singlePlan.staffList
     }
   }
 }

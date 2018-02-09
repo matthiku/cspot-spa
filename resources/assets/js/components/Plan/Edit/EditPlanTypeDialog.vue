@@ -51,7 +51,6 @@ import planMixins from '../mixins'
 
 export default {
   name: 'editPlanTypeDialog',
-  props: ['plan'],
   mixins: [genericMixins, planMixins],
 
   data () {

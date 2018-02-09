@@ -62,12 +62,6 @@ export default {
     }
   },
 
-  computed: {
-    plan () {
-      return this.$store.getters.plan(this.planId)
-    }
-  },
-
   methods: {
     removeStaff (item) {
       this.$store.dispatch('removeStaffFromPlan', {
@@ -75,23 +69,12 @@ export default {
         staffId: item.id
       })
       .then(() => {
-        this.createStaffList()
+        // this.createStaffList() => change to store.dispatch!
         item.warning = false
         // remove the local staff from the staffList array
         let idx = this.items.find((el) => el.id === item.id)
         if (idx) this.items.splice(idx, 1)
       })
-    }
-  },
-  created () {
-    this.createStaffList(this.plan)
-  },
-  watch: {
-    plan () {
-      this.createStaffList(this.plan)
-    },
-    users () {
-      this.createStaffList(this.plan)
     }
   }
 }

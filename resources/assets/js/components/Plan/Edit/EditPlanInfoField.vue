@@ -42,7 +42,7 @@ import genericMixins from '../../../mixins'
 import planMixins from '../mixins'
 
 export default {
-  props: ['plan', 'userOwnsThisPlan'],
+  props: ['userOwnsThisPlan'],
   mixins: [genericMixins, planMixins],
 
   data () {

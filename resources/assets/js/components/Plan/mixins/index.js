@@ -1,3 +1,8 @@
+/**
+ * Mixin for Plan pages
+ * 
+ * provides all relevant entities for a plan
+ */
 export default {
 
   computed: {

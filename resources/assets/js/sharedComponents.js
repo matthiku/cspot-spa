@@ -1,7 +1,10 @@
 import Vue from 'vue'
+
+// alert and success bars
 import AlertCmp from './components/shared/Alert.vue'
 import SuccessCmp from './components/shared/Success.vue'
 
+// Plan Details page
 import EditPlanDateTimeDialog from './components/Plan/Edit/EditPlanDateTimeDialog'
 import EditPlanTypeDialog from './components/Plan/Edit/EditPlanTypeDialog'
 import EditPlanStaffDialog from './components/Plan/Edit/EditPlanStaffDialog'
@@ -11,6 +14,7 @@ import EditPlanActionList from './components/Plan/Edit/EditPlanActionList'
 import EditPlanActionScriptureDialog from './components/Plan/Edit/EditPlanActionScriptureDialog'
 import DeletePlanDialog from './components/Plan/Edit/DeletePlanDialog'
 import ShowListOfPlans from './components/Plan/View/PlansView.vue'
+import ShowPlanTitleToolbar from './components/Plan/View/PlanTitleToolbar.vue'
 import ShowActionsChips from './components/Plan/View/ActionsChips.vue'
 import ShowStaffChips from './components/Plan/View/StaffChips.vue'
 import ShowYoutubeModal from './components/Plan/View/YoutubeModal.vue'
@@ -36,6 +40,7 @@ export default function sharedComponents () {
   Vue.component('app-edit-plan-type-dialog', EditPlanTypeDialog)
   Vue.component('app-edit-plan-date-time-dialog', EditPlanDateTimeDialog)
   Vue.component('app-delete-plan-dialog', DeletePlanDialog)
+  Vue.component('app-show-plan-title-toolbar', ShowPlanTitleToolbar)
   Vue.component('app-show-list-of-plans', ShowListOfPlans)
   Vue.component('app-show-youtube-modal', ShowYoutubeModal)
   Vue.component('app-show-staff-chips', ShowStaffChips)

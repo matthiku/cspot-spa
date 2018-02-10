@@ -1,5 +1,3 @@
-// import { firebaseApp, plansRef, songsRef, typesRef, rolesRef, usersRef } from './firebaseApp'
-
 export default function startUpActions (store, router) {
   // run actions at the start of the App
 

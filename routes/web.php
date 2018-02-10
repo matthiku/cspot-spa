@@ -11,16 +11,16 @@
 |
 */
 
-Route::get('/', 'HomeController@index');
-Route::get('/login', 'HomeController@index');
-Route::get('/signin', 'HomeController@index');
-Route::get('/profile', 'HomeController@index');
-Route::get('/nextsunday', 'HomeController@index');
-Route::get('/songs', 'HomeController@index');
-Route::get('/plans', 'HomeController@index');
-Route::get('/plans/{plan_id}', 'HomeController@index');
-Route::get('/createplan', 'HomeController@index');
-Route::get('/admin', 'HomeController@index');
-Route::get('/admin/{any}', 'HomeController@index');
+Route::get('/', 'AppController@index');
+Route::get('/login', 'AppController@index');
+Route::get('/signin', 'AppController@index');
+Route::get('/profile', 'AppController@index');
+Route::get('/nextsunday', 'AppController@index');
+Route::get('/songs', 'AppController@index');
+Route::get('/plans', 'AppController@index');
+Route::get('/plans/{plan_id}', 'AppController@index');
+Route::get('/createplan', 'AppController@index');
+Route::get('/admin', 'AppController@index');
+Route::get('/admin/{any}', 'AppController@index');
 
 Auth::routes();

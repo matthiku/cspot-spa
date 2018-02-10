@@ -51,6 +51,8 @@ class LoginController extends Controller
         if ($request->ajax() || $request->expectsJson()) {
 
             $auth = auth()->check();
+            $user = \App\Models\User::with('roles')->where('id', Auth::user()->id)->first();
+
             return response()->json(
                 [
                     'auth' => $auth,

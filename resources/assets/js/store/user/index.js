@@ -136,6 +136,8 @@ export default {
            */
           commit('setMessage', '')
           commit('setUser', data.data.user)
+          // load all entities from the backend
+          dispatch('loadAllItems')
         } else {
           commit('setMessage', 'log in error')
           console.log(data)         

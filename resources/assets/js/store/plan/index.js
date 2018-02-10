@@ -224,25 +224,23 @@ export default {
         return
       }
 
-      // add Staff List property
-      payload.staffList = []
+      // create Staff List property from Related Model 'teams'
+      // and from the plan-properties 'leader' and 'teacher'
       let items = []
-      let staff = payload.staff
       let users = rootState.user.users
-      let roles = rootState.user.roles
-      for (let key in staff) {
-        if (staff.hasOwnProperty(key)) {
-          let item = staff[key]
-          if (!users || !users[item.userId]) continue
+      let roles = rootState.role.roles
+      let staff = payload.teams // array
+      staff.forEach(member => {
+        if (users && users[member.user_id] && roles && roles[member.role_id]) {
           items.push({
-            id: key,
-            icon: roles[item.role].icon,
-            role: item.role,
-            userName: users[item.userId].name || users[item.userId].email,
+            id: member.id,
+            // icon: roles[member.role_id].icon,
+            role: roles[member.role_id].name,
+            userName: users[member.user_id].name || users[member.user_id].email,
             warning: false
           })
         }
-      }
+      })
       payload.staffList = items
 
       // add plan activities list property

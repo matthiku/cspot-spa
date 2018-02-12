@@ -19,9 +19,11 @@
                   <div>
                     <strong>Staff: </strong>
                     <app-show-staff-chips :single-plan="plan"></app-show-staff-chips>
+
                     <span v-if="plan.items">
                       {{ Object.keys(plan.items).length }} items</span>
                     <small v-else>(empty plan)</small>
+                    
                   </div>
 
                   <div v-if="plan.info"><strong>Note: </strong>{{ plan.info }}</div>

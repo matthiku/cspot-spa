@@ -19,7 +19,13 @@ export default {
       console.log('updating local list of ROLES from Server')
       axios.get('/api/role')
       .then((data) => {
-        commit('setRoles', data.data)
+        let roles = {}
+        // turn array into an object
+        data.data.forEach(elem => {
+          let obj = elem
+          roles[obj.id] = elem
+        })
+        commit('setRoles', roles)
       })
       .catch((error) => dispatch('errorHandling', error))
     },

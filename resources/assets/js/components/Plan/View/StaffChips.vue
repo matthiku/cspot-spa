@@ -9,12 +9,12 @@
         >
         <v-tooltip bottom lazy>
           <span slot="activator">
-            <v-icon color="primary">{{ staff.icon }}</v-icon>
+            <v-icon color="primary">{{ roles[staff.role_id].icon }}</v-icon>
             <span>
-              {{ staff.userName | firstWord }}
+              {{ users[staff.user_id].name | firstWord }}
             </span>
           </span>
-          <span>{{ staff.role | ucFirst }}</span>
+          <span>{{ roles[staff.role_id].name | ucFirst }}</span>
         </v-tooltip>
       </v-chip>
 
@@ -39,7 +39,7 @@ export default {
   computed: {
     staffList () {
       if (!this.singlePlan || !this.singlePlan.id) return []
-      return this.singlePlan.staffList
+      return this.singlePlan.teams
     }
   }
 }

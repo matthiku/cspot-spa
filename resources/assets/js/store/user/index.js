@@ -31,7 +31,13 @@ export default {
       axios.get('/api/user')
         .then((data) => {
           if (data.data) {
-            commit('setUsers', data.data)
+            let users = {}
+            // turn array into an object
+            data.data.forEach(elem => {
+              let obj = elem
+              users[obj.id] = elem
+            })
+            commit('setUsers', users)
           }
         })
         .catch((error) => dispatch('errorHandling', error))

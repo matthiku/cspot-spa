@@ -218,9 +218,12 @@
       createRolesArrays () {
         // create list of possible roles
         this.rolesList = []
-        this.roles.forEach(element => {
-          this.rolesList.push(element.name)
-        })
+        for (const key in this.roles) {
+          if (this.roles.hasOwnProperty(key)) {
+            const element = this.roles[key]
+            this.rolesList.push(element.name)
+          }
+        }
         // create list of roles actually assigned to this user
         if (this.userData.roles) {
           this.userRoles = []

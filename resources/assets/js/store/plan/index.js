@@ -219,13 +219,17 @@ export default {
     },
 
     setSinglePlan({state, commit, rootState}, payload) {
-      if (typeof(payload) !== 'object' || !payload.hasOwnProperty('id')) {
-        console.warn('STORE - payload rejected!')
+      if (typeof(payload) !== 'object') {
+        console.warn('STORE - payload is not an object!', payload)
+        return
+      }
+      if (!payload.hasOwnProperty('id')) {
+        console.warn('STORE - payload missing ID!', payload)
         return
       }
 
       // is this the same plan?
-      if (payload.id === state.plan.id) {
+      if (state.plan && payload.id === state.plan.id) {
         console.log('STORE - same plan!', payload.id)
         return
       }

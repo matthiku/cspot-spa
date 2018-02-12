@@ -45,4 +45,7 @@ Route::apiResources(
     ]
 );
 
+// provide date of latest update to certain tables
 Route::get('songs/latest', 'SongController@latest');
+Route::get('plans/latest', 'PlanController@latest');
+Route::get('users/latest', 'UserController@latest');

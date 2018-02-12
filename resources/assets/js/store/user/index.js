@@ -1,9 +1,11 @@
 import axios from 'axios'
+import * as moment from 'moment'
 
 export default {
   state: {
     oldRoute: null,
     users: [],
+    usersUpdated: null,
     user: null
   },
 
@@ -22,24 +24,40 @@ export default {
     },
     setUsers (state, payload) {
       state.users = payload
+    },
+    setUpdateDate (state, payload) {
+      state.usersUpdated = payload
     }
   },
 
   actions: {
-    refreshUsers ({commit, dispatch}, payload) {
+    refreshUsers ({state, commit, dispatch}, payload) {
       console.log('updating local USERS list from Server')
-      axios.get('/api/user')
+      // first get date of latest update to USERS table
+      axios.get('api/users/latest')
         .then((data) => {
-          if (data.data) {
-            let users = {}
-            // turn array into an object
-            data.data.forEach(elem => {
-              let obj = elem
-              users[obj.id] = elem
-            })
-            commit('setUsers', users)
+          let updateDate = data.data.date
+          let oldDate = state.usersUpdated
+          commit('setUpdateDate', updateDate)
+          if (payload !== 'init' && oldDate == updateDate) {
+            console.log('not updating USERS, nothing changed', oldDate, updateDate)
+            return
           }
-        })
+
+          axios.get('/api/user')
+            .then((data) => {
+              if (data.data) {
+                let users = {}
+                // turn array into an object
+                data.data.forEach(elem => {
+                  let obj = elem
+                  users[obj.id] = elem
+                })
+                commit('setUsers', users)
+              }
+            })
+            .catch((error) => dispatch('errorHandling', error))
+          })
         .catch((error) => dispatch('errorHandling', error))
     },
 

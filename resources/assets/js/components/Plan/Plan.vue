@@ -24,7 +24,7 @@
                     <v-container fluid fill-height>
                       <v-layout row>
 
-                        <v-flex v-if="!plan" xs12>No plan found!</v-flex>
+                        <v-flex v-if="!plan" xs12>Plan missing or still loading...</v-flex>
 
                         <!-- show title, date and location -->
                         <v-flex v-else xs12 class="px-0 grey lighten-2">
@@ -222,7 +222,7 @@ export default {
       if (this.$route && this.$route.name === 'nextsunday') {
         this.pageTitle = 'This Sunday\'s Plan'
         plan = this.$store.getters.nextSunday
-        if (this.plan.id === plan.id) return
+        if (this.plan && this.plan.id === plan.id) return
       } else {
         let planId = this.$route.params.planId
         if (isNaN(planId) || this.plan.id === planId) return
@@ -277,7 +277,7 @@ export default {
       })
     },
     savePageStatus () {
-      if (this.plan === undefined) return
+      if (!this.plan || this.plan === undefined) return
       if (this.pageStatus.hasOwnProperty(this.plan.id)) {
         this.pageStatus[this.plan.id].showDetails = this.showDetails
       } else {
@@ -308,7 +308,7 @@ export default {
     this.loadCurrentPlan()
 
     // check which expansion panel should be open
-    if (this.plan === undefined) return
+    if (!this.plan || this.plan === undefined) return
     if (this.pageStatus.hasOwnProperty(this.plan.id)) this.showDetails = this.pageStatus[this.plan.id].showDetails
   },
 

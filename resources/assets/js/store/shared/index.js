@@ -69,6 +69,35 @@ export default {
       if (!rootState.plan.plans || rootState.plan.plans.length === 0) {
         dispatch('refreshPlans', 'init')
       }
+      // repeat this every 5 mins (30 secs for tests)
+      setTimeout(() => {
+        // check if the initial loading of data (see below) had already been successful
+        console.log('checking all items....')
+        dispatch('refreshAllItems')
+      }, 30000)      
+    },
+    refreshAllItems ({rootState, dispatch}) {
+      if (!rootState.user.user) {
+        console.log('(refreshAllItems) user not signed in!', rootState.user.user)
+        return
+      }
+      // only reload these if the initial loading failed
+      if (!rootState.role.roles || rootState.role.roles.length === 0) {
+        dispatch('refreshRoles', 'init')
+      }
+      if (!rootState.type.types || rootState.type.types.length === 0) {
+        dispatch('refreshTypes', 'init')
+      }
+      // always check if these entitties needs to be reloaded (by first checking the last updated date)
+      dispatch('refreshUsers', 'init')
+      dispatch('refreshSongs', 'init')
+      dispatch('refreshPlans', 'init')
+      // repeat this every 5 mins (30 secs for tests)
+      setTimeout(() => {
+        // check if the initial loading of data (see below) had already been successful
+        console.log('re-checking all items....')
+        dispatch('refreshAllItems')
+      }, 30000)      
     },
     clearAllItems ({commit}) {
       commit('setUsers', [])

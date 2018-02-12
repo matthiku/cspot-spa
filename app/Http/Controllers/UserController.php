@@ -18,6 +18,12 @@ class UserController extends Controller
         //
         return response(User::with('roles')->get()->jsonSerialize(), Response::HTTP_OK);
     }
+    public function latest()
+    {        
+        // get date of latest change in this table:
+        $latest = User::latest('updated_at')->first()->updated_at;
+        return response($latest, Response::HTTP_OK);
+    }
 
     /**
      * Store a newly created resource in storage.

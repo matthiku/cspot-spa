@@ -5,7 +5,7 @@ import bibleBooks from './bibleBooks.js'
 
 export default {
   state: {
-    plan: {},
+    plan: null,
     plans: [],
     bibleBooks,
     newPlanId: null,
@@ -40,7 +40,7 @@ export default {
 
   // A C T I O N S  (dispatches)
   actions: {
-    refreshPlans ({commit, dispatch}) {
+    refreshPlans ({commit, dispatch}, payload) {
       console.log('updating local list of PLANS from Server')
       axios.get('/api/plan')
         .then((data) => {
@@ -219,9 +219,8 @@ export default {
     },
 
     setSinglePlan({state, commit, rootState}, payload) {
-      console.log('STORE - setSinglePlan:', payload ? payload.id : 'n/a')
       if (typeof(payload) !== 'object' || !payload.hasOwnProperty('id')) {
-        console.log('STORE - payload rejected')
+        console.warn('STORE - payload rejected!')
         return
       }
 

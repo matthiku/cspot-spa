@@ -54,28 +54,29 @@ export default {
         console.log('(loadAllItems) user not signed in!', rootState.user.user)
         return
       }
-      if (!rootState.user.users) {
-        dispatch('refreshUsers')
+      if (!rootState.user.users || rootState.user.users.length === 0) {
+        dispatch('refreshUsers', 'init')
       }
       if (!rootState.role.roles || rootState.role.roles.length === 0) {
-        dispatch('refreshRoles')
+        dispatch('refreshRoles', 'init')
       }
       if (!rootState.type.types || rootState.type.types.length === 0) {
-        dispatch('refreshTypes')
+        dispatch('refreshTypes', 'init')
       }
       if (!rootState.song.songs || rootState.song.songs.length === 0) {
-        dispatch('refreshSongs')
+        dispatch('refreshSongs', 'init')
       }
       if (!rootState.plan.plans || rootState.plan.plans.length === 0) {
-        dispatch('refreshPlans')
+        dispatch('refreshPlans', 'init')
       }
     },
     clearAllItems ({commit}) {
+      commit('setUsers', [])
       commit('setUser', null)
-      commit('setUsers', null)
+      commit('setPlan', null)
+      commit('setPlans', [])
       commit('setTypes', [])
       commit('setSongs', [])
-      commit('setPlans', [])
       commit('setRoles', [])
     },
     clearError ({ commit }) {

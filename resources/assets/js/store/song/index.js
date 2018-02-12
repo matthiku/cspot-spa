@@ -17,7 +17,7 @@ export default {
   },
 
   actions: {
-    refreshSongs ({commit, dispatch}) {
+    refreshSongs ({commit, dispatch}, payload) {
       console.log('updating local list of SONGS from Server')
       axios.get('/api/song')
         .then(data => {

@@ -15,7 +15,7 @@ export default {
   },
 
   actions: {
-    refreshRoles ({commit, dispatch}) {
+    refreshRoles ({commit, dispatch}, payload) {
       console.log('updating local list of ROLES from Server')
       axios.get('/api/role')
       .then((data) => {

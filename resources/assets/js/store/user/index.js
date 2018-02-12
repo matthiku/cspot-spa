@@ -3,7 +3,7 @@ import axios from 'axios'
 export default {
   state: {
     oldRoute: null,
-    users: null,
+    users: [],
     user: null
   },
 
@@ -26,7 +26,7 @@ export default {
   },
 
   actions: {
-    refreshUsers ({commit, dispatch}) {
+    refreshUsers ({commit, dispatch}, payload) {
       console.log('updating local USERS list from Server')
       axios.get('/api/user')
         .then((data) => {

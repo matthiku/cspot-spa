@@ -222,19 +222,15 @@ export default {
       if (this.$route && this.$route.name === 'nextsunday') {
         this.pageTitle = 'This Sunday\'s Plan'
         plan = this.$store.getters.nextSunday
-        console.log('PLAN nextsunday', plan === undefined ? 'n/a' : plan.id)
         if (this.plan.id === plan.id) return
       } else {
         let planId = this.$route.params.planId
-        console.log('PLAN searching for plan id', planId)
         if (isNaN(planId) || this.plan.id === planId) return
         plan = this.$store.getters.planById(planId)
         // perhaps the plan was coming from the HTML header on page reload
         if (!plan && this.$store.state.plan && this.$store.state.plan.plan ) {
-          console.log('PLAN plan came from state on page reload')
           plan = this.$store.state.plan.plan
         }
-        console.log('PLAN', planId, plan === undefined ? 'n/a' : plan.id)
       }
 
       // open the staff list panel if no staff is assigned yet
@@ -305,12 +301,10 @@ export default {
       // this.$router.push({name: 'plans'})
     },
     plans () {
-      console.log('PLAN plans changed')
       this.loadCurrentPlan()
     }
   },
   mounted () {
-    console.log('PLAN mounted')
     this.loadCurrentPlan()
 
     // check which expansion panel should be open
@@ -319,7 +313,6 @@ export default {
   },
 
   updated () {
-    console.log('PLAN updated')
     this.loadCurrentPlan()
     this.savePageStatus()
   },

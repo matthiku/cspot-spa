@@ -15,7 +15,7 @@ export default {
     }
   },
   actions: {
-    refreshTypes ({commit, dispatch}) {
+    refreshTypes ({commit, dispatch}, payload) {
       console.log('updating local list of TYPES from Server')
       axios.get('/api/type')
         .then(data => {

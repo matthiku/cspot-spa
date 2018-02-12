@@ -34,7 +34,7 @@ import planMixins from '../mixins'
 export default {
   mixins: [genericMixins, planMixins],
 
-  props: ['single-plan', 'showDetails'],
+  props: ['single-plan'],
 
   computed: {
     staffList () {

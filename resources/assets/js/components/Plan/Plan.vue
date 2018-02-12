@@ -62,10 +62,10 @@
                                   <div slot="header">
                                     <span class="body-2 mr-3">
                                       <v-icon class="mr-3">supervisor_account</v-icon>
-                                      Staff <span v-if="plan.staffList && plan.staffList.length">({{ plan.staffList.length }})</span>
+                                      Staff <span v-if="plan.teams && plan.teams.length">({{ plan.teams.length }})</span>
                                     </span>
 
-                                    <app-show-staff-chips v-if="!showDetails.staff" :plan="plan"></app-show-staff-chips>
+                                    <app-show-staff-chips v-if="!showDetails.staff" :single-plan="plan"></app-show-staff-chips>
 
                                     <v-tooltip bottom lazy
                                         v-if="!showDetails.staff"

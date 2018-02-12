@@ -44,3 +44,5 @@ Route::apiResources(
         'song' => 'SongController'
     ]
 );
+
+Route::get('songs/latest', 'SongController@latest');

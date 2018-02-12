@@ -112,14 +112,14 @@ export default {
 
   computed: {
     planType () {
-      if (this.plan.id) {
+      if (this.plan && this.plan.id) {
         if (this.types && this.types.length) {
           return this.types[this.plan.type_id].name 
         } else {
           return this.plan.type_id
         } 
       }
-      return 'Plan gone'
+      return 'Loading Plan...'
     }    
   }
 }

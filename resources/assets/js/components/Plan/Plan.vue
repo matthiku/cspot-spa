@@ -222,15 +222,19 @@ export default {
       if (this.$route && this.$route.name === 'nextsunday') {
         this.pageTitle = 'This Sunday\'s Plan'
         plan = this.$store.getters.nextSunday
-        console.log('nextsunday', plan)
+        console.log('PLAN nextsunday', plan === undefined ? 'n/a' : plan.id)
+        if (this.plan.id === plan.id) return
       } else {
         let planId = this.$route.params.planId
+        console.log('PLAN searching for plan id', planId)
+        if (isNaN(planId) || this.plan.id === planId) return
         plan = this.$store.getters.planById(planId)
-        // perhaps the plan is already in the state
+        // perhaps the plan was coming from the HTML header on page reload
         if (!plan && this.$store.state.plan && this.$store.state.plan.plan ) {
+          console.log('PLAN plan came from state on page reload')
           plan = this.$store.state.plan.plan
         }
-        console.log(planId, plan)
+        console.log('PLAN', planId, plan === undefined ? 'n/a' : plan.id)
       }
 
       // open the staff list panel if no staff is assigned yet
@@ -289,23 +293,24 @@ export default {
 
   watch: {
     plan (val) {
-      console.log('plan changed!', val)
       // check which expansion panel is open
-      if (!val) return
-      if (this.pageStatus.hasOwnProperty(this.plan.id)) this.showDetails = this.pageStatus[this.plan.id].showDetails
-      if (this.plan && !this.plan.staffList.length && !this.pageStatus.hasOwnProperty(this.plan.id)) {
-        this.showDetails.staff = true
-        this.showDetails.activities = false
+      if (val !== undefined) {
+        if (this.pageStatus.hasOwnProperty(this.plan.id)) this.showDetails = this.pageStatus[this.plan.id].showDetails
+        if (this.plan && !this.plan.teams.length && !this.pageStatus.hasOwnProperty(this.plan.id)) {
+          this.showDetails.staff = true
+          this.showDetails.activities = false
+        }
       }
-      if (this.plan.id) return
       // return to list of plans if this plan became void meanwhile
-      this.$router.push({name: 'plans'})
+      // this.$router.push({name: 'plans'})
     },
     plans () {
+      console.log('PLAN plans changed')
       this.loadCurrentPlan()
     }
   },
   mounted () {
+    console.log('PLAN mounted')
     this.loadCurrentPlan()
 
     // check which expansion panel should be open
@@ -314,6 +319,7 @@ export default {
   },
 
   updated () {
+    console.log('PLAN updated')
     this.loadCurrentPlan()
     this.savePageStatus()
   },

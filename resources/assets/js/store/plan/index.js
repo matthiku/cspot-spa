@@ -19,6 +19,10 @@ export default {
   // M U T A T I O N S  (commits)
   mutations: {
 
+    setPlan (state, payload) {
+      state.plan = payload
+    },
+
     setPlans (state, payload) {
       state.plans = payload
     },
@@ -214,34 +218,18 @@ export default {
       commit('clearNewPlanId')
     },
 
-    setSinglePlan({state, rootState}, payload) {
-      console.log('setSinglePlan:', payload)
-      if (!payload) return
-
-      // is this the same plan?
-      if (payload.id === state.plan.id) {
-        console.log('same plan!')
+    setSinglePlan({state, commit, rootState}, payload) {
+      console.log('STORE - setSinglePlan:', payload ? payload.id : 'n/a')
+      if (typeof(payload) !== 'object' || !payload.hasOwnProperty('id')) {
+        console.log('STORE - payload rejected')
         return
       }
 
-      // create Staff List property from Related Model 'teams'
-      // and from the plan-properties 'leader' and 'teacher'
-      let items = []
-      let users = rootState.user.users
-      let roles = rootState.role.roles
-      let staff = payload.teams // array
-      staff.forEach(member => {
-        if (users && users[member.user_id] && roles && roles[member.role_id]) {
-          items.push({
-            id: member.id,
-            // icon: roles[member.role_id].icon,
-            role: roles[member.role_id].name,
-            userName: users[member.user_id].name || users[member.user_id].email,
-            warning: false
-          })
-        }
-      })
-      payload.staffList = items
+      // is this the same plan?
+      if (payload.id === state.plan.id) {
+        console.log('STORE - same plan!', payload.id)
+        return
+      }
 
       // add plan activities list property
       let actionList = []
@@ -286,8 +274,8 @@ export default {
       }
       payload.actionList = actionList.sort((elemA, elemB) => elemA.seqNo - elemB.seqNo)
 
-      // no write everyting to the state
-      state.plan = payload
+      // now write everyting to the state
+      commit('setPlan', payload)
     }
   },
 
@@ -323,14 +311,17 @@ export default {
     },
 
     nextSunday (state) {
+      if (!state.plans) return
       let nextSunday = moment().isoWeekday(7).startOf('day')
-      return state.plans.find(plan => {
-        // console.log(moment(plan.date).startOf('day'))
-        return (
-          moment(plan.date).startOf('day').isSame(nextSunday, 'day') &&
-          (plan.type_id * 1 === 0 || plan.type_id * 1 === 1)
-        )
+      
+      // find the plan with type_id 1 or 2 for next Sunday
+      let plan = state.plans.find(plan => {
+        let isNextSunday = moment(plan.date).startOf('day').isSame(nextSunday, 'day')
+        // isNextSunday && (plan.type_id === 0 || plan.type_id === 1)
+        return isNextSunday && [0, 1].indexOf(parseInt(plan.type_id)) >= 0
       })
+      if (!plan) return {}
+      return plan
     },
 
     futurePlans (state, getters) {

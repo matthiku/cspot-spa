@@ -7,9 +7,10 @@ import SuccessCmp from './components/shared/Success.vue'
 // Plan Details page
 import EditPlanDateTimeDialog from './components/Plan/Edit/EditPlanDateTimeDialog'
 import EditPlanTypeDialog from './components/Plan/Edit/EditPlanTypeDialog'
-import EditPlanStaffDialog from './components/Plan/Edit/EditPlanStaffDialog'
 import EditPlanInfoField from './components/Plan/Edit/EditPlanInfoField'
+import EditPlanStaffDialog from './components/Plan/Edit/EditPlanStaffDialog'
 import EditPlanStaffList from './components/Plan/Edit/EditPlanStaffList'
+import EditPlanStaffSingle from './components/Plan/Edit/EditPlanStaffSingle'
 import EditPlanActionList from './components/Plan/Edit/EditPlanActionList'
 import EditPlanActionScriptureDialog from './components/Plan/Edit/EditPlanActionScriptureDialog'
 import DeletePlanDialog from './components/Plan/Edit/DeletePlanDialog'
@@ -34,9 +35,10 @@ export default function sharedComponents () {
 
   Vue.component('app-edit-plan-action-scripture-dialog', EditPlanActionScriptureDialog)
   Vue.component('app-edit-plan-action-list', EditPlanActionList)
+  Vue.component('app-edit-plan-single-staff', EditPlanStaffSingle)
   Vue.component('app-edit-plan-staff-list', EditPlanStaffList)
-  Vue.component('app-edit-plan-info-field', EditPlanInfoField)
   Vue.component('app-edit-plan-staff-dialog', EditPlanStaffDialog)
+  Vue.component('app-edit-plan-info-field', EditPlanInfoField)
   Vue.component('app-edit-plan-type-dialog', EditPlanTypeDialog)
   Vue.component('app-edit-plan-date-time-dialog', EditPlanDateTimeDialog)
   Vue.component('app-delete-plan-dialog', DeletePlanDialog)

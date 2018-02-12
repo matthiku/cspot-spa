@@ -85,7 +85,10 @@
                                     </v-tooltip>
                                   </div>
 
-                                  <app-edit-plan-staff-list :planId="plan.id" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-staff-list>
+                                  <app-edit-plan-staff-list
+                                      :planId="plan.id"
+                                      :userOwnsThisPlan="userOwnsThisPlan"
+                                    ></app-edit-plan-staff-list>
 
                                 </v-expansion-panel-content>
 

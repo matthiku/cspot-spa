@@ -102,11 +102,11 @@
       </transition>
 
       <v-snackbar
-        transition="fade-transition"
-        :timeout="timeout"
-        color="info" multi-line vertical
-        v-model="showMessage"
-      >
+          transition="fade-transition"
+          :timeout="timeout"
+          color="info" multi-line vertical
+          v-model="showMessage"
+        >
         {{ message }}
         <v-btn dark flat @click.native="onDismissed('clearMessage')">Close</v-btn>
       </v-snackbar>
@@ -128,11 +128,11 @@
           <v-list-tile-title>Logout</v-list-tile-title>
         </v-list-tile>
         <v-list-tile v-else
-          v-for="(item, i) in menuItems"
-          :key="i"
-          :to="{ name: item.link }"
-          value="true"
-        >
+            v-for="(item, i) in menuItems"
+            :key="i"
+            :to="{ name: item.link }"
+            value="true"
+          >
           <v-list-tile-action>
             <v-icon v-html="item.icon"></v-icon>
           </v-list-tile-action>

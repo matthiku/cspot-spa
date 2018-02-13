@@ -305,6 +305,7 @@ export default {
     }
   },
   mounted () {
+    // console.log((new Date()).getMilliseconds(), 'mounted')    
     this.loadCurrentPlan()
 
     // check which expansion panel should be open
@@ -313,6 +314,7 @@ export default {
   },
 
   updated () {
+    // console.log((new Date()).getMilliseconds(), 'updated')    
     this.loadCurrentPlan()
     this.savePageStatus()
   },

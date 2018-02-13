@@ -4,7 +4,7 @@ import axios from 'axios'
 
 export default {
   state: {
-    types: []
+    types: 'loading'
   },
   mutations: {
     setTypes (state, payload) {

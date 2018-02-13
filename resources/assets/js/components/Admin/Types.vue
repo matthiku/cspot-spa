@@ -8,7 +8,7 @@
 
         <v-data-table
             v-bind:headers="headers"
-            :items="types"
+            :items="typesArray"
             :search="search.filter"
             hide-actions
             class="elevation-1"
@@ -84,6 +84,20 @@
           { text: 'Start', value: 'start' },
           { text: 'End', value: 'end' }
         ]
+      }
+    },
+
+    computed: {
+      typesArray () {
+        let types = []
+        if (this.types === 'loading') return types
+        for (const key in this.types) {
+          if (this.types.hasOwnProperty(key)) {
+            const element = this.types[key];
+            types.push(element)
+          }
+        }
+        return types
       }
     },
 

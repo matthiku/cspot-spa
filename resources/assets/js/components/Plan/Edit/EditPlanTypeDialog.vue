@@ -20,7 +20,7 @@
             <v-flex xs12>
               Select:
               <v-select
-                v-bind:items="types"
+                v-bind:items="typesArray"
                 v-model="type"
                 return-object
                 item-text="name"
@@ -59,6 +59,19 @@ export default {
       typeEditingDlg: false,
       type: {},
       oldType: null
+    }
+  },
+
+  computed: {
+    typesArray () {
+      let types = []
+      for (const key in this.types) {
+        if (this.types.hasOwnProperty(key)) {
+          const element = this.types[key];
+          types.push(element)
+        }
+      }
+      return types
     }
   },
 

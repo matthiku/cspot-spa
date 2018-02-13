@@ -13,7 +13,7 @@
 
                   <h3 class="white--text mb-0">
                     {{ plan.date | dateShort }}<span v-if="plan.end">-{{ plan.end | time }}</span> - 
-                    <span style="font-style: italic;">{{ types.length ? types[plan.type_id].name : plan.type_id }}</span>
+                    <span style="font-style: italic;">{{ Object.keys(types).length ? types[plan.type_id].name : plan.type_id }}</span>
                   </h3>
 
                   <div>

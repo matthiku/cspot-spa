@@ -27,13 +27,24 @@
           ></v-checkbox>
         </td>
 
-        <td class="text-xs-center">{{ props.item.date | dateShort }}, <span class="no-wrap">{{ props.item.type_id }}</span></td>
+        <td class="text-xs-center">
+          {{ props.item.date | dateShort }},
+          <span class="no-wrap">
+            {{ Object.keys(types).length && types[props.item.type_id] ? types[props.item.type_id].name : props.item.type_id }}
+          </span>
+        </td>
 
-        <td class="text-xs-right">{{ props.item.items.length }}</td>
+        <td class="text-xs-right">
+          {{ props.item.items ? props.item.items.length : 0 }}
+        </td>
 
-        <td class="text-xs-right">{{ props.item.leader_id }}</td>
+        <td class="text-xs-right">
+          {{ Object.keys(users).length && users[props.item.leader_id] ? users[props.item.leader_id].name : props.item.leader_id }}
+        </td>
 
-        <td class="text-xs-right">{{ props.item.teacher_id }}</td>
+        <td class="text-xs-right">
+          {{ Object.keys(users).length && users[props.item.teacher_id] ? users[props.item.teacher_id].name : props.item.teacher_id }}
+        </td>
       </tr>
     </template>
 
@@ -48,10 +59,12 @@
 
 <script>
   import genericMixins from '../../../mixins/'
+  import planMixins from '../mixins'
+
   export default {
     props: ['planList', 'hideSelect'],
 
-    mixins: [genericMixins],
+    mixins: [genericMixins, planMixins],
 
     data () {
       return {

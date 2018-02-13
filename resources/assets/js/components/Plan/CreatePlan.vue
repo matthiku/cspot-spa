@@ -342,6 +342,7 @@ export default {
   watch: {
     // once the user selects a type, we can use some default values from the type object:
     type () {
+      if (!Object.keys(this.plans).length) return
       this.type_id = this.type.id
       if (this.type.start !== '00:00:00') this.time = this.type.start
       if (this.type.end !== '00:00:00') this.endTime = this.type.end.substr(0, 5)

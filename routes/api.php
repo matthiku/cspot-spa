@@ -34,6 +34,11 @@ Route::middleware('auth:api')->get(
 //     }
 // );
 
+// provide date of latest update to certain tables
+Route::get('/song/latest', 'SongController@latest');
+Route::get('/plan/latest', 'PlanController@latest');
+Route::get('/user/latest', 'UserController@latest');
+
 // no authentication
 Route::apiResources(
     [
@@ -44,8 +49,3 @@ Route::apiResources(
         'song' => 'SongController'
     ]
 );
-
-// provide date of latest update to certain tables
-Route::get('songs/latest', 'SongController@latest');
-Route::get('plans/latest', 'PlanController@latest');
-Route::get('users/latest', 'UserController@latest');

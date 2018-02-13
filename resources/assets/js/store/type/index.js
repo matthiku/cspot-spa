@@ -19,7 +19,13 @@ export default {
       console.log('updating local list of TYPES from Server')
       axios.get('/api/type')
         .then(data => {
-          commit('setTypes', data.data)
+          let types = {}
+          // turn array into an object
+          data.data.forEach(elem => {
+            let obj = elem
+            types[obj.id] = elem
+          })
+          commit('setTypes', types)
         })
         .catch(error => dispatch('errorHandling', error))
     },

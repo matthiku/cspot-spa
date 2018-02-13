@@ -4,7 +4,8 @@ import axios from 'axios'
 
 export default {
   state: {
-    songs: []
+    songs: [],
+    songsUpdatedAt: null
   },
 
   mutations: {
@@ -13,25 +14,40 @@ export default {
     },
     addDummySong (state, payload) {
       state.songs[payload.id] = payload
+    },
+    setSongsUpdateDate(state, payload) {
+      state.songsUpdatedAt = payload
     }
   },
 
   actions: {
-    refreshSongs ({commit, dispatch}, payload) {
-      console.log('updating local list of SONGS from Server')
-      axios.get('/api/song')
-        .then(data => {
-          if (data.data) {
-            let songs = {}
-            // turn array into an object
-            data.data.forEach(elem => {
-              let obj = elem
-              songs[obj.id] = elem
-            })
-            commit('setSongs', songs)
-          }
-        })
-        .catch(error => dispatch('errorHandling', error))
+    refreshSongs ({state, commit, dispatch}, payload) {
+      // first get date of latest update to SONGS table
+      axios.get('api/song/latest')
+      .then((data) => {
+        let updateDate = data.data.date
+        let oldDate = state.songsUpdatedAt
+        commit('setSongsUpdateDate', updateDate)
+        if (payload === 'init' || oldDate !== updateDate) {
+          console.log('updating local list of SONGS from Server')
+          axios.get('/api/song')
+          .then(data => {
+            if (data.data) {
+              let songs = {}
+              // turn array into an object
+              data.data.forEach(elem => {
+                let obj = elem
+                songs[obj.id] = elem
+              })
+              commit('setSongs', songs)
+            }
+          })
+          .catch(error => dispatch('errorHandling', error))
+        } else {          
+          console.log('not updating SONGS as nothing changed', oldDate, updateDate)
+        }
+      })
+      .catch((error) => dispatch('errorHandling', error))
     },
 
     addDummySong ({commit}, payload) {

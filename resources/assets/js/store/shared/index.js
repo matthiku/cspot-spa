@@ -54,51 +54,45 @@ export default {
         console.log('(loadAllItems) user not signed in!', rootState.user.user)
         return
       }
-      if (!rootState.user.users || rootState.user.users.length === 0) {
-        dispatch('refreshUsers', 'init')
-      }
-      if (!rootState.role.roles || rootState.role.roles.length === 0) {
-        dispatch('refreshRoles', 'init')
-      }
-      if (!rootState.type.types || rootState.type.types.length === 0) {
-        dispatch('refreshTypes', 'init')
-      }
-      if (!rootState.song.songs || rootState.song.songs.length === 0) {
-        dispatch('refreshSongs', 'init')
-      }
-      if (!rootState.plan.plans || rootState.plan.plans.length === 0) {
-        dispatch('refreshPlans', 'init')
-      }
-      // repeat this every 5 mins (30 secs for tests)
+      dispatch('refreshUsers', 'init')
+      dispatch('refreshRoles', 'init')
+      dispatch('refreshTypes', 'init')
+      dispatch('refreshSongs', 'init')
+      dispatch('refreshPlans', 'init')
+      // repeat this later with conditions
       setTimeout(() => {
-        // check if the initial loading of data (see below) had already been successful
         console.log('checking all items....')
         dispatch('refreshAllItems')
-      }, 30000)      
+      }, 3000)      
     },
+
     refreshAllItems ({rootState, dispatch}) {
       if (!rootState.user.user) {
         console.log('(refreshAllItems) user not signed in!', rootState.user.user)
         return
       }
+      
       // only reload these if the initial loading failed
-      if (!rootState.role.roles || rootState.role.roles.length === 0) {
-        dispatch('refreshRoles', 'init')
+      if (!Object.keys(rootState.role.roles).length) {
+        dispatch('refreshRoles')
       }
-      if (!rootState.type.types || rootState.type.types.length === 0) {
-        dispatch('refreshTypes', 'init')
+      if (!Object.keys(rootState.type.types).length) {
+        dispatch('refreshTypes')
       }
+
       // always check if these entitties needs to be reloaded (by first checking the last updated date)
-      dispatch('refreshUsers', 'init')
-      dispatch('refreshSongs', 'init')
-      dispatch('refreshPlans', 'init')
+      dispatch('refreshUsers')
+      dispatch('refreshSongs')
+      dispatch('refreshPlans')
+
       // repeat this every 5 mins (30 secs for tests)
       setTimeout(() => {
         // check if the initial loading of data (see below) had already been successful
         console.log('re-checking all items....')
         dispatch('refreshAllItems')
-      }, 30000)      
+      }, 300000)      
     },
+
     clearAllItems ({commit}) {
       commit('setUsers', [])
       commit('setUser', null)
@@ -108,30 +102,39 @@ export default {
       commit('setSongs', [])
       commit('setRoles', [])
     },
+
     clearError ({ commit }) {
       commit('clearError')
     },
+
     clearMessage ({ commit }) {
       commit('clearMessage')
     },
+
     setLoading ({ commit }, payload) {
       commit('setLoading', payload)
     },
+
     setMessage ({ commit }, payload) {
       commit('setMessage', payload)
     },
+
     appendMessage ({ commit }, payload) {
       commit('appendMessage', payload)
     },
+
     setDialog ({ commit }, payload) {
       commit('setDialog', payload)
     },
+
     hideDialog ({ commit }) {
       commit('hideDialog')
     },
+
     showDialog ({ commit }) {
       commit('showDialog')
     },
+
     errorHandling ({ commit }, payload) {
       let text = payload
       // show typical attributes of error messages if available

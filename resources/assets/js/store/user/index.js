@@ -5,7 +5,7 @@ export default {
   state: {
     oldRoute: null,
     users: [],
-    usersUpdated: null,
+    usersUpdatedAt: null,
     user: null
   },
 
@@ -25,40 +25,41 @@ export default {
     setUsers (state, payload) {
       state.users = payload
     },
-    setUpdateDate (state, payload) {
-      state.usersUpdated = payload
+    setUsersUpdateDate (state, payload) {
+      state.usersUpdatedAt = payload
     }
   },
 
   actions: {
     refreshUsers ({state, commit, dispatch}, payload) {
-      console.log('updating local USERS list from Server')
       // first get date of latest update to USERS table
-      axios.get('api/users/latest')
-        .then((data) => {
-          let updateDate = data.data.date
-          let oldDate = state.usersUpdated
-          commit('setUpdateDate', updateDate)
-          if (payload !== 'init' && oldDate == updateDate) {
-            console.log('not updating USERS, nothing changed', oldDate, updateDate)
-            return
-          }
+      axios.get('api/user/latest')
+      .then((data) => {
+        let updateDate = data.data.date
+        let oldDate = state.usersUpdatedAt
+        commit('setUsersUpdateDate', updateDate)
 
+        if (payload === 'init' || oldDate !== updateDate || !Object.keys(state.users).length) {
+          console.log('updating local list of USERS from Server', oldDate, updateDate)
           axios.get('/api/user')
-            .then((data) => {
-              if (data.data) {
-                let users = {}
-                // turn array into an object
-                data.data.forEach(elem => {
-                  let obj = elem
-                  users[obj.id] = elem
-                })
-                commit('setUsers', users)
-              }
-            })
-            .catch((error) => dispatch('errorHandling', error))
+          .then((data) => {
+            if (data.data) {
+              let users = {}
+              // turn array into an object
+              data.data.forEach(elem => {
+                let obj = elem
+                users[obj.id] = elem
+              })
+              commit('setUsers', users)
+            }
           })
-        .catch((error) => dispatch('errorHandling', error))
+          .catch((error) => dispatch('errorHandling', error))
+        } else {
+          console.log('not updating USERS as nothing changed', oldDate, updateDate)
+          return
+        }
+      })
+      .catch((error) => dispatch('errorHandling', error))
     },
 
     // update firebase user table

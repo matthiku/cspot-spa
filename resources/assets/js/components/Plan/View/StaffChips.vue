@@ -38,7 +38,7 @@ export default {
 
   computed: {
     staffList () {
-      if (!this.singlePlan || !this.singlePlan.id || !this.users || !this.roles) return []
+      if (!this.singlePlan || !this.singlePlan.id || !Object.keys(this.users).length || !Object.keys(this.roles).length) return []
       return this.singlePlan.teams
     }
   }

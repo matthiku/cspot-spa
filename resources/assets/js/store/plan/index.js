@@ -7,6 +7,7 @@ export default {
   state: {
     plan: null,
     plans: [],
+    plansUpdatedAt: null,
     bibleBooks,
     newPlanId: null,
     activityColours: {
@@ -34,19 +35,35 @@ export default {
 
     clearNewPlanId (state) {
       state.newPlanId = null
+    },
+
+    setPlansUpdateDate(state, payload) {
+      state.plansUpdatedAt = payload
     }
 
   },
 
   // A C T I O N S  (dispatches)
   actions: {
-    refreshPlans ({commit, dispatch}, payload) {
-      console.log('updating local list of PLANS from Server')
-      axios.get('/api/plan')
-        .then((data) => {
-          commit('setPlans', data.data)
-        })
-        .catch((error) => dispatch('errorHandling', error))
+    refreshPlans ({state, commit, dispatch}, payload) {
+      // first get date of latest update to PLANS table
+      axios.get('api/plan/latest')
+      .then((data) => {
+        let updateDate = data.data.date
+        let oldDate = state.plansUpdatedAt
+        commit('setPlansUpdateDate', updateDate)
+        if (payload === 'init' || oldDate !== updateDate) {
+          console.log('updating local list of PLANS from Server')
+          axios.get('/api/plan')
+          .then((data) => {
+            commit('setPlans', data.data)
+          })
+          .catch((error) => dispatch('errorHandling', error))
+        } else {
+          console.log('not updating PLANS as nothing changed', oldDate, updateDate)
+        }
+      })
+      .catch((error) => dispatch('errorHandling', error))
     },
 
     // create a new Plan item and possibly upload an image file

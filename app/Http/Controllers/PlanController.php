@@ -32,6 +32,7 @@ class PlanController extends Controller
 
         return response($plans->jsonSerialize(), Response::HTTP_OK);
     }
+
     // get date of latest change in this table:
     public function latest()
     {        

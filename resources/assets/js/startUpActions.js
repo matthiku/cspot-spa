@@ -31,6 +31,6 @@ export default function startUpActions (store, router) {
   setTimeout(() => {
     // check if the initial loading of data (see below) had already been successful
     store.dispatch('loadAllItems')
-  }, 2000)
+  }, 1000)
 
 }

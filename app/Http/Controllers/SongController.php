@@ -21,9 +21,10 @@ class SongController extends Controller
         return response($songs->toArray(), Response::HTTP_OK);
         // return response($songs->jsonSerialize(), Response::HTTP_OK);
     }
+
+    // get date of latest change in this table:
     public function latest()
     {        
-        // get date of latest change in this table:
         $latest = Song::latest('updated_at')->first()->updated_at;
         return response($latest, Response::HTTP_OK);
     }

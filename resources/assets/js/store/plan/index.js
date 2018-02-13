@@ -52,18 +52,19 @@ export default {
         let updateDate = data.data.date
         let oldDate = state.plansUpdatedAt
         commit('setPlansUpdateDate', updateDate)
-        if (payload === 'init' || oldDate !== updateDate) {
-          console.log('updating local list of PLANS from Server')
+        if (payload === 'init' || oldDate !== updateDate || !Object.keys(state.plans).length) {
+          let reason = payload === 'init' ? payload : oldDate !== updateDate ? 'out-of-date' : 'object empty'
+          console.log('updating local list of PLANS from Server, reason:', reason)
           axios.get('/api/plan')
           .then((data) => {
             commit('setPlans', data.data)
           })
-          .catch((error) => dispatch('errorHandling', error))
+          .catch((error) => console.warn(error))
         } else {
-          console.log('not updating PLANS as nothing changed', oldDate, updateDate)
+          console.log('PLANS still up-to-date')
         }
       })
-      .catch((error) => dispatch('errorHandling', error))
+      .catch((error) => console.warn(error))
     },
 
     // create a new Plan item and possibly upload an image file

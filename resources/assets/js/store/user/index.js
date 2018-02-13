@@ -40,7 +40,8 @@ export default {
         commit('setUsersUpdateDate', updateDate)
 
         if (payload === 'init' || oldDate !== updateDate || !Object.keys(state.users).length) {
-          console.log('updating local list of USERS from Server', oldDate, updateDate)
+          let reason = payload === 'init' ? payload : oldDate !== updateDate ? 'out-of-date' : 'object empty'
+          console.log('updating local list of USERS from Server, reason:', reason)
           axios.get('/api/user')
           .then((data) => {
             if (data.data) {
@@ -53,13 +54,13 @@ export default {
               commit('setUsers', users)
             }
           })
-          .catch((error) => dispatch('errorHandling', error))
+          .catch((error) => console.warn(error))
         } else {
-          console.log('not updating USERS as nothing changed', oldDate, updateDate)
+          console.log('USERS still up-to-date')
           return
         }
       })
-      .catch((error) => dispatch('errorHandling', error))
+      .catch((error) => console.warn(error))
     },
 
     // update firebase user table

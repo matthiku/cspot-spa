@@ -70,17 +70,9 @@ export default {
       if (!rootState.user.user) {
         console.log('(refreshAllItems) user not signed in!', rootState.user.user)
         return
-      }
-      
-      // only reload these if the initial loading failed
-      if (!Object.keys(rootState.role.roles).length) {
-        dispatch('refreshRoles')
-      }
-      if (!Object.keys(rootState.type.types).length) {
-        dispatch('refreshTypes')
-      }
-
-      // always check if these entitties needs to be reloaded (by first checking the last updated date)
+      }            
+      dispatch('refreshRoles')
+      dispatch('refreshTypes')
       dispatch('refreshUsers')
       dispatch('refreshSongs')
       dispatch('refreshPlans')

@@ -28,12 +28,14 @@ export default {
         let updateDate = data.data.date
         let oldDate = state.songsUpdatedAt
         commit('setSongsUpdateDate', updateDate)
-        if (payload === 'init' || oldDate !== updateDate) {
-          console.log('updating local list of SONGS from Server')
+        if (payload === 'init' || oldDate !== updateDate || !Object.keys(state.songs).length) {
+          let reason = payload === 'init' ? payload : oldDate !== updateDate ? 'out-of-date' : 'object empty'
+          console.log('updating local list of SONGS from Server, reason:', reason)
           axios.get('/api/song')
           .then(data => {
             if (data.data) {
               let songs = {}
+          let reason = payload === 'init' ? payload : oldDate !== updateDate ? 'out-of-date' : 'object empty'
               // turn array into an object
               data.data.forEach(elem => {
                 let obj = elem
@@ -42,12 +44,12 @@ export default {
               commit('setSongs', songs)
             }
           })
-          .catch(error => dispatch('errorHandling', error))
+          .catch(error => console.warn(error))
         } else {          
-          console.log('not updating SONGS as nothing changed', oldDate, updateDate)
+          console.log('SONGS still up-to-date')
         }
       })
-      .catch((error) => dispatch('errorHandling', error))
+      .catch((error) => console.warn(error))
     },
 
     addDummySong ({commit}, payload) {

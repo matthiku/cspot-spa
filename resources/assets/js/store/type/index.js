@@ -15,19 +15,24 @@ export default {
     }
   },
   actions: {
-    refreshTypes ({commit, dispatch}, payload) {
-      console.log('updating local list of TYPES from Server')
-      axios.get('/api/type')
-        .then(data => {
-          let types = {}
-          // turn array into an object
-          data.data.forEach(elem => {
-            let obj = elem
-            types[obj.id] = elem
+    refreshTypes ({state, commit, dispatch}, payload) {
+      if (payload === 'init' || !Object.keys(state.types).length) {
+        let reason = payload === 'init' ? payload : 'object empty'
+        console.log('updating local list of TYPES from Server, reason:', reason)
+        axios.get('/api/type')
+          .then(data => {
+            let types = {}
+            // turn array into an object
+            data.data.forEach(elem => {
+              let obj = elem
+              types[obj.id] = elem
+            })
+            commit('setTypes', types)
           })
-          commit('setTypes', types)
-        })
-        .catch(error => dispatch('errorHandling', error))
+          .catch(error => console.warn(error))
+      } else {
+        console.log('TYPES still up-to-date')
+      }
     },
 
     addDummyType ({commit}, payload) {

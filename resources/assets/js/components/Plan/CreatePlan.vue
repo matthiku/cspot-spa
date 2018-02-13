@@ -7,6 +7,7 @@
       </v-flex>
     </v-layout>
 
+
     <v-layout row>
       <v-flex xs12>
         <form @submit.prevent="onCreatePlan">
@@ -17,7 +18,7 @@
               <v-layout row wrap>
                 <v-flex xs11 sm5>
                   <v-select
-                    v-bind:items="types"
+                    v-bind:items="typesArray"
                     v-model="type"
                     return-object
                     item-text="name"
@@ -67,6 +68,7 @@
             </v-layout>
             </v-flex>
           </v-layout>
+
 
           <!-- Start and End TIME Picker -->
           <v-layout row>
@@ -138,6 +140,7 @@
             </v-flex>
           </v-layout>
 
+
           <!-- Type-specific Details (Display-Only) -->
           <v-layout row v-if="type.repeat && type.weekday >= 0">
             <v-flex xs12 md6 offset-md3>
@@ -156,6 +159,7 @@
             </v-flex>
           </v-layout>
 
+
           <!-- Description -->
           <v-layout row>
             <v-flex xs12 md6 offset-md3>
@@ -167,6 +171,7 @@
                 ></v-text-field>
             </v-flex>
           </v-layout>
+
 
           <!-- Default BG image for this plan -->
           <v-layout row>
@@ -190,9 +195,10 @@
             </v-flex>
           </v-layout>
 
+
           <hr class="mt-2">
           <!-- SUBMIT -->
-          <v-layout row class="mt-2">
+          <v-layout row class="my-2">
             <v-flex xs12 md6 offset-md3>
               <v-btn 
                 type="submit" 
@@ -208,12 +214,24 @@
             </v-flex>
             <small>*indicates required fields</small>
           </v-layout>
+
+
+          <v-layout row v-if="dayPlans && dayPlans.length">
+            <v-flex xs12 md6 offset-md3>
+              <h3 class="secondary--text">Existing plans on that same day:</h3>
+              <app-show-simple-plan-list 
+                  :planList="dayPlans"
+                  hideSelect="true"
+                ></app-show-simple-plan-list>
+            </v-flex>
+          </v-layout>
         </form>
       </v-flex>
     </v-layout>
 
   </v-container>
 </template>
+
 
 <script>
 import genericMixins from '../../mixins/'
@@ -267,6 +285,10 @@ export default {
       if (this.type.repeat === 'biweekly') return {amount: 14, type: 'd'}
       if (this.type.repeat === 'monthly') return {amount: 1, type: 'm'}
       if (this.type.repeat === 'yearly') return {amount: 1, type: 'y'}
+    },
+    dayPlans () {
+      if (!this.date) return
+      return this.$store.getters.plansByDate(this.date)
     }
   },
 

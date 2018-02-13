@@ -87,20 +87,6 @@
       }
     },
 
-    computed: {
-      typesArray () {
-        let types = []
-        if (this.types === 'loading') return types
-        for (const key in this.types) {
-          if (this.types.hasOwnProperty(key)) {
-            const element = this.types[key];
-            types.push(element)
-          }
-        }
-        return types
-      }
-    },
-
     created () {
       this.$store.dispatch('hideDialog')
     },

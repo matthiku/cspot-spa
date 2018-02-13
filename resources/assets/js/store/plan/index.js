@@ -346,16 +346,31 @@ export default {
       return plan
     },
 
-    futurePlans (state, getters) {
+    // return only future plans (ordered by date)
+    futurePlans (state) {
       if (state.plans === 'loading') return 'loading'
 
-      // return only future plans (ordered by date)
-      let plans = getters.plans.filter(plan => {
+      let plans = state.plans.filter(plan => {
         return moment(plan.date).isSameOrAfter(moment(), 'day')
       })
       return plans.sort((planA, planB) => {
         return moment(planA.date).unix() - moment(planB.date).unix()
       })
+    },
+
+    // return only plans on a certain day
+    plansByDate (state) {
+      return (date) => {
+        if (state.plans === 'loading') return 'loading'
+        if (!date) return 'date missing'
+
+        let plans = state.plans.filter(plan => {
+          return moment(plan.date).isSame(moment(date), 'day')
+        })
+        return plans.sort((planA, planB) => {
+          return moment(planA.date).unix() - moment(planB.date).unix()
+        })
+      }
     },
 
     // return a plan when a proper planId was given as an argument

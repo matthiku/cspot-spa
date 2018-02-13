@@ -9,6 +9,17 @@ export default {
     types () {
       return this.$store.getters.types
     },
+    typesArray() {
+      let types = []
+      if (this.types === 'loading') return types
+      for (const key in this.types) {
+        if (this.types.hasOwnProperty(key)) {
+          const element = this.types[key];
+          types.push(element)
+        }
+      }
+      return types
+    },
     songs () {
       return this.$store.getters.songs
     },
@@ -43,18 +54,6 @@ export default {
       }
       // an admin is always owner
       return this.$store.getters.userIsAdmin || check
-    },
-
-    findRoleInStaff (requestedRole, staff) {
-      if (!staff) return null
-      // loop through the staff list (an object) and find the requested role
-      let user = { name: 'pending', id: null }
-      Object.entries(staff).forEach(
-        ([key, role]) => {
-          if (role.role === requestedRole) user.id = role.userId
-        }
-      )
-      return (this.users && user.id && this.users[user.id]) ? this.users[user.id] : user
     }
   },
 

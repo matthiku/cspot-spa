@@ -429,16 +429,7 @@
         this.planList = []
         this.upcomingPlans.forEach(element => {
           if (this.userOwnsPlan(element)) {
-            let leader = this.findRoleInStaff('leader', element.staff)
-            let teacher = this.findRoleInStaff('teacher', element.staff)
-            this.planList.push({
-              id: element.id,
-              date: element.date,
-              type: this.types[element.type_id].name,
-              items: element.items ? Object.keys(element.items).length : 0,
-              leader: leader ? leader.name : 'none',
-              teacher: teacher ? teacher.name : 'none'
-            })
+            this.planList.push(element)
           }
         })
       },

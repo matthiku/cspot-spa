@@ -62,19 +62,6 @@ export default {
     }
   },
 
-  computed: {
-    typesArray () {
-      let types = []
-      for (const key in this.types) {
-        if (this.types.hasOwnProperty(key)) {
-          const element = this.types[key];
-          types.push(element)
-        }
-      }
-      return types
-    }
-  },
-
   methods: {
     saveType () {
       this.typeEditingDlg = false

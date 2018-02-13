@@ -9,7 +9,7 @@
     >
     <template slot="headers" slot-scope="props">
       <tr>
-        <th class="pa-0 ma-0"></th>
+        <th v-if="!hideSelect" class="pa-0 ma-0"></th>
 
         <th class="subheading pa-0 ma-0" v-for="header in props.headers" :key="header.text">
           {{ header.text }}
@@ -19,7 +19,7 @@
 
     <template slot="items" slot-scope="props">
       <tr :active="props.selected" @click="onPlanSelected(props)">
-        <td>
+        <td v-if="!hideSelect">
           <v-checkbox
             primary
             hide-details
@@ -27,13 +27,13 @@
           ></v-checkbox>
         </td>
 
-        <td>{{ props.item.date | dateShort }}, <span class="no-wrap">{{ props.item.type }}</span></td>
+        <td class="text-xs-center">{{ props.item.date | dateShort }}, <span class="no-wrap">{{ props.item.type_id }}</span></td>
 
-        <td class="text-xs-right">{{ props.item.items }}</td>
+        <td class="text-xs-right">{{ props.item.items.length }}</td>
 
-        <td class="text-xs-right">{{ props.item.leader }}</td>
+        <td class="text-xs-right">{{ props.item.leader_id }}</td>
 
-        <td class="text-xs-right">{{ props.item.teacher }}</td>
+        <td class="text-xs-right">{{ props.item.teacher_id }}</td>
       </tr>
     </template>
 
@@ -49,7 +49,7 @@
 <script>
   import genericMixins from '../../../mixins/'
   export default {
-    props: ['planList'],
+    props: ['planList', 'hideSelect'],
 
     mixins: [genericMixins],
 

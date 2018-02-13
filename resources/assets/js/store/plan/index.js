@@ -6,7 +6,7 @@ import bibleBooks from './bibleBooks.js'
 export default {
   state: {
     plan: null,
-    plans: [],
+    plans: 'loading',
     plansUpdatedAt: null,
     bibleBooks,
     newPlanId: null,
@@ -325,6 +325,7 @@ export default {
     },
 
     plans (state) {
+      if (state.plans === 'loading') return 'loading'
       // return all plans ordered by date, descending
       return state.plans.sort((planA, planB) => {
         return moment(planB.date).unix() - moment(planA.date).unix()
@@ -332,7 +333,7 @@ export default {
     },
 
     nextSunday (state) {
-      if (!state.plans) return
+      if (!state.plans || state.plans === 'loading') return
       let nextSunday = moment().isoWeekday(7).startOf('day')
       
       // find the plan with type_id 1 or 2 for next Sunday
@@ -346,6 +347,8 @@ export default {
     },
 
     futurePlans (state, getters) {
+      if (state.plans === 'loading') return 'loading'
+
       // return only future plans (ordered by date)
       let plans = getters.plans.filter(plan => {
         return moment(plan.date).isSameOrAfter(moment(), 'day')

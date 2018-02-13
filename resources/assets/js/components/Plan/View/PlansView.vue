@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-flex xs12 :key="plan.id" v-for="plan in listedPlans">
+    <v-flex xs12 :key="plan.id" v-for="plan in listedPlans" v-if="listedPlans !== 'loading'">
       <v-card class="accent mb-2">
         <v-container fluid class="pa-0">
           <v-layout row>
@@ -47,6 +47,9 @@
         </v-container>
       </v-card>
     </v-flex>
+
+    <v-flex xs12 v-else>Loading...</v-flex>
+    
   </v-container>
 </template>
 

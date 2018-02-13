@@ -424,7 +424,7 @@
     methods: {
       createPlanList () {
         // wait until the types list is populated
-        if (!this.types.length || !this.users) return
+        if (!Object.keys(this.types).length || !this.users || this.upcomingPlans === 'loading') return
 
         this.planList = []
         this.upcomingPlans.forEach(element => {

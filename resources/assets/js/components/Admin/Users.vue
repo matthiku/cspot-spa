@@ -92,6 +92,8 @@
       },
       updateUsersList () {
         this.userList = []
+        if (this.users === 'loading') return
+
         // morph the users object into an array of users
         for (let key in this.users) {
           this.userList.push(this.users[key])

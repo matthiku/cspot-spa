@@ -4,7 +4,7 @@ import * as moment from 'moment'
 export default {
   state: {
     oldRoute: null,
-    users: [],
+    users: 'loading',
     usersUpdatedAt: null,
     user: null
   },

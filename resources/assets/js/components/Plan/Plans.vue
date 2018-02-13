@@ -30,13 +30,16 @@
             <v-container>
               <v-layout row wrap>
 
-                <v-flex xs12 mb-2 v-if="!plans.length && !loading">
-                  There are no Plans.<br>
-                  <v-btn v-if="userIsAdmin" :to="{name: 'createplan'}">Create one!</v-btn>
+                <v-flex xs12 mb-2 v-if="(!plans.length && !loading) || plans === 'loading'">
+                  <span v-if="plans === 'loading'">Loading plans ...</span>
+                  <span v-else>
+                    There are no Plans.<br>
+                    <v-btn v-if="userIsAdmin" :to="{name: 'createplan'}">Create one!</v-btn>
+                  </span>
                 </v-flex>
 
                 <!-- iterate through each registered plan -->
-                <app-show-list-of-plans></app-show-list-of-plans>
+                <app-show-list-of-plans v-if="plans !== 'loading'"></app-show-list-of-plans>
 
               </v-layout>
             </v-container>

@@ -4,7 +4,7 @@ import axios from 'axios'
 
 export default {
   state: {
-    songs: [],
+    songs: 'loading',
     songsUpdatedAt: null
   },
 

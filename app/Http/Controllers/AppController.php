@@ -30,16 +30,16 @@ class AppController extends Controller
         if ($request->is('plans/*') && $id) {
 
             $plan = \App\Models\Plan::with(
-                    [
-                        'items',
-                        'teams',
-                        'resources',
-                        'notes',
-                        'histories'
-                    ]
-                )
-                ->where('id', $id)
-                ->first();
+                [
+                    'items',
+                    'teams',
+                    'resources',
+                    'notes',
+                    'histories'
+                ]
+            )
+            ->where('id', $id)
+            ->first();
 
             if ($plan) {
                 $data['plan'] = $plan;

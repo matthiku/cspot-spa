@@ -19,33 +19,33 @@ Route::middleware('auth:api')->get(
     }
 );
 
-// with Authentication
-// Route::middleware('auth:api')->group(
-//     function () {
-//         Route::apiResources(
-//             [
-//                 'user' => 'UserController',
-//                 'type' => 'TypeController',
-//                 'role' => 'RoleController',
-//                 'plan' => 'PlanController',
-//                 'song' => 'SongController'
-//             ]
-//         );
-//     }
-// );
-
 // provide date of latest update to certain tables
 Route::get('/song/latest', 'SongController@latest');
 Route::get('/plan/latest', 'PlanController@latest');
 Route::get('/user/latest', 'UserController@latest');
 
-// no authentication
-Route::apiResources(
-    [
-        'user' => 'UserController',
-        'type' => 'TypeController',
-        'role' => 'RoleController',
-        'plan' => 'PlanController',
-        'song' => 'SongController'
-    ]
+// with Authentication
+Route::middleware('auth:api')->group(
+    function () {
+        Route::apiResources(
+            [
+                'user' => 'UserController',
+                'type' => 'TypeController',
+                'role' => 'RoleController',
+                'plan' => 'PlanController',
+                'song' => 'SongController'
+            ]
+        );
+    }
 );
+
+// no authentication
+// Route::apiResources(
+//     [
+//         'user' => 'UserController',
+//         'type' => 'TypeController',
+//         'role' => 'RoleController',
+//         'plan' => 'PlanController',
+//         'song' => 'SongController'
+//     ]
+// );

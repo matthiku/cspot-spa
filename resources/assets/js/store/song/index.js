@@ -23,7 +23,7 @@ export default {
   actions: {
     refreshSongs ({state, commit, dispatch}, payload) {
       // first get date of latest update to SONGS table
-      axios.get('api/song/latest')
+      axios.get('/api/song/latest')
       .then((data) => {
         let updateDate = data.data.date
         let oldDate = state.songsUpdatedAt

@@ -33,7 +33,7 @@ export default {
   actions: {
     refreshUsers ({state, commit, dispatch}, payload) {
       // first get date of latest update to USERS table
-      axios.get('api/user/latest')
+      axios.get('/api/user/latest')
       .then((data) => {
         let updateDate = data.data.date
         let oldDate = state.usersUpdatedAt

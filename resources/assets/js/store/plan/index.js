@@ -47,7 +47,7 @@ export default {
   actions: {
     refreshPlans ({state, commit, dispatch}, payload) {
       // first get date of latest update to PLANS table
-      axios.get('api/plan/latest')
+      axios.get('/api/plan/latest')
       .then((data) => {
         let updateDate = data.data.date
         let oldDate = state.plansUpdatedAt

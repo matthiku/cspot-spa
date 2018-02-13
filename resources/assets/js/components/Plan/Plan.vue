@@ -225,7 +225,7 @@ export default {
         if (this.plan && this.plan.id === plan.id) return
       } else {
         let planId = this.$route.params.planId
-        if (isNaN(planId) || this.plan.id === planId) return
+        if (isNaN(planId) || (this.plan && this.plan.id === planId)) return
         plan = this.$store.getters.planById(planId)
         // perhaps the plan was coming from the HTML header on page reload
         if (!plan && this.$store.state.plan && this.$store.state.plan.plan ) {

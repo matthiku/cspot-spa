@@ -7,7 +7,10 @@
         <!-- show all individual staff records -->
         <div v-for="item in items" v-bind:key="item.id">
 
-          <app-edit-plan-single-staff :item="item" :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-single-staff>
+          <app-edit-plan-single-staff
+              v-if="Object.keys(roles).length && Object.keys(users).length"
+              :item="item"
+              :userOwnsThisPlan="userOwnsThisPlan"></app-edit-plan-single-staff>
 
         </div>
 

@@ -361,6 +361,7 @@ export default {
     // return a plan when a proper planId was given as an argument
     planById (state) {
       return planId => {
+        if (state.plans === 'loading') return 'loading'
         return state.plans.find(plan => {
           return plan.id === planId
         })

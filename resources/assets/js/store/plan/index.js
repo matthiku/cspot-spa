@@ -73,10 +73,11 @@ export default {
       let key
       // reach out to our DB and store it
       let planData = Object.assign({}, payload.planData)
-      plansRef.push(planData)
+      axios.post('/api/plan', planData)
         .then(data => {
           // the database call will get us an id, which we need to add a new plan to the store
-          key = data.key
+          console.log(data)
+          key = data.id
           return key
         })
         // now check if there is a file to be uploaded
@@ -207,28 +208,26 @@ export default {
 
     // move a plan to the bin
     // - - payload must be the full plan, as we send it to the bin and then delete it
-    binPlan ({state, commit, dispatch}, payload) {
+    binPlan ({commit, dispatch}, payload) {
       commit('setLoading', true)
-      binRef.child('users').push(payload)
-      .then(() => {
-        plansRef.child(payload.id).remove()
+      axios.delete(`/api/plan/${payload.id}/soft`)
         .then(() => {
           dispatch('refreshPlans')
           commit('setLoading', false)
-          commit('setMessage', 'Plan removed into the bin.')
+          commit('setMessage', 'Plan changed to hidden plan (private).')
         })
         .catch((error) => dispatch('errorHandling', error))
-      })
     },
 
     // delete a plan finally
     deletePlan ({state, commit, dispatch}, payload) {
       commit('setLoading', true)
-      plansRef.child(payload.id).remove()
+      axios.delete(`/api/plan/${payload.id}`)
         .then(() => {
           dispatch('refreshPlans')
           commit('setLoading', false)
           commit('setMessage', 'Plan was erased.')
+          state.plan = null
         })
         .catch((error) => dispatch('errorHandling', error))
     },
@@ -249,6 +248,8 @@ export default {
       // is this the same plan?
       if (state.plan && payload.id === state.plan.id) {
         console.log('STORE - same plan!', payload.id)
+        // verify that plan still exists; e.g. was deleted
+        if (!state.plans[payload.id]) state.plan = null
         return
       }
 

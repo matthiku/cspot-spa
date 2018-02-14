@@ -26,11 +26,11 @@ class StorePlan extends FormRequest
         return [
             //
             'date' => 'required|date',
-            'leader_id' => 'required|integer',
-            'type_id' => 'required|integer',
+            'leader_id' => 'required|integer|exists:users,id',
+            'type_id' => 'required|integer|exists:types,id',
             'changer' => 'required|max:255',
             'date_end' => 'nullable|date',
-            'teacher_id' => 'integer',
+            'teacher_id' => 'integer|exists:users,id',
             'start' => 'date',
             'info' => 'max:255',
             'subtitle' => 'max:255',

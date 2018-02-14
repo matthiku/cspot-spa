@@ -57,19 +57,20 @@ class PlanController extends Controller
     public function store(StorePlan $request)
     {
         $plan = new Plan();
-        // required fields (validated!)
+        // required fields
         $plan->date = $request->date;
         $plan->leader_id = $request->leader_id;
         $plan->type_id = $request->type_id;
         $plan->changer = $request->changer;
         // optional fields
-        $plan->start = $request->start;
-        $plan->date_end = $request->date_end;
-        $plan->teacher_id = $request->teacher_id;
-        $plan->info = $request->info;
-        $plan->private = $request->private;
-        $plan->subtitle = $request->subtitle;
+        if ($request->has('date_end')) $plan->date_end = $request->date_end;
+        if ($request->has('teacher_id')) $plan->teacher_id = $request->teacher_id;
+        if ($request->has('info')) $plan->info = $request->info;
+        if ($request->has('private')) $plan->private = $request->private;
+        if ($request->has('subtitle')) $plan->subtitle = $request->subtitle;
         $plan->save();
+
+        return response($plan->jsonSerialize(), Response::HTTP_OK);
     }
 
 
@@ -83,6 +84,7 @@ class PlanController extends Controller
     public function update(Request $request, Plan $plan)
     {
         //
+        return response(null, Response::HTTP_OK);
     }
 
     /**
@@ -94,6 +96,15 @@ class PlanController extends Controller
     public function destroy(Plan $plan)
     {
         //
-        // Plan::destroy($plan)
+        $plan->delete();
+        return response(null, Response::HTTP_OK);
+    }
+    // simply change the field 'private' to '1'
+    public function softdelete(Plan $plan)
+    {
+        //
+        $plan->private = true;
+        $plan->save();
+        return response($plan->jsonSerialize(), Response::HTTP_OK);
     }
 }

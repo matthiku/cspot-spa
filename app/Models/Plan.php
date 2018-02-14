@@ -15,54 +15,54 @@ use Auth;
 class Plan extends Model
 {
     // mass assignment protection
-	protected $fillable = [
-		'date',
-		'start',
-		'end',
-		'date_end',
-		'leader_id',
-		'teacher_id',
-		'type_id',
-		'info',
-		'state',
+    protected $fillable = [
+        'date',
+        'start',
+        'end',
+        'date_end',
+        'leader_id',
+        'teacher_id',
+        'type_id',
+        'info',
+        'state',
         'changer',
-		'private',
-		'subtitle',
-		'updated_at',
-	];
-	protected $hidden = [
-		'created_at'
-	];
-	protected $dates = [
-		'date', 'date_end', 'created_at', 'updated_at'
-	];
+        'private',
+        'subtitle',
+        'updated_at',
+    ];
+    protected $hidden = [
+        'created_at'
+    ];
+    protected $dates = [
+        'date', 'date_end', 'created_at', 'updated_at'
+    ];
 
 
 
-	public function isFuture()
-	{
-		return $this->date > Carbon::yesterday();
-	}
+    public function isFuture()
+    {
+        return $this->date > Carbon::yesterday();
+    }
 
 
 
-	// the leader_id points to the id on the users table
-	public function leader()
-	{
-		return $this->belongsTo('App\Models\User', 'leader_id');
-	}
+    // the leader_id points to the id on the users table
+    public function leader()
+    {
+        return $this->belongsTo('App\Models\User', 'leader_id');
+    }
 
-	// the teacher_id points to the id on the users table
-	public function teacher()
-	{
-		return $this->belongsTo('App\Models\User', 'teacher_id');
-	}
+    // the teacher_id points to the id on the users table
+    public function teacher()
+    {
+        return $this->belongsTo('App\Models\User', 'teacher_id');
+    }
 
-	// the type_id points to the id on the types table (the type of service of this plan)
-	public function type()
-	{
-		return $this->belongsTo('App\Models\Type');
-	}
+    // the type_id points to the id on the types table (the type of service of this plan)
+    public function type()
+    {
+        return $this->belongsTo('App\Models\Type');
+    }
 
 
     /**
@@ -149,7 +149,7 @@ class Plan extends Model
             $items = $this->items
                 ->where('forLeadersEyesOnly', false);
 
-    	return $items->sortByDesc('seq_no')->first();
+        return $items->sortByDesc('seq_no')->first();
     }
 
 
@@ -160,17 +160,17 @@ class Plan extends Model
      */
     public function songsFreshness()
     {
-    	$items = $this->items
+        $items = $this->items
             ->where('song_id', '>', 0)
             ->where('deleted_at', null);
 
-    	$collect = collect();
+        $collect = collect();
 
-    	foreach ($items as $item) {
-    		if ($item->song_freshness)
-    			$collect->push($item->song_freshness);
-    	}
+        foreach ($items as $item) {
+            if ($item->song_freshness)
+                $collect->push($item->song_freshness);
+        }
 
-		return $collect->avg();
+        return $collect->avg();
     }
 }

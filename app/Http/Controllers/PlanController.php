@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Plan;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Http\Requests\StorePlan;
 
 class PlanController extends Controller
 {
+
+
+
     /**
      * Display a listing of the resource.
      *
@@ -35,21 +39,37 @@ class PlanController extends Controller
 
     // get date of latest change in this table:
     public function latest()
-    {        
+    {
         $latest = Plan::latest('updated_at')->first()->updated_at;
         return response($latest, Response::HTTP_OK);
     }
 
 
+
     /**
      * Store a newly created resource in storage.
+     * 
+     * StorePlan handles the validation logic
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StorePlan $request)
     {
-        //
+        $plan = new Plan();
+        // required fields (validated!)
+        $plan->date = $request->date;
+        $plan->leader_id = $request->leader_id;
+        $plan->type_id = $request->type_id;
+        $plan->changer = $request->changer;
+        // optional fields
+        $plan->start = $request->start;
+        $plan->date_end = $request->date_end;
+        $plan->teacher_id = $request->teacher_id;
+        $plan->info = $request->info;
+        $plan->private = $request->private;
+        $plan->subtitle = $request->subtitle;
+        $plan->save();
     }
 
 
@@ -74,5 +94,6 @@ class PlanController extends Controller
     public function destroy(Plan $plan)
     {
         //
+        // Plan::destroy($plan)
     }
 }

@@ -290,15 +290,17 @@ export default {
   watch: {
     plan (val) {
       // check which expansion panel is open
-      if (val !== undefined) {
+      if (val !== undefined && val !== null) {
+        console.log(val)
         if (this.pageStatus.hasOwnProperty(this.plan.id)) this.showDetails = this.pageStatus[this.plan.id].showDetails
-        if (this.plan && !this.plan.teams.length && !this.pageStatus.hasOwnProperty(this.plan.id)) {
+        if (this.plan && this.plan.teams && !this.plan.teams.length && !this.pageStatus.hasOwnProperty(this.plan.id)) {
           this.showDetails.staff = true
           this.showDetails.activities = false
         }
+        return
       }
-      // return to list of plans if this plan became void meanwhile
-      // this.$router.push({name: 'plans'})
+      // return to home page if this plan became void meanwhile
+      this.$router.push({name: 'home'})
     },
     plans () {
       this.loadCurrentPlan()

@@ -322,10 +322,11 @@ export default {
       this.$store.dispatch('setLoading', true)
       const planData = {
         date: this.dateTime.format(),
-        end: this.endDateTime.format(),
+        date_end: this.endDateTime.format(),
         type_id: this.type_id,
-        staff: {},
-        info: this.info
+        info: this.info,
+        leader_id: 0,
+        changer: this.user.name
       }
       // send 2 sep. objects as payload to the store
       this.$store.dispatch('createPlan', {

@@ -68,7 +68,7 @@ export default {
     },
 
     // create a new Plan item and possibly upload an image file
-    createPlan ({commit, dispatch}, payload) {
+    createPlan ({state, commit, dispatch}, payload) {
       let imageUrl
       let key
       // reach out to our DB and store it
@@ -76,8 +76,8 @@ export default {
       axios.post('/api/plan', planData)
         .then(data => {
           // the database call will get us an id, which we need to add a new plan to the store
-          console.log(data)
-          key = data.id
+          console.log(data.data)
+          key = data.data.id
           return key
         })
         // now check if there is a file to be uploaded
@@ -103,10 +103,13 @@ export default {
               imageUrl: imageUrl
             })
           commit('createPlan', planData)
+          commit('setPlan', planData)
           commit('setLoading', false)
+          state.newPlanId = key
         })
 
-        .catch(error => dispatch('errorHandling', error))
+        .catch((error) => console.warn(error))
+        .then((data) => console.log(data))
     },
 
     // update an existing plan

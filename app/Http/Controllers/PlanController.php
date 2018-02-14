@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+Use Carbon\Carbon;
 use App\Models\Plan;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -58,12 +59,12 @@ class PlanController extends Controller
     {
         $plan = new Plan();
         // required fields
-        $plan->date = $request->date;
+        $plan->date = Carbon::parse($request->date);
         $plan->leader_id = $request->leader_id;
         $plan->type_id = $request->type_id;
         $plan->changer = $request->changer;
         // optional fields
-        if ($request->has('date_end')) $plan->date_end = $request->date_end;
+        if ($request->has('date_end')) $plan->date_end = Carbon::parse($request->date_end);
         if ($request->has('teacher_id')) $plan->teacher_id = $request->teacher_id;
         if ($request->has('info')) $plan->info = $request->info;
         if ($request->has('private')) $plan->private = $request->private;

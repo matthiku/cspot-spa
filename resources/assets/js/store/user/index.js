@@ -156,7 +156,11 @@ export default {
           return
         }
         if (data.data) {
-          if (window.cspot2_server_data) {
+          let user
+          // check if there is user data in the page header
+          if (data.data.user) {
+            user = data.data.user
+          } else if (window.cspot2_server_data) {
             let dt
             try {
               dt = JSON.parse(window.cspot2_server_data)              
@@ -164,16 +168,19 @@ export default {
               console.warn('backend data in header invalid or missing!')
             }
             if (dt.user) {
-              commit('setMessage', '')
-              commit('setUser', dt.user)
-              // load all entities from the backend
-              dispatch('loadAllItems')
+              user = dt.user
             } else {
               console.warn('backend failed to send user data!')
             }
+          // check if there was user data in the HTTP response
           } else {
             console.warn('backend failed to send ANY data!')
+            return
           }
+          commit('setMessage', '')
+          commit('setUser', user)
+          // load all basic cspot entities from the backend
+          dispatch('loadAllItems')
         } else {
           commit('setMessage', 'log in error')
           console.log(data)         

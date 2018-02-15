@@ -113,7 +113,7 @@ export default {
   computed: {
     planType () {
       if (this.plan && this.plan.id) {
-        if (this.types && Object.keys(this.types).length) {
+        if (this.types instanceof Object) {
           return this.types[this.plan.type_id].name 
         } else {
           return this.plan.type_id

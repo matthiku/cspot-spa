@@ -16,7 +16,7 @@
                 <div @click="showSinglePlan(plan.id)" class="cursor-pointer">   
 
                   <h3 class="white--text mb-0">
-                    {{ plan.date | dateShort }}<span v-if="plan.end">-{{ plan.end | time }}</span> - 
+                    {{ plan.date | dateShort }}<span v-if="plan.date_end">-{{ plan.date_end | time }}</span> - 
                     <span style="font-style: italic;">
                       {{ types instanceof Object ? types[plan.type_id].name : plan.type_id }}
                     </span>

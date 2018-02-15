@@ -35,7 +35,7 @@
                               <v-layout row wrap>
                                 <v-flex sm12 md8 class="py-0">
                                   <h2 :class="[ userOwnsThisPlan ? 'mb-0' : 'mb-2']" @click="openEditDialog('date')"
-                                    >{{ plan.date | date }}<span v-if="plan.end">-{{ plan.end | time }}</span>
+                                    >{{ plan.date | date }}<span v-if="plan.date_end">-{{ plan.date_end | time }}</span>
 
                                     <app-edit-plan-date-time-dialog
                                         v-if="userOwnsThisPlan"

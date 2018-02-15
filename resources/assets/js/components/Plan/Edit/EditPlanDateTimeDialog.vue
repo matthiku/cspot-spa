@@ -142,8 +142,8 @@ export default {
       let date = this.$moment(this.startDate + 'T' + this.startTime).format()
       let end = this.$moment(this.startDate + 'T' + this.endTime).format()
       // do not submit if nothing has changed
-      if (date === this.plan.date && end === this.plan.end) return
-      if (!(date !== this.plan.date || end !== this.plan.end)) return
+      if (date === this.plan.date && end === this.plan.date_end) return
+      if (!(date !== this.plan.date || end !== this.plan.date_end)) return
 
       this.$store.dispatch('updatePlan', {
         id: this.plan.id,
@@ -160,7 +160,7 @@ export default {
       if (!this.plan) return
       this.startDate = this.$moment(this.plan.date).format('YYYY-MM-DD')
       this.startTime = this.$moment(this.plan.date).format('HH:mm')
-      this.endTime = this.$moment(this.plan.end).format('HH:mm')
+      this.endTime = this.$moment(this.plan.date_end).format('HH:mm')
     }
   },
 

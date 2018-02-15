@@ -83,7 +83,6 @@ export default {
       axios.post('/api/plan', planData)
         .then(data => {
           // the database call will get us an id, which we need to add a new plan to the store
-          console.log(data.data)
           key = data.data.id
           return key
         })
@@ -116,7 +115,6 @@ export default {
         })
 
         .catch((error) => console.warn(error))
-        .then((data) => console.log(data))
     },
 
     // update an existing plan

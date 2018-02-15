@@ -16,18 +16,22 @@ export default {
   },
   actions: {
     refreshTypes ({state, commit, dispatch}, payload) {
-      if (payload === 'init' || !Object.keys(state.types).length) {
-        let reason = payload === 'init' ? payload : 'object empty'
+      if (payload === 'init' || !(state.types instanceof Object) || state.types === 'loading') {
+        let reason = payload === 'init' ? payload : state.types === 'loading' ? 'not loaded' : 'object empty'
         console.log('updating local list of TYPES from Server, reason:', reason)
         axios.get('/api/type')
           .then(data => {
-            let types = {}
-            // turn array into an object
-            data.data.forEach(elem => {
-              let obj = elem
-              types[obj.id] = elem
-            })
-            commit('setTypes', types)
+            if (data.data.forEach) {
+              let types = {}
+              // turn array into an object
+              data.data.forEach(elem => {
+                let obj = elem
+                types[obj.id] = elem
+              })
+              commit('setTypes', types)
+            } else {
+              console.warn(data)
+            }
           })
           .catch(error => console.warn(error))
       } else {

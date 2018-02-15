@@ -16,18 +16,22 @@ export default {
 
   actions: {
     refreshRoles ({state, commit, dispatch}, payload) {
-      if (payload === 'init' || !Object.keys(state.roles).length) {
+      if (payload === 'init' || !(state.roles instanceof Object)) {
         let reason = payload === 'init' ? payload : 'object empty'
         console.log('updating local list of ROLES from Server, reason:', reason)
         axios.get('/api/role')
         .then((data) => {
-          let roles = {}
-          // turn array into an object
-          data.data.forEach(elem => {
-            let obj = elem
-            roles[obj.id] = elem
-          })
-          commit('setRoles', roles)
+          if (data.data.forEach) {
+            // turn array into an object
+            let roles = {}
+            data.data.forEach(elem => {
+              let obj = elem
+              roles[obj.id] = elem
+            })
+            commit('setRoles', roles)
+          } else {
+            console.warn(data)
+          }
         })
         .catch((error) => console.warn(error))
       } else {

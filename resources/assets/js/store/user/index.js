@@ -39,12 +39,12 @@ export default {
         let oldDate = state.usersUpdatedAt
         commit('setUsersUpdateDate', updateDate)
 
-        if (payload === 'init' || oldDate !== updateDate || !Object.keys(state.users).length) {
+        if (payload === 'init' || oldDate !== updateDate || !(state.users instanceof Object)) {
           let reason = payload === 'init' ? payload : oldDate !== updateDate ? 'out-of-date' : 'object empty'
           console.log('updating local list of USERS from Server, reason:', reason)
           axios.get('/api/user')
           .then((data) => {
-            if (data.data) {
+            if (data.data.forEach) {
               let users = {}
               // turn array into an object
               data.data.forEach(elem => {
@@ -52,6 +52,8 @@ export default {
                 users[obj.id] = elem
               })
               commit('setUsers', users)
+            } else {
+              console.warn(data)
             }
           })
           .catch((error) => console.warn(error))

@@ -1,6 +1,10 @@
 <template>
   <v-container fluid>
-    <v-flex xs12 :key="plan.id" v-for="plan in listedPlans" v-if="listedPlans !== 'loading'">
+    <v-flex xs12
+        v-if="listedPlans !== 'loading'"
+        v-for="plan in listedPlans" 
+        :key="plan.id"
+      >
       <v-card class="accent mb-2">
         <v-container fluid class="pa-0">
           <v-layout row>
@@ -13,7 +17,9 @@
 
                   <h3 class="white--text mb-0">
                     {{ plan.date | dateShort }}<span v-if="plan.end">-{{ plan.end | time }}</span> - 
-                    <span style="font-style: italic;">{{ Object.keys(types).length ? types[plan.type_id].name : plan.type_id }}</span>
+                    <span style="font-style: italic;">
+                      {{ types instanceof Object ? types[plan.type_id].name : plan.type_id }}
+                    </span>
                   </h3>
 
                   <div>
@@ -21,7 +27,7 @@
                     <app-show-staff-chips :single-plan="plan"></app-show-staff-chips>
 
                     <span v-if="plan.items">
-                      {{ Object.keys(plan.items).length }} items</span>
+                      {{ plan.items instanceof Object }} items</span>
                     <small v-else>(empty plan)</small>
                     
                   </div>

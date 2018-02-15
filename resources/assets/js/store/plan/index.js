@@ -52,7 +52,7 @@ export default {
         let updateDate = data.data.date
         let oldDate = state.plansUpdatedAt
         commit('setPlansUpdateDate', updateDate)
-        if (payload === 'init' || oldDate !== updateDate || !Object.keys(state.plans).length) {
+        if (payload === 'init' || oldDate !== updateDate || !(state.plans instanceof Object)) {
           let reason = payload === 'init' ? payload : oldDate !== updateDate ? 'out-of-date' : 'object empty'
           console.log('updating local list of PLANS from Server, reason:', reason)
           axios.get('/api/plan')

@@ -18,6 +18,7 @@ export default function startUpActions (store, router) {
   // check if page header contains single plan
   if (serverData.plan) {
     store.dispatch('setSinglePlan', serverData.plan)
+    store.commit('addPlan', serverData.plan)
   }
 
   // check if a user is already logged on in the browser session

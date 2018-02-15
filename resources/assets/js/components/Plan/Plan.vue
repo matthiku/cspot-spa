@@ -217,19 +217,21 @@ export default {
 
   methods: {
     loadCurrentPlan () {
-      let plan = {}
+      let plan
       // get plan depending on current route!
       if (this.$route && this.$route.name === 'nextsunday') {
         this.pageTitle = 'This Sunday\'s Plan'
         plan = this.$store.getters.nextSunday
         if (this.plan && this.plan.id === plan.id) return
       } else {
-        let planId = this.$route.params.planId
+        let planId = parseInt(this.$route.params.planId)
         if (isNaN(planId) || (this.plan && this.plan.id === planId)) return
-        plan = this.$store.getters.planById(planId)
+        plan = this.plans.find((pl) => planId === pl.id)
+        // console.log(planId, 'found plan?', plan)
         // perhaps the plan was coming from the HTML header on page reload
-        if (!plan && this.$store.state.plan && this.$store.state.plan.plan ) {
+        if ((!plan || plan === 'loading') && this.$store.state.plan && this.$store.state.plan.plan ) {
           plan = this.$store.state.plan.plan
+          // console.log('took plan from page header', plan)
         }
       }
 
@@ -289,9 +291,9 @@ export default {
 
   watch: {
     plan (val) {
+      // console.log('watching plan', val)
       // check which expansion panel is open
-      if (val !== undefined && val !== null) {
-        console.log(val)
+      if (val instanceof Object) {
         if (this.pageStatus.hasOwnProperty(this.plan.id)) this.showDetails = this.pageStatus[this.plan.id].showDetails
         if (this.plan && this.plan.teams && !this.plan.teams.length && !this.pageStatus.hasOwnProperty(this.plan.id)) {
           this.showDetails.staff = true
@@ -299,16 +301,20 @@ export default {
         }
         return
       }
+
       // return to home page if this plan became void meanwhile
       this.$router.push({name: 'home'})
     },
-    plans () {
-      this.loadCurrentPlan()
+    plans (val) {
+      if (val !== 'loading' && val instanceof Object) {
+        // console.log('reloading as PLANS have changed!')
+        this.loadCurrentPlan()
+      }
     }
   },
   mounted () {
-    // console.log((new Date()).getMilliseconds(), 'mounted')    
-    this.loadCurrentPlan()
+    // console.log((new Date()).getMilliseconds(), 'mounted')
+    // this.loadCurrentPlan()
 
     // check which expansion panel should be open
     if (!this.plan || this.plan === undefined) return
@@ -316,9 +322,11 @@ export default {
   },
 
   updated () {
-    // console.log((new Date()).getMilliseconds(), 'updated')    
-    this.loadCurrentPlan()
-    this.savePageStatus()
+    // console.log((new Date()).getMilliseconds(), 'updated', this.plans.length)
+    if (this.plans instanceof Array && this.plans.length) {
+      this.loadCurrentPlan()
+      this.savePageStatus()
+    }
   },
   beforeDestroy () {
     this.savePageStatus()

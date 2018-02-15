@@ -24,6 +24,13 @@ export default {
       state.plan = payload
     },
 
+    addPlan (state, payload) {
+      if (payload instanceof Object) {
+        if (!(state.plans instanceof Object)) state.plans = []
+        state.plans.push(payload)
+      }
+    },
+
     setPlans (state, payload) {
       state.plans = payload
     },
@@ -118,7 +125,7 @@ export default {
       commit('setLoading', true)
       const updateObj = {}
       updateObj[payload.field] = payload.value
-      plansRef.child(payload.id).update(updateObj)
+      axios(payload.id)
         .then(() => {
           commit('setLoading', false)
           dispatch('refreshPlans')
@@ -248,11 +255,13 @@ export default {
         return
       }
 
-      // is this the same plan?
-      if (state.plan && payload.id === state.plan.id) {
-        console.log('STORE - same plan!', payload.id)
-        // verify that plan still exists; e.g. was deleted
-        if (!state.plans[payload.id]) state.plan = null
+      // is this the same plan? Does it (still) exist in the PLANS array?
+      if (state.plan && state.plan.id && payload.id === state.plan.id) {
+        // verify that plan still exists; e.g. wasn't deleted
+        if (state.plans instanceof Object && !state.plans.find((pl) => payload.id === pl.id)) {
+          state.plan = null
+        }
+        console.log('STORE - same plan!', payload.id, state.plan)
         return
       }
 

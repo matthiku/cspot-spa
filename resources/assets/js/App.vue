@@ -104,7 +104,8 @@
       <v-snackbar
           transition="fade-transition"
           :timeout="timeout"
-          color="info" multi-line vertical
+          color="info"
+          top vertical
           v-model="showMessage"
         >
         {{ message }}
@@ -189,7 +190,7 @@
         clipped: true,
         drawer: true,
         right: true,
-        timeout: 8500,
+        timeout: 7500,
         showMessage: false
       }
     },

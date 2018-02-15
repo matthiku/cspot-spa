@@ -27,7 +27,7 @@
                     <app-show-staff-chips :single-plan="plan"></app-show-staff-chips>
 
                     <span v-if="plan.items">
-                      {{ plan.items instanceof Object }} items</span>
+                      {{ plan.items instanceof Object ? plan.items.length : 0 }} items</span>
                     <small v-else>(empty plan)</small>
                     
                   </div>

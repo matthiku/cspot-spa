@@ -9,12 +9,12 @@
         >
         <v-tooltip bottom lazy>
           <span slot="activator">
-            <v-icon color="primary">{{ roles[staff.role_id].icon }}</v-icon>
+            <v-icon color="primary">{{ roles instanceof Object ? roles[staff.role_id].icon : staff.role_id }}</v-icon>
             <span>
-              {{ users[staff.user_id].name | firstWord }}
+              {{ (users instanceof Object ? users[staff.user_id].name : staff.user_id) | firstWord }}
             </span>
           </span>
-          <span>{{ roles[staff.role_id].name | ucFirst }}</span>
+          <span>{{ (roles instanceof Object ? roles[staff.role_id].name : staff.role_id) | ucFirst }}</span>
         </v-tooltip>
       </v-chip>
 

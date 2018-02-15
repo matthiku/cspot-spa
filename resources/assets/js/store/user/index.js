@@ -156,16 +156,24 @@ export default {
           return
         }
         if (data.data) {
-          /**
-           * object 'data.data' contains -
-           * auth : true
-           * intended : "/" 
-           * user : {…}
-           */
-          commit('setMessage', '')
-          commit('setUser', data.data.user)
-          // load all entities from the backend
-          dispatch('loadAllItems')
+          if (window.cspot2_server_data) {
+            let dt
+            try {
+              dt = JSON.parse(window.cspot2_server_data)              
+            } catch (error) {
+              console.warn('backend data in header invalid or missing!')
+            }
+            if (dt.user) {
+              commit('setMessage', '')
+              commit('setUser', dt.user)
+              // load all entities from the backend
+              dispatch('loadAllItems')
+            } else {
+              console.warn('backend failed to send user data!')
+            }
+          } else {
+            console.warn('backend failed to send ANY data!')
+          }
         } else {
           commit('setMessage', 'log in error')
           console.log(data)         

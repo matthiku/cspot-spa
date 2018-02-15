@@ -1,3 +1,8 @@
+/**
+ * Register and configure all Vue frontend routes
+ * 
+ * (C) 2018 Matthias Kuhs
+ */
 import Vue from 'vue'
 import Router from 'vue-router'
 

@@ -25,4 +25,5 @@ export default (to, from, next) => {
     store.dispatch('setOldRoute', to)
     next('/signin')
   }
+  
 }

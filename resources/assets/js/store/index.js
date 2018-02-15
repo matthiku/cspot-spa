@@ -1,7 +1,13 @@
+/**
+ * central register for all Vuex store modules
+ * 
+ * (C) 2018 Matthias Kuhs
+ */
 import Vue from 'vue'
 import Vuex from 'vuex'
 
 import axios from 'axios'
+console.log('setting axios defaults')
 axios.defaults.headers.common = {
   'X-Requested-With': 'XMLHttpRequest',
   'X-CSRF-TOKEN': window.csrf_token

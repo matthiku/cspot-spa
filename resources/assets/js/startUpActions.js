@@ -1,13 +1,21 @@
+/**
+ * startUpActions is called from (imported into) the main.js module, and used in the Vue launch block.
+ * 
+ * (C) 2018 Matthias Kuhs
+ *
+ * @param {*} store   The Vuex store object as defined in main.js
+ * @param {*} router  The Vue router object
+ */
 export default function startUpActions (store, router) {
-  // run actions at the start of the App
 
   // read server data
   let serverData
   try {
     serverData = JSON.parse(window.cspot2_server_data)
   } catch (error) {
-    console.log(error, 'No user is signed in. FROM: ', from)
+    console.log(error, 'No user is signed in.')
   }
+  // check if page header contains single plan
   if (serverData.plan) {
     store.dispatch('setSinglePlan', serverData.plan)
   }
@@ -16,7 +24,6 @@ export default function startUpActions (store, router) {
   var user = serverData.user
   if (user) {
     store.commit('setUser', user)
-    // store.dispatch('fetchUserData', user)
   } else {
     // user is not signed in yet, so we store the desired page and let the user sign in first
     let from = store.getters.oldRoute
@@ -29,7 +36,6 @@ export default function startUpActions (store, router) {
   }
 
   setTimeout(() => {
-    // check if the initial loading of data (see below) had already been successful
     store.dispatch('loadAllItems')
   }, 1000)
 

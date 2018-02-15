@@ -1,3 +1,8 @@
+/**
+ * central registration of all Vue components
+ * 
+ * (C) 2018 Matthias Kuhs
+ */
 import Vue from 'vue'
 
 // alert and success bars

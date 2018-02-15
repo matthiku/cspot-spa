@@ -1,3 +1,8 @@
+/**
+ * Main application as called from within the main view (app.blade.php)
+ * 
+ * (C) 2018 Matthias Kuhs
+ */
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 

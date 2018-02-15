@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export default {
   state: {
     appName: 'c-SPOT-SPA',
@@ -54,6 +56,10 @@ export default {
         console.log('(loadAllItems) user not signed in!', rootState.user.user)
         return
       }
+      // make sure we always have the latest token!
+      console.log('update csrf token for axios')
+      axios.defaults.headers.common = { 'X-CSRF-TOKEN': window.csrf_token }
+
       dispatch('refreshUsers', 'init')
       dispatch('refreshRoles', 'init')
       dispatch('refreshTypes', 'init')

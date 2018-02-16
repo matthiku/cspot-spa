@@ -5,9 +5,11 @@
  */
 import Vue from 'vue'
 
-// alert and success bars
+// Main app components
 import AlertCmp from './components/shared/Alert.vue'
 import SuccessCmp from './components/shared/Success.vue'
+import FooterCmp from './components/shared/Footer.vue'
+import ToolbarCmp from './components/shared/Toolbar.vue'
 
 // Plan Details page
 import EditPlanDateTimeDialog from './components/Plan/Edit/EditPlanDateTimeDialog'
@@ -37,6 +39,8 @@ import AdminEditFieldDialog from './components/Admin/Edit/EditFieldDialog'
 export default function sharedComponents () {
   Vue.component('app-alert', AlertCmp)
   Vue.component('app-success', SuccessCmp)
+  Vue.component('app-footer', FooterCmp)
+  Vue.component('app-toolbar', ToolbarCmp)
 
   Vue.component('app-edit-plan-action-scripture-dialog', EditPlanActionScriptureDialog)
   Vue.component('app-edit-plan-action-list', EditPlanActionList)

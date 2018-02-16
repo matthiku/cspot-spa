@@ -54,8 +54,8 @@ class PlanItemController extends Controller
      */
     public function destroy(Plan $plan, Item $item)
     {
-        //
-        $item->delete();
+        // no need to use soft-deletes
+        $item->forceDelete();
         // need to re-calculate seq.nos!
         return response($item->jsonSerialize(), Response::HTTP_OK);
     }

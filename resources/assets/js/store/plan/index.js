@@ -300,10 +300,15 @@ export default {
         return
       }
 
+      // was there any change in the amounf of items?
+      let lenActionList = 0
+      let lenItems = 0
+      if (state.plan) {
+        lenActionList = state.plan.actionList ? state.plan.actionList.length : 0
+        lenItems = state.plan.items ? state.plan.items.length : 0
+      }
       // is this the same plan? Does it (still) exist in the PLANS array? 
-      // And was there any change in the amounf of items?
-      if (state.plan && state.plan.id && payload.id === state.plan.id && 
-        state.plan.actionList.length === state.plan.items.length) {
+      if (state.plan && state.plan.id && payload.id === state.plan.id && lenActionList === lenItems) {
         // verify that plan still exists; e.g. wasn't deleted
         if (state.plans instanceof Object && !state.plans.find((pl) => payload.id === pl.id)) {
           state.plan = null

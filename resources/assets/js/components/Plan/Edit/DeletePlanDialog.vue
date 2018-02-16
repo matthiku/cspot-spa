@@ -57,7 +57,9 @@
 
     computed: {
       planEmpty () {
-        return (this.plan.teams && this.plan.teams.length) ? false : true
+        let teams = (this.plan && this.plan.teams) ? this.plan.teams.length : 0
+        let items = (this.plan && this.plan.items) ? this.plan.items.length : 0
+        return teams || items ? false : true
       }
     },
 

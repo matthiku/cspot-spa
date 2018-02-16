@@ -34,12 +34,12 @@ Route::middleware('auth:api')->group(
                 'type' => 'TypeController',
                 'role' => 'RoleController',
                 'plan' => 'PlanController',
+                'plan.team' => 'PlanTeamController',
                 'song' => 'SongController'
             ]
         );
 
-        // provide for 'soft-deletes'
-        // https://laravel.com/docs/5.5/eloquent#soft-deleting
+        // provide for 'soft-deletes' https://laravel.com/docs/5.5/eloquent#soft-deleting
         Route::delete('/plan/{plan}/soft', 'PlanController@softdelete');
     }
 );

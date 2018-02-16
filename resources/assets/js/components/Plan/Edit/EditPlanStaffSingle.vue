@@ -65,14 +65,12 @@ export default {
     removeStaff () {
       this.$store.dispatch('removeStaffFromPlan', {
         planId: this.plan.id,
-        staffId: this.item.id
+        staffId: this.item.id,
+        name: this.user_name,
+        role: this.roles_name
       })
       .then(() => {
-        // this.createStaffList() => change to store.dispatch!
         this.warning = false
-        // remove the local staff from the staffList array
-        let idx = this.items.find((el) => el.id === this.item.id)
-        if (idx) this.items.splice(idx, 1)
       })
     }
   }

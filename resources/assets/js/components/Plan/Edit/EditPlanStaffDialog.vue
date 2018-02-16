@@ -77,9 +77,12 @@ export default {
   computed: {
     rolesList () {
       let rl = []
-      for (let role in this.roles) {
-        if (this.roles[role].users && this.roles[role].forEvents) {
-          rl.push({text: role, value: role})
+      for (const key in this.roles) {
+        if (this.roles.hasOwnProperty(key)) {
+          const role = this.roles[key]
+          if (role.for_events) {
+            rl.push({text: role.name, value: role.id})
+          }
         }
       }
       return rl
@@ -90,18 +93,18 @@ export default {
     startAdding () {
       this.staffEditingDlg = true
       // if staffList is still empty, pre-select role 'leader'
-      if (!this.plan.staffList.length) this.role = {text: 'leader', value: 'leader'}
+      //TODO: the value '5' for leader must be computed !! !! ==================================
+      if (!this.plan.teams || !this.plan.teams.length) this.role = {text: 'leader', value: 5}
     },
     saveStaff () {
       this.staffEditingDlg = false
       this.$store.dispatch('addStaffToPlan', {
         planId: this.plan.id,
-        staff: {
-          userId: this.person.id,
-          role: this.role.text
-        }
-      }).then(() => {
-        this.createStaffList()
+        roleId: this.role.value,
+        role:   this.role.text,
+        userId: this.person.id,
+        name:   this.person.name
+      }).then((data) => {
         this.person = null
         this.role = null
       })
@@ -114,14 +117,16 @@ export default {
   },
 
   watch: {
+
     // filter list of users according to the role selected!
     role (val) {
       if (!val) return
-      let role = val.text
+      let role = val.value
       if (!role || !this.roles[role]) return
+
       let ul = []
       for (let user in this.roles[role].users) {
-        ul.push({ id: user, name: this.users[user].name || this.users[user].email })
+        ul.push({ id: this.users[user].id, name: this.users[user].name || this.users[user].email })
       }
       this.usersList = ul
       // already select the user in the form if there's only one
@@ -129,6 +134,7 @@ export default {
         this.person = ul[0]
       }
     },
+
     // checking if parent wants this component to appear!
     dialogShow () {
       if (this.dialog.type !== 'staff') return

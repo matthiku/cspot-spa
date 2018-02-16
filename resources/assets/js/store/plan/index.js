@@ -31,6 +31,23 @@ export default {
       }
     },
 
+    addTeamMemberToPlan (state, payload) {
+      if (state.plan instanceof Object && payload instanceof Object) {
+        if (!state.plans.teams instanceof Array) {
+          state.plans.teams = []
+        }
+        state.plan.teams.push(payload)
+      }
+    },
+
+    removeMemberFromPlan (state, payload) {
+      // remove the local staff from the staffList array
+      let plan = state.plan || []
+      if (plan.id === payload.planId) {
+        state.plan.teams = plan.teams.filter((el) => el.id !== payload.staffId)
+      }
+    },
+
     setPlans (state, payload) {
       state.plans = payload
     },
@@ -135,20 +152,26 @@ export default {
     // - - payload must contain plan id and staff object with userId and role name
     addStaffToPlan ({commit, dispatch}, payload) {
       commit('setLoading', true)
-      plansRef.child(payload.planId).child('staff').push(payload.staff)
-        .then(() => {
-          commit('appendMessage', 'One person added to this plan')
+      axios.post(`/api/plan/${payload.planId}/team`, {
+        'role_id': payload.roleId,
+        'user_id': payload.userId
+      })
+        .then((data) => {
+          commit('addTeamMemberToPlan', data.data)
+          commit('appendMessage', `${payload.name} added as ${payload.role} to this plan`)
           commit('setLoading', false)
         })
         .catch((error) => dispatch('errorHandling', error))
     },
+
     // remove a staff member from a plan
     // - - payload must contain plan id and staff id
     removeStaffFromPlan ({commit, dispatch}, payload) {
       commit('setLoading', true)
-      plansRef.child(payload.planId).child('staff').child(payload.staffId).remove()
-        .then(() => {
-          commit('appendMessage', 'One person removed from this plan')
+      axios.delete(`/api/plan/${payload.planId}/team/${payload.staffId}`)
+        .then((data) => {
+          commit('removeMemberFromPlan', payload)
+          commit('appendMessage', `${payload.name} removed as ${payload.role} from this plan`)
           commit('setLoading', false)
         })
         .catch((error) => dispatch('errorHandling', error))

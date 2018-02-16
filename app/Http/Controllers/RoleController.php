@@ -15,8 +15,8 @@ class RoleController extends Controller
      */
     public function index()
     {
-        //
-        return response(Role::all()->jsonSerialize(), Response::HTTP_OK);
+        // get all roles with all users having this role
+        return response(Role::with('users')->get()->jsonSerialize(), Response::HTTP_OK);
     }
 
     /**

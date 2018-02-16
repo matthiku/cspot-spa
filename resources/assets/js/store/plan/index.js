@@ -219,8 +219,8 @@ export default {
         .then((data) => {
           commit('addActionToPlan', data.data) // add the new item (acitvity) to the items array of the plan
           dispatch('setSinglePlan', state.plan) // refactor the actionList on the plan
-          commit('appendMessage', '"' + payload.type + '" item added to this plan')
-          dispatch('refreshPlans')
+          commit('appendMessage', '"' + payload.type + '" added to this plan')
+          // dispatch('refreshPlans')
           commit('setLoading', false)
         })
         .catch((error) => dispatch('errorHandling', error))
@@ -255,7 +255,7 @@ export default {
           commit('removeActionFromPlan', payload)
           dispatch('setSinglePlan', state.plan) // refactor the actionList on the plan
           commit('appendMessage', 'Action removed from this plan')
-          dispatch('refreshPlans')
+          // dispatch('refreshPlans')
           commit('setLoading', false)
         })
         .catch((error) => dispatch('errorHandling', error))

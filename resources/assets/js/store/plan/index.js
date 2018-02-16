@@ -40,11 +40,30 @@ export default {
       }
     },
 
+    addActionToPlan (state, payload) {
+      if (state.plan instanceof Object && payload instanceof Object) {
+        if (!state.plan.items instanceof Array || !state.plan.items) {
+          state.plan.items = []
+        }
+        state.plan.items.push(payload)
+      }
+    },
+
     removeMemberFromPlan (state, payload) {
       // remove the local staff from the staffList array
       let plan = state.plan || []
       if (plan.id === payload.planId) {
         state.plan.teams = plan.teams.filter((el) => el.id !== payload.staffId)
+      }
+    },
+
+    removeActionFromPlan (state, payload) {
+      // remove the deleted activity from the staffList array
+      let plan = state.plan || []
+      if (plan.id === payload.planId) {
+        // build a new items array without the just deleted one
+        // and write it back into the state
+        state.plan.items = plan.items.filter((el) => el.id !== payload.actionId)
       }
     },
 
@@ -148,6 +167,7 @@ export default {
         })
         .catch((error) => dispatch('errorHandling', error))
     },
+
     // add a staff member to a plan
     // - - payload must contain plan id and staff object with userId and role name
     addStaffToPlan ({commit, dispatch}, payload) {
@@ -163,7 +183,6 @@ export default {
         })
         .catch((error) => dispatch('errorHandling', error))
     },
-
     // remove a staff member from a plan
     // - - payload must contain plan id and staff id
     removeStaffFromPlan ({commit, dispatch}, payload) {
@@ -177,7 +196,7 @@ export default {
         .catch((error) => dispatch('errorHandling', error))
     },
 
-    addActionItemToPlan ({commit, dispatch}, payload) {
+    addActionItemToPlan ({state, commit, dispatch}, payload) {
       if (!payload.planId) {
         dispatch('errorHandling', 'Error when trying to add action item: planId missing!')
         return
@@ -196,11 +215,10 @@ export default {
         type: payload.type,
         seqNo: payload.seqNo
       }
-      plansRef
-        .child(payload.planId)
-        .child('actions')
-        .push(newObj)
-        .then(() => {
+      axios.post(`/api/plan/${payload.planId}/item`, newObj)
+        .then((data) => {
+          commit('addActionToPlan', data.data) // add the new item (acitvity) to the items array of the plan
+          dispatch('setSinglePlan', state.plan) // refactor the actionList on the plan
           commit('appendMessage', '"' + payload.type + '" item added to this plan')
           dispatch('refreshPlans')
           commit('setLoading', false)
@@ -226,10 +244,16 @@ export default {
     },
     // remove an action from a plan
     // - - payload must contain plan id and action id
-    removeActionFromPlan ({commit, dispatch}, payload) {
+    removeActionFromPlan ({state, commit, dispatch}, payload) {
       commit('setLoading', true)
-      plansRef.child(payload.planId).child('actions').child(payload.actionId).remove()
-        .then(() => {
+
+      axios.delete(
+        `/api/plan/${payload.planId}/item/${payload.actionId}`
+      )
+        .then((data) => {
+          console.log('removing action item with id', payload.actionId)
+          commit('removeActionFromPlan', payload)
+          dispatch('setSinglePlan', state.plan) // refactor the actionList on the plan
           commit('appendMessage', 'Action removed from this plan')
           dispatch('refreshPlans')
           commit('setLoading', false)
@@ -249,7 +273,6 @@ export default {
         })
         .catch((error) => dispatch('errorHandling', error))
     },
-
     // delete a plan finally
     deletePlan ({state, commit, dispatch}, payload) {
       commit('setLoading', true)
@@ -262,6 +285,7 @@ export default {
         })
         .catch((error) => dispatch('errorHandling', error))
     },
+
     clearNewPlanId ({commit}) {
       commit('clearNewPlanId')
     },
@@ -276,8 +300,10 @@ export default {
         return
       }
 
-      // is this the same plan? Does it (still) exist in the PLANS array?
-      if (state.plan && state.plan.id && payload.id === state.plan.id) {
+      // is this the same plan? Does it (still) exist in the PLANS array? 
+      // And was there any change in the amounf of items?
+      if (state.plan && state.plan.id && payload.id === state.plan.id && 
+        state.plan.actionList.length === state.plan.items.length) {
         // verify that plan still exists; e.g. wasn't deleted
         if (state.plans instanceof Object && !state.plans.find((pl) => payload.id === pl.id)) {
           state.plan = null
@@ -297,7 +323,7 @@ export default {
           let bb = state.bibleBooks
           for (const key in bb) {
             if (bb.hasOwnProperty(key)) {
-              if (action.comment.indexOf(key) >= 0) isScriptureRef = true
+              if (action.comment && action.comment.indexOf(key) >= 0) isScriptureRef = true
             }
           }
           let obj = {

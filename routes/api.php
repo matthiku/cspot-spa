@@ -33,9 +33,11 @@ Route::middleware('auth:api')->group(
                 'user' => 'UserController',
                 'type' => 'TypeController',
                 'role' => 'RoleController',
+                'song' => 'SongController',
+
                 'plan' => 'PlanController',
                 'plan.team' => 'PlanTeamController',
-                'song' => 'SongController'
+                'plan.item' => 'PlanItemController',
             ]
         );
 

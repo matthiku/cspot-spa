@@ -15,7 +15,12 @@ export default (to, from, next) => {
     console.log(error, 'No user is signed in. FROM: ', from)
   }
   if (user) {
-    store.commit('setUser', user)
+    console.log('getting userdata from page header', user)
+    if (store.user) {
+      store.user.user = user
+    } else {
+      store.commit('setUser', user)
+    }
   }
 
   if (store.getters.user) {

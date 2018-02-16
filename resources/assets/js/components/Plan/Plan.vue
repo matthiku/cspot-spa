@@ -314,7 +314,9 @@ export default {
   },
   mounted () {
     // console.log((new Date()).getMilliseconds(), 'mounted')
-    // this.loadCurrentPlan()
+
+    // check if plan is already available, otherwise load it
+    if (!this.plan) this.loadCurrentPlan()
 
     // check which expansion panel should be open
     if (!this.plan || this.plan === undefined) return

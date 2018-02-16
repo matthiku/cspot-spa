@@ -66,7 +66,7 @@
                     ></app-edit-song-field>
                   <span v-else-if="props.item.title_2">({{ props.item.title_2 }})</span>
 
-                  <v-btn v-if="addToPlan" @click="addSelectedSongToPlan(props.item.key)"
+                  <v-btn v-if="addToPlan" @click="addSelectedSongToPlan(props.item.id)"
                       class="on-hover-only" small round fab color="primary"
                       title="add this song to your plan"><v-icon>add</v-icon></v-btn>
                 </td>
@@ -314,7 +314,7 @@
                           <v-btn 
                               :disabled="!dialog.selectedPlan"
                               color="green darken-1" round small block 
-                              @click.native="addSelectedSongToPlan(props.item.key)"> <v-icon>add</v-icon> Add</v-btn>
+                              @click.native="addSelectedSongToPlan(props.item.id)"> <v-icon>add</v-icon> Add</v-btn>
                         </v-card-actions>
                       </v-card>
                     </v-dialog>
@@ -433,14 +433,17 @@
           }
         })
       },
+
       showItemDialog (what) {
         this.itemDialog.show = true
         this.itemDialog.what = what
       },
+
       toggleExpanded (props) {
         props.expanded = !props.expanded
         if (!props.expanded) this.fab = false
       },
+
       addSelectedSongToPlan (id) {
         if (!id || !this.dialog.selectedPlan || isNaN(this.dialog.seqNo)) return
 

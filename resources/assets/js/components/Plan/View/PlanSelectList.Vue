@@ -83,7 +83,11 @@
       // if only one plan was provided for this list, we can already select it
       if (this.planList && Object.keys(this.planList).length === 1) {
         this.selected = this.planList
-        this.$store.dispatch('setDialog', {selectedPlan: this.planList[0].id})
+        this.$store.dispatch('setDialog', {
+            selectedPlan: this.planList[0].id,
+            seqNo: this.planList[0].items ? this.planList[0].items.length : 0
+          }
+        )
       }
     },
 
@@ -95,7 +99,10 @@
         if (props.selected) {
           this.$store.dispatch('setDialog', {selectedPlan: undefined})
         } else {
-          this.$store.dispatch('setDialog', {selectedPlan: props.item.id})
+          this.$store.dispatch('setDialog', {
+              selectedPlan: props.item.id,
+              seqNo: props.items ? props.items.length : 0
+            })
           if (this.selected.length > 1) this.selected = []
         }
       }

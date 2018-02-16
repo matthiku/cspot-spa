@@ -17,7 +17,7 @@
 
             <td class="text-xs-right">{{ props.item.id }}</td>
 
-            <td class="text-xs-right" @click="editField('icon', props.item)">
+            <td class="text-xs-right no-wrap" @click="editField('icon', props.item)">
               <small>({{ props.item.icon }})</small>
               <v-icon v-if="props.item.icon">{{ props.item.icon }}</v-icon>
             </td>
@@ -25,10 +25,10 @@
             <td class="text-xs-right" @click="editField('name', props.item)">{{ props.item.name }}</td>
 
             <td class="text-xs-right" @click="updateEvent(props.item)">
-              <v-checkbox v-model="props.item.forEvents" light></v-checkbox>
+              <v-checkbox v-model="props.item.for_events" light></v-checkbox>
             </td>
 
-            <td class="text-xs-right" v-if="users">
+            <td class="text-xs-right" v-if="users instanceof Object">
               <span v-for="(ok, id, index) in props.item.users" :key="index">
                 <v-chip small
                   @click="gotoUserProfile(users[id].id)"

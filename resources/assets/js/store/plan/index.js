@@ -33,8 +33,8 @@ export default {
 
     addTeamMemberToPlan (state, payload) {
       if (state.plan instanceof Object && payload instanceof Object) {
-        if (!state.plans.teams instanceof Array) {
-          state.plans.teams = []
+        if (!state.plan.teams instanceof Array || !state.plan.teams) {
+          state.plan.teams = []
         }
         state.plan.teams.push(payload)
       }

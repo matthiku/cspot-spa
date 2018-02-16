@@ -3,16 +3,21 @@
 
     <!-- drop-down menu in Plan title bar -->
     <v-menu open-on-hover bottom right offset-y>
+
       <v-btn icon slot="activator" dark>
         <v-toolbar-side-icon></v-toolbar-side-icon>
       </v-btn>
+
       <v-card>
         <v-card-title class="subheading blue-grey--text text--lighten-1 pb-0 mb-0">Select Show Mode:</v-card-title>
+
         <v-list class="mt-0">
+          
           <v-list-tile v-for="item in planMenuItems" :key="item.title" @click="planAction(item.action)">
             <v-icon class="mr-3">{{ item.icon }}</v-icon>
             <v-list-tile-title>{{ item.title }}</v-list-tile-title>
           </v-list-tile>
+
           <div v-if="userIsAdmin">
             <hr>
             <v-list-tile>
@@ -22,7 +27,9 @@
             </v-list-tile>
           </div>
         </v-list>
+
       </v-card>
+
     </v-menu>
 
 

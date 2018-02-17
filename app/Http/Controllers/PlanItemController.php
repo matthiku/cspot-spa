@@ -43,7 +43,10 @@ class PlanItemController extends Controller
      */
     public function update(Request $request, Plan $plan, Item $item)
     {
-        //
+        // $request must contain field name and new value
+        $item[$request->field] = $request->value;
+        $item->save();
+        return response($item->jsonSerialize(), Response::HTTP_OK);
     }
 
     /**

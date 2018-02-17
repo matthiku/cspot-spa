@@ -234,13 +234,19 @@ export default {
       }
       const updateObj = {}
       updateObj[payload.field] = payload.newValue
-      plansRef
-        .child(payload.planId)
-          .child('actions')
-            .child(payload.key)
-              .update(updateObj)
-                .then(() => { if (loadHandling === 'local') commit('setLoading', false) })
-                .catch((error) => dispatch('errorHandling', error))
+      axios.patch(
+        `/api/plan/${payload.planId}/item/${payload.actionId}`,
+        {
+          'field': payload.field,
+          'value': payload.value
+        }
+      )
+        .then((data) => {
+          if (loadHandling === 'local') commit('setLoading', false)
+          console.log(data)
+          // @TODO: update current activity in the store
+        })
+        .catch((error) => dispatch('errorHandling', error))
     },
     // remove an action from a plan
     // - - payload must contain plan id and action id

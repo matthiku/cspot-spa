@@ -6,7 +6,7 @@
       <v-list two-line dense>
 
         <!-- loop through all plan action items -->
-        <template v-for="(item, index) in actionList">
+        <template v-for="(item, index) in plan.actionList">
 
           <v-list-tile
               :id="'activity-item-' + item.key"
@@ -103,11 +103,11 @@
 
           </v-list-tile>
 
-          <v-divider v-if="index + 1 < actionList.length" :key="item.key"></v-divider>
+          <v-divider v-if="index + 1 < plan.actionList.length" :key="item.key"></v-divider>
         </template>
 
         <p class="text-xs-center ma-0">
-          <span v-if="!actionList.length">(no items added yet)</span>
+          <span v-if="!plan.actionList.length">(no items added yet)</span>
         </p>
       </v-list>
     </v-card-text>
@@ -330,7 +330,7 @@
       },
       // find the Activity where seqNo is <from> and change it to <to>
       changeSeqNo (from, to) {
-        this.actionList.forEach((elem) => {
+        this.plan.actionList.forEach((elem) => {
           if (parseInt(elem.seqNo) === parseInt(from)) {
             elem.seqNo = to
           }
@@ -348,7 +348,7 @@
           // report the change back to the backend DB
           let obj = {
             planId: this.plan.id,
-            key: elem.key,
+            actionId: elem.key,
             field: 'seqNo',
             newValue: elem.seqNo
           }

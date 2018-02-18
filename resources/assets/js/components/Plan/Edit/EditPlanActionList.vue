@@ -238,8 +238,8 @@
         // update the text on the backend DB
         this.$store.dispatch('updateActionItem', {
           planId: this.plan.id,
-          key,
-          field: 'value',
+          actionId: key,
+          field: 'comment',
           newValue: event.target.outerText
         }).then(() => {
           // stop the content editing

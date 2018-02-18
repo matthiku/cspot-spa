@@ -183,6 +183,7 @@ export default {
         })
         .catch((error) => dispatch('errorHandling', error))
     },
+
     // remove a staff member from a plan
     // - - payload must contain plan id and staff id
     removeStaffFromPlan ({commit, dispatch}, payload) {
@@ -225,7 +226,10 @@ export default {
         })
         .catch((error) => dispatch('errorHandling', error))
     },
+
     updateActionItem ({rootState, commit, dispatch}, payload) {
+      // payload must contain planId, itemId, field name and new value
+      //
       let loadHandling = 'local'
       if (!rootState.shared.loading) {
         commit('setLoading', true)
@@ -238,16 +242,18 @@ export default {
         `/api/plan/${payload.planId}/item/${payload.actionId}`,
         {
           'field': payload.field,
-          'value': payload.value
+          'value': payload.newValue
         }
       )
         .then((data) => {
           if (loadHandling === 'local') commit('setLoading', false)
-          console.log(data)
-          // @TODO: update current activity in the store
+          //
+          // TODO: update(replace) current activity in the store!
+          //data.data = updated activity
         })
         .catch((error) => dispatch('errorHandling', error))
     },
+
     // remove an action from a plan
     // - - payload must contain plan id and action id
     removeActionFromPlan ({state, commit, dispatch}, payload) {

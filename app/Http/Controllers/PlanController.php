@@ -48,6 +48,32 @@ class PlanController extends Controller
 
 
     /**
+     * Get a single plan
+     * 
+     * StorePlan handles the validation logic
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Plan  $plan
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Plan $plan)
+    {
+        $plan = \App\Models\Plan::with(
+            [
+                'items',
+                'teams',
+                'resources',
+                'notes',
+                'histories'
+            ]
+        )
+        ->where('id', $plan->id)
+        ->first();
+        return response($plan->jsonSerialize(), Response::HTTP_OK);
+    }
+
+
+    /**
      * Store a newly created resource in storage.
      * 
      * StorePlan handles the validation logic

@@ -31,42 +31,6 @@ export default {
       }
     },
 
-    addTeamMemberToPlan (state, payload) {
-      if (state.plan instanceof Object && payload instanceof Object) {
-        if (!state.plan.teams instanceof Array || !state.plan.teams) {
-          state.plan.teams = []
-        }
-        state.plan.teams.push(payload)
-      }
-    },
-
-    addActionToPlan (state, payload) {
-      if (state.plan instanceof Object && payload instanceof Object) {
-        if (!state.plan.items instanceof Array || !state.plan.items) {
-          state.plan.items = []
-        }
-        state.plan.items.push(payload)
-      }
-    },
-
-    removeMemberFromPlan (state, payload) {
-      // remove the local staff from the staffList array
-      let plan = state.plan || []
-      if (plan.id === payload.planId) {
-        state.plan.teams = plan.teams.filter((el) => el.id !== payload.staffId)
-      }
-    },
-
-    removeActionFromPlan (state, payload) {
-      // remove the deleted activity from the staffList array
-      let plan = state.plan || []
-      if (plan.id === payload.planId) {
-        // build a new items array without the just deleted one
-        // and write it back into the state
-        state.plan.items = plan.items.filter((el) => el.id !== payload.actionId)
-      }
-    },
-
     setPlans (state, payload) {
       state.plans = payload
     },
@@ -106,6 +70,18 @@ export default {
         } else {
           console.log('PLANS still up-to-date')
         }
+      })
+      .catch((error) => console.warn(error))
+    },
+
+    // get complete data of a single plan
+    reloadPlan ({state, commit, dispatch}, payload) {
+      axios.get(`/api/plan/${payload.planId}`)
+      .then((data) => {
+        // first 'empty' the plan in the store
+        // to make sure we do replace it with the updated plan!
+        commit('setPlan', {type_id: payload.type_id})
+        dispatch('setSinglePlan', data.data)
       })
       .catch((error) => console.warn(error))
     },
@@ -177,7 +153,7 @@ export default {
         'user_id': payload.userId
       })
         .then((data) => {
-          commit('addTeamMemberToPlan', data.data)
+          dispatch('reloadPlan', payload)
           commit('appendMessage', `${payload.name} added as ${payload.role} to this plan`)
           commit('setLoading', false)
         })
@@ -190,7 +166,7 @@ export default {
       commit('setLoading', true)
       axios.delete(`/api/plan/${payload.planId}/team/${payload.staffId}`)
         .then((data) => {
-          commit('removeMemberFromPlan', payload)
+          dispatch('reloadPlan', payload)
           commit('appendMessage', `${payload.name} removed as ${payload.role} from this plan`)
           commit('setLoading', false)
         })
@@ -218,8 +194,7 @@ export default {
       }
       axios.post(`/api/plan/${payload.planId}/item`, newObj)
         .then((data) => {
-          commit('addActionToPlan', data.data) // add the new item (acitvity) to the items array of the plan
-          dispatch('setSinglePlan', state.plan) // refactor the actionList on the plan
+          dispatch('reloadPlan', payload)
           commit('appendMessage', '"' + payload.type + '" added to this plan')
           // dispatch('refreshPlans')
           commit('setLoading', false)
@@ -247,9 +222,8 @@ export default {
       )
         .then((data) => {
           if (loadHandling === 'local') commit('setLoading', false)
-          //
-          // TODO: update(replace) current activity in the store!
-          //data.data = updated activity
+          // update(replace) current plan and replace in the store!
+          dispatch('reloadPlan', payload)
         })
         .catch((error) => dispatch('errorHandling', error))
     },
@@ -264,8 +238,7 @@ export default {
       )
         .then((data) => {
           console.log('removing action item with id', payload.actionId)
-          commit('removeActionFromPlan', payload)
-          dispatch('setSinglePlan', state.plan) // refactor the actionList on the plan
+          dispatch('reloadPlan', payload)
           commit('appendMessage', 'Action removed from this plan')
           // dispatch('refreshPlans')
           commit('setLoading', false)

@@ -103,11 +103,11 @@
 
           </v-list-tile>
 
-          <v-divider v-if="index + 1 < plan.actionList.length" :key="item.key"></v-divider>
+          <v-divider v-if="plan.actionList && index + 1 < plan.actionList.length" :key="item.key"></v-divider>
         </template>
 
         <p class="text-xs-center ma-0">
-          <span v-if="!plan.actionList.length">(no items added yet)</span>
+          <span v-if="!plan.actionList || !plan.actionList.length">(no items added yet)</span>
         </p>
       </v-list>
     </v-card-text>
@@ -349,7 +349,7 @@
           let obj = {
             planId: this.plan.id,
             actionId: elem.key,
-            field: 'seqNo',
+            field: 'seq_no',
             newValue: elem.seqNo
           }
           this.$store.dispatch('updateActionItem', obj)

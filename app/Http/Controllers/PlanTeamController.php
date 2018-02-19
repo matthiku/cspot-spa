@@ -9,19 +9,6 @@ use Illuminate\Http\Response;
 
 class PlanTeamController extends Controller
 {
-    /**
-     * Display a listing of the roles of a plan.
-     *
-     * @param \App\Models\Plan $plan the Plan
-     * 
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Plan $plan)
-    {
-        //
-    }
-
-
 
     /**
      * Store a newly created TEAM member for a PLAN in storage.

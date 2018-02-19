@@ -8,6 +8,7 @@ export default {
     plan: null,
     plans: 'loading',
     plansUpdatedAt: null,
+    planUpdatedAt: null,
     bibleBooks,
     newPlanId: null,
     activityColours: {
@@ -46,6 +47,10 @@ export default {
 
     setPlansUpdateDate(state, payload) {
       state.plansUpdatedAt = payload
+    },
+
+    setPlanUpdateDate(state, payload) {
+      state.planUpdatedAt = payload
     }
 
   },
@@ -76,14 +81,23 @@ export default {
 
     // get complete data of a single plan
     reloadPlan ({state, commit, dispatch}, payload) {
-      axios.get(`/api/plan/${payload.planId}`)
-      .then((data) => {
-        // first 'empty' the plan in the store
-        // to make sure we do replace it with the updated plan!
-        commit('setPlan', {type_id: payload.type_id})
-        dispatch('setSinglePlan', data.data)
+      // first check if data was meanwhile updated on the backend
+      axios.get(`/api/plan/${payload.planId}/latest`)
+        .then((data) => {
+          let updateDate = data.data.date
+          let oldDate = state.planUpdatedAt
+          commit('setPlanUpdateDate', updateDate)
+          // only request a new copy from the backend if the data has changed
+          if (oldDate !== updateDate || !(state.plan instanceof Object)) {
+            axios.get(`/api/plan/${payload.planId}`)
+            .then((data) => {
+              // first 'empty' the plan in the store to make sure we do have just the updated plan!
+              commit('setPlan', {})
+              dispatch('setSinglePlan', data.data)
+            })
+            .catch((error) => console.warn(error))
+        }
       })
-      .catch((error) => console.warn(error))
     },
 
     // create a new Plan item and possibly upload an image file
@@ -237,7 +251,7 @@ export default {
         `/api/plan/${payload.planId}/item/${payload.actionId}`
       )
         .then((data) => {
-          console.log('removing action item with id', payload.actionId)
+          console.log('removing action from plan', payload)
           dispatch('reloadPlan', payload)
           commit('appendMessage', 'Action removed from this plan')
           // dispatch('refreshPlans')

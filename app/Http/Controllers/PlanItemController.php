@@ -33,11 +33,11 @@ class PlanItemController extends Controller
     }
 
 
-
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Plan  $plan
      * @param  \App\Models\Item  $item
      * @return \Illuminate\Http\Response
      */
@@ -48,6 +48,8 @@ class PlanItemController extends Controller
         $item->save();
         return response($item->jsonSerialize(), Response::HTTP_OK);
     }
+
+
 
     /**
      * Remove the specified resource from storage.

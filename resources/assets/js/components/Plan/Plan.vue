@@ -244,8 +244,12 @@ export default {
         this.showDetails.activities = true
       }
 
-      // save current plan to the state
-      this.$store.dispatch('setSinglePlan', plan)
+      // make sure we have the latest version from the backend of this plan
+      if (plan && !isNaN(plan.id)) {
+        console.log('reloading plan', plan.id)
+        plan.planId = plan.id
+        this.$store.dispatch('reloadPlan', plan)
+      }
     },
     openPlanSubtitleEdit () {
       if (!this.userOwnsThisPlan) return

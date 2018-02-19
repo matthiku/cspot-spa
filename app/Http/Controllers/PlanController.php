@@ -12,7 +12,6 @@ class PlanController extends Controller
 {
 
 
-
     /**
      * Display a listing of the resource.
      *
@@ -38,10 +37,33 @@ class PlanController extends Controller
         return response($plans->jsonSerialize(), Response::HTTP_OK);
     }
 
-    // get date of latest change in this table:
+    /**
+     * Get date of latest change in the PLANS table
+     */
     public function latest()
     {
         $latest = Plan::latest('updated_at')->first()->updated_at;
+        return response($latest, Response::HTTP_OK);
+    }
+    /** 
+     * Get date of latest update to a single plan (including child relations)
+     */ 
+    public function planLatest(Plan $plan)
+    {
+        $plan_date = $plan->updated_at;
+
+        $item_date = $plan_date;
+        if ($plan->items->count()) {
+            $item_date = $plan->items()->latest('updated_at')->first()->updated_at;
+        }
+        $latest = $plan_date->max($item_date);
+        
+        $team_date = $plan_date;
+        if ($plan->teams->count()) {
+            $team_date = $plan->teams()->latest('updated_at')->first()->updated_at;
+        }
+        $latest = $latest->max($team_date);
+
         return response($latest, Response::HTTP_OK);
     }
 

@@ -24,8 +24,9 @@ Route::middleware('auth:api')->group(
     function () {        
         // provide date of latest update to certain tables
         Route::get('/song/latest', 'SongController@latest');
-        Route::get('/plan/latest', 'PlanController@latest');
         Route::get('/user/latest', 'UserController@latest');
+        Route::get('/plan/latest', 'PlanController@latest');
+        Route::get('/plan/{plan}/latest', 'PlanController@planLatest');
 
         // provide the CRUD  resources
         Route::apiResources(

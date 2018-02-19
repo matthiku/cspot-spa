@@ -269,19 +269,6 @@ export default {
       if (!this.userOwnsThisPlan) return
       this.editing = what
     },
-    onFieldEdited (that) {
-      if (!this.userOwnsThisPlan) return
-      this.editing = ''
-      this.showDetails[that] = false
-      // check if there were any changes
-      if (this.$refs['input-info']._data.initialValue === this.$refs['input-info']._data.lazyValue) return
-      // update plan set info = this.plan[that]
-      this.$store.dispatch('updatePlan', {
-        id: this.plan.id,
-        field: that,
-        value: this.plan[that]
-      })
-    },
     savePageStatus () {
       if (!this.plan || this.plan === undefined) return
       if (this.pageStatus.hasOwnProperty(this.plan.id)) {

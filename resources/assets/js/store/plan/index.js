@@ -149,11 +149,12 @@ export default {
       commit('setLoading', true)
       const updateObj = {}
       updateObj[payload.field] = payload.value
-      axios(payload.id)
-        .then(() => {
-          commit('setLoading', false)
-          dispatch('refreshPlans')
+      axios.patch(`/api/plan/${payload.id}`, payload)
+        .then((data) => {
+          commit('setPlan', {})
+          dispatch('setSinglePlan', data.data)
           commit('setMessage', 'Plan successfully updated.')
+          commit('setLoading', false)
         })
         .catch((error) => dispatch('errorHandling', error))
     },
@@ -298,16 +299,8 @@ export default {
         console.warn('STORE - payload missing ID!', payload)
         return
       }
-
-      // was there any change in the amounf of items?
-      let lenActionList = 0
-      let lenItems = 0
-      if (state.plan) {
-        lenActionList = state.plan.actionList ? state.plan.actionList.length : 0
-        lenItems = state.plan.items ? state.plan.items.length : 0
-      }
       // is this the same plan? Does it (still) exist in the PLANS array? 
-      if (state.plan && state.plan.id && payload.id === state.plan.id && lenActionList === lenItems) {
+      if (state.plan && state.plan.id && payload.id === state.plan.id) {
         // verify that plan still exists; e.g. wasn't deleted
         if (state.plans instanceof Object && !state.plans.find((pl) => payload.id === pl.id)) {
           state.plan = null
@@ -315,7 +308,6 @@ export default {
         console.log('STORE - same plan!', payload.id, state.plan)
         return
       }
-
       // add plan activities list property
       let actionList = []
       let planItems = payload.items

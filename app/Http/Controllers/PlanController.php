@@ -11,6 +11,20 @@ use App\Http\Requests\StorePlan;
 class PlanController extends Controller
 {
 
+    protected function getPlanWithRelations($plan) {
+        return \App\Models\Plan::with(
+            [
+                'items',
+                'teams',
+                'resources',
+                'notes',
+                'histories'
+            ]
+        )
+        ->where('id', $plan->id)
+        ->first();
+    }
+
 
     /**
      * Display a listing of the resource.
@@ -80,17 +94,7 @@ class PlanController extends Controller
      */
     public function show(Plan $plan)
     {
-        $plan = \App\Models\Plan::with(
-            [
-                'items',
-                'teams',
-                'resources',
-                'notes',
-                'histories'
-            ]
-        )
-        ->where('id', $plan->id)
-        ->first();
+        $plan = $this->getPlanWithRelations($plan);
         return response($plan->jsonSerialize(), Response::HTTP_OK);
     }
 
@@ -132,8 +136,16 @@ class PlanController extends Controller
      */
     public function update(Request $request, Plan $plan)
     {
-        //
-        return response(null, Response::HTTP_OK);
+        $plan = $this->getPlanWithRelations($plan);
+        // request must contain field name and new value
+        $value = $request->value;
+        if ($request->field === 'date' || $request->field === 'date_end' ) {
+            $value = Carbon::parse($request->value);
+        }
+        $plan[$request->field] = $value;
+        $plan->save();
+
+        return response($plan, Response::HTTP_OK);
     }
 
     /**

@@ -152,7 +152,7 @@ export default {
       })
       this.$store.dispatch('updatePlan', {
         id: this.plan.id,
-        field: 'end',
+        field: 'date_end',
         value: end
       })
     },

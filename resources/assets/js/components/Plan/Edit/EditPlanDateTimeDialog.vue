@@ -19,6 +19,7 @@
 
             <v-flex xs11 sm5>
               <v-menu
+                  ref="startDateMenu"
                   lazy
                   :close-on-content-click="false"
                   v-model="startDateMenu"
@@ -36,14 +37,16 @@
                   prepend-icon="event"
                   readonly
                 ></v-text-field>
-                <v-date-picker v-model="startDate" no-title scrollable actions>
-                  <template slot-scope="{ save, cancel }">
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn flat color="primary" @click="cancel">Cancel</v-btn>
-                      <v-btn flat color="primary" @click="save">OK</v-btn>
-                    </v-card-actions>
-                  </template>
+                <v-date-picker 
+                    v-model="startDate"
+                    autosave
+                    no-title 
+                    scrollable
+                    actions
+                  >
+                  <v-spacer></v-spacer>
+                  <v-btn flat color="primary" @click="startDateMenu = false">Cancel</v-btn>
+                  <v-btn flat color="primary" @click="$refs.startDateMenu.save(startDate)">OK</v-btn>
                 </v-date-picker>
               </v-menu>
             </v-flex>
@@ -71,7 +74,11 @@
                   prepend-icon="access_time"
                   readonly
                 ></v-text-field>
-                <v-time-picker format="24hr" v-model="startTime" autosave></v-time-picker>
+                <v-time-picker 
+                    format="24hr"
+                    v-model="startTime"
+                    autosave
+                  ></v-time-picker>
               </v-menu>
             </v-flex>
 
@@ -97,7 +104,11 @@
                   prepend-icon="access_time"
                   readonly
                 ></v-text-field>
-                <v-time-picker format="24hr" v-model="endTime" autosave></v-time-picker>
+                <v-time-picker
+                    format="24hr"
+                    v-model="endTime"
+                    autosave
+                  ></v-time-picker>
               </v-menu>
             </v-flex>
 
@@ -141,20 +152,22 @@ export default {
       this.dateEditingDlg = false
       let date = this.$moment(this.startDate + 'T' + this.startTime).format()
       let end = this.$moment(this.startDate + 'T' + this.endTime).format()
-      // do not submit if nothing has changed
-      if (date === this.plan.date && end === this.plan.date_end) return
-      if (!(date !== this.plan.date || end !== this.plan.date_end)) return
 
-      this.$store.dispatch('updatePlan', {
-        id: this.plan.id,
-        field: 'date',
-        value: date
-      })
-      this.$store.dispatch('updatePlan', {
-        id: this.plan.id,
-        field: 'date_end',
-        value: end
-      })
+      // do not submit if nothing has changed
+      if (date !== this.plan.date) {
+        this.$store.dispatch('updatePlan', {
+          id: this.plan.id,
+          field: 'date',
+          value: date
+        })
+      }
+      if (end !== this.plan.date_end) {
+        this.$store.dispatch('updatePlan', {
+          id: this.plan.id,
+          field: 'date_end',
+          value: end
+        })
+      }
     },
     updateDates () {
       if (!this.plan) return

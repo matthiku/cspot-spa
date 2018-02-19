@@ -68,7 +68,7 @@
                 <app-show-youtube-modal :youtube-id="songs[item.value].youtube_id"></app-show-youtube-modal>
             </v-list-tile-action>
 
-            <v-list-tile-action v-if="!item.warning">
+            <v-list-tile-action v-if="!item.warning && !item.forLeadersEyesOnly">
               <v-tooltip bottom>
                 <v-btn icon ripple slot="activator"
                     ><v-icon>airplay</v-icon>

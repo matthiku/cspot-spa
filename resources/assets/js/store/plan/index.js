@@ -334,7 +334,8 @@ export default {
             seqNo: parseInt(action.seq_no),
             key: action.id,
             value: 0,
-            warning: false
+            warning: false,
+            forLeadersEyesOnly: action.forLeadersEyesOnly
           }
           if (action.song_id) {
             obj.type = 'song'

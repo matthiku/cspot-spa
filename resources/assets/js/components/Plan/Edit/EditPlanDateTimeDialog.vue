@@ -56,28 +56,30 @@
             <!-- show START time picker -->
             <v-flex xs11 sm5>
               <v-menu
-                lazy
-                :close-on-content-click="false"
-                v-model="startTimeMenu"
-                transition="scale-transition"
-                offset-y
-                full-width
-                :nudge-right="40"
-                max-width="290px"
-                min-width="290px"
-              >
+                  ref="startTimeMenu"
+                  lazy
+                  :close-on-content-click="false"
+                  v-model="startTimeMenu"
+                  transition="scale-transition"
+                  offset-y
+                  full-width
+                  :nudge-right="40"
+                  max-width="290px"
+                  min-width="290px"
+                  :return-value.sync="startTime"
+                >
                 <v-text-field
-                  v-model="startTime"
-                  @change="saveDate"
                   slot="activator"
                   label="Pick the START time"
+                  v-model="startTime"
                   prepend-icon="access_time"
+                  @change="saveDate"
                   readonly
                 ></v-text-field>
                 <v-time-picker 
                     format="24hr"
                     v-model="startTime"
-                    autosave
+                    @change="$refs.startTimeMenu.save(startTime)"
                   ></v-time-picker>
               </v-menu>
             </v-flex>
@@ -86,28 +88,29 @@
             <v-spacer></v-spacer>
             <v-flex xs11 sm5>
               <v-menu
-                lazy
-                :close-on-content-click="false"
-                v-model="endTimeMenu"
-                transition="scale-transition"
-                offset-y
-                full-width
-                :nudge-right="40"
-                max-width="290px"
-                min-width="290px"
-              >
+                  ref="endTimeMenu"
+                  lazy
+                  :close-on-content-click="false"
+                  v-model="endTimeMenu"
+                  transition="scale-transition"
+                  offset-y
+                  full-width
+                  :nudge-right="40"
+                  max-width="290px"
+                  min-width="290px"
+                >
                 <v-text-field
-                  v-model="endTime"
-                  @change="saveDate"
-                  slot="activator"
-                  label="Pick the END time"
-                  prepend-icon="access_time"
-                  readonly
-                ></v-text-field>
+                    slot="activator"
+                    label="Pick the END time"
+                    v-model="endTime"
+                    @change="saveDate"
+                    prepend-icon="access_time"
+                    readonly
+                  ></v-text-field>
                 <v-time-picker
                     format="24hr"
                     v-model="endTime"
-                    autosave
+                    @change="$refs.endTimeMenu.save(endTime)"
                   ></v-time-picker>
               </v-menu>
             </v-flex>
@@ -150,11 +153,12 @@ export default {
   methods: {
     saveDate () {
       this.dateEditingDlg = false
-      let date = this.$moment(this.startDate + 'T' + this.startTime).format()
-      let end = this.$moment(this.startDate + 'T' + this.endTime).format()
+      let date = this.$moment(this.startDate + 'T' + this.startTime).format('YYYY-MM-DD HH:mm:ss')
+      let end = this.$moment(this.startDate + 'T' + this.endTime).format('YYYY-MM-DD HH:mm:ss')
 
       // do not submit if nothing has changed
       if (date !== this.plan.date) {
+        console.log(date, this.plan.date)
         this.$store.dispatch('updatePlan', {
           id: this.plan.id,
           field: 'date',
@@ -162,6 +166,7 @@ export default {
         })
       }
       if (end !== this.plan.date_end) {
+        console.log(end, this.plan.date_end)
         this.$store.dispatch('updatePlan', {
           id: this.plan.id,
           field: 'date_end',

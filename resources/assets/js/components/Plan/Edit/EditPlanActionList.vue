@@ -9,7 +9,7 @@
         <template v-for="(item, index) in plan.actionList">
 
           <v-list-tile
-              :id="'activity-item-' + item.key"
+              :id="'activity-item-' + item.seqNo"
               :draggable="userOwnsThisPlan" 
               :key="index"
               @dragstart="drag"
@@ -357,7 +357,7 @@
               // after the last action, make sure we update the local data
               if (idx >= this.actionList.length) {
                 this.$store.commit('setMessage', 'Plan Activities sequence updated.')
-                // this.$store.dispatch('refreshPlans').then()
+                this.$store.commit('setLoading', false)
               }
             })
         })

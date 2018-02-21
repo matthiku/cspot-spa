@@ -18,12 +18,12 @@
               @dragleave="dragleave"
               @dragover="dragover"
               @dragend="dragend"
-              avatar>
-
+              avatar
+            >
             <v-list-tile-action title="drag items to re-arrange sequence"
                 :id="'drop-item-' + item.key"
                 v-if="userOwnsThisPlan"
-                class="cursor-n-resize"
+                class="min-w-25 cursor-n-resize"
               ><v-icon>swap_vert</v-icon>
             </v-list-tile-action>
 
@@ -34,11 +34,16 @@
             <!-- show actual item detail -->
             <v-list-tile-content v-if="!item.warning" class="show-on-hover">
               <v-list-tile-title>
-                ({{ item.seqNo }})
+
                 <span :id="item.key"
                     :contenteditable="userOwnsThisPlan && item.type === 'text'"
                     @keydown.enter.stop="updateActivityText"
-                    :class="[item.type!=='text' ? 'body-2' : '']"
+                    :class="{
+                        'body-2': item.type!=='text',
+                        'indigo--text': item.type==='song',
+                        'cyan--text': item.type==='read',
+                        'lime--text text--darken-3': item.type==='text'
+                      }"
                     class="strong white-space-normal py-1 pr-1"
                   >
                   <v-tooltip bottom lazy offset-overflow v-if="item.type==='song'">
@@ -48,13 +53,15 @@
                   <span v-else>{{ item.title }}</span>
                   <span v-if="item.subtitle">({{ item.subtitle }})</span>
                 </span>
-                <span
+
+                <span class="on-hover-only"
                     v-if="userOwnsThisPlan && item.type === 'text'"
-                    class="on-hover-only"
                     title="click text to edit"
                   ><v-icon>edit</v-icon></span> 
               </v-list-tile-title>
+
               <v-list-tile-sub-title>{{ item.book_ref }}</v-list-tile-sub-title>
+
             </v-list-tile-content>
 
 
@@ -74,12 +81,17 @@
                 <app-show-youtube-modal :youtube-id="songs[item.value].youtube_id"></app-show-youtube-modal>
             </v-list-tile-action>
 
-            <v-list-tile-action v-if="!item.warning && !item.forLeadersEyesOnly">
-              <v-tooltip bottom>
+            <v-list-tile-action v-if="!item.warning">
+              <v-tooltip bottom v-if="!item.forLeadersEyesOnly">
                 <v-btn icon ripple slot="activator"
                     ><v-icon>airplay</v-icon>
                 </v-btn>
                 <span>start presentation here (once implemented)</span>
+              </v-tooltip>
+              <v-tooltip bottom v-else>
+                <v-btn icon ripple slot="activator"
+                    ><v-icon>remove_red_eye</v-icon></v-btn>
+                <span>for leader's eyes only</span>
               </v-tooltip>
             </v-list-tile-action>
 
@@ -196,6 +208,9 @@
 </template>
 
 <style>
+  .min-w-25 {
+    min-width: 25px;
+  }
   .button-group {
     border: 1px solid gray;
     border-radius: 5px;

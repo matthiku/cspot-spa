@@ -35,10 +35,11 @@
             <v-list-tile-content v-if="!item.warning" class="show-on-hover">
               <v-list-tile-title>
                 ({{ item.seqNo }})
-                <strong  :id="item.key"
+                <span :id="item.key"
                     :contenteditable="userOwnsThisPlan && item.type === 'text'"
                     @keydown.enter.stop="updateActivityText"
-                    class="white-space-normal py-1 pr-1"
+                    :class="[item.type!=='text' ? 'body-2' : '']"
+                    class="strong white-space-normal py-1 pr-1"
                   >
                   <v-tooltip bottom lazy offset-overflow v-if="item.type==='song'">
                     <span slot="activator">{{ item.title }}</span>
@@ -46,7 +47,7 @@
                   </v-tooltip>
                   <span v-else>{{ item.title }}</span>
                   <span v-if="item.subtitle">({{ item.subtitle }})</span>
-                </strong>
+                </span>
                 <span
                     v-if="userOwnsThisPlan && item.type === 'text'"
                     class="on-hover-only"
@@ -124,20 +125,32 @@
     <v-slide-y-transition>
       <v-card-actions v-if="userOwnsThisPlan" v-show="!editGenericItem">
 
-        <v-btn :color="activityColours.song" small class="white--text" @click="addSong">
-          <v-icon>record_voice_over</v-icon>
-          &nbsp;Add Song</v-btn>
+        <span class="button-group pa-1">
+          <span class="title">Add:</span>
+          <v-tooltip bottom lazy>
+            <v-btn slot="activator" :color="activityColours.song" small class="white--text" @click="addSong">
+              <v-icon>record_voice_over</v-icon>
+              &nbsp;Song</v-btn>
+            <span>Navigates to the song list.<br>There, select a song to be added to this plan.</span>
+          </v-tooltip>
 
-        <v-btn :color="activityColours.read" small class="white--text" @click="addScriptureRefDlg">
-          <v-icon>local_library</v-icon>
-          &nbsp; Add Scripture</v-btn>
+          <v-tooltip bottom lazy>
+            <v-btn slot="activator" :color="activityColours.read" small class="white--text" @click="addScriptureRefDlg">
+              <v-icon>local_library</v-icon>
+              &nbsp; Scripture</v-btn>
+            <span>Opens a dialog to add a Scripture Reference to this plan.</span>
+          </v-tooltip>
 
-        <v-btn :color="activityColours.text" small class="white--text" @click="editGenericItem=true">
-          <v-icon>label</v-icon>
-          &nbsp; Add Gen. Item</v-btn>
+          <v-tooltip bottom lazy>
+            <v-btn slot="activator" :color="activityColours.text" small class="white--text" @click="editGenericItem=true">
+              <v-icon>label</v-icon>
+              &nbsp; Gen. Item</v-btn>
+            <span>Opens a dialog to add a generic Text Item to this plan.</span>
+          </v-tooltip>
+        </span>
 
         <v-spacer></v-spacer>
-        <v-btn small color="purple" @click="$store.commit('setLoading', true)">
+        <v-btn small color="purple">
           big Plan</v-btn>
 
         <v-spacer></v-spacer>
@@ -183,6 +196,12 @@
 </template>
 
 <style>
+  .button-group {
+    border: 1px solid gray;
+    border-radius: 5px;
+    background-color: rgb(228, 229, 230);
+    box-shadow: 1px 2px 3px gray;
+  }
   .white-space-normal {
     white-space: normal;
   }

@@ -41,6 +41,7 @@
                     class="white-space-normal py-1 pr-1"
                   >
                   {{ item.title }}
+                  <span v-if="item.subtitle">({{ item.subtitle }})</span>
                 </strong>
                 <span
                     v-if="userOwnsThisPlan && item.type === 'text'"

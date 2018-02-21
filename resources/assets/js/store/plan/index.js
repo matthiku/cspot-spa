@@ -334,8 +334,14 @@ export default {
             obj.value = action.song_id
             obj.color = state.activityColours.song
             obj.icon = 'record_voice_over'
-            obj.title = songs[action.song_id] ? songs[action.song_id].title : action.song_id
-            obj.book_ref = songs[action.song_id] ? songs[action.song_id].book_ref : action.song_id
+            obj.title = action.song_id
+            obj.subtitle = action.song_id
+            obj.book_ref = action.song_id
+            if (songs[action.song_id]) {
+              obj.title =  songs[action.song_id].title
+              obj.subtitle = songs[action.song_id].title_2
+              obj.book_ref = songs[action.song_id].book_ref
+            }
           } else if (action.comment && isScriptureRef) {
             obj.type = 'read'
             obj.title = action.comment

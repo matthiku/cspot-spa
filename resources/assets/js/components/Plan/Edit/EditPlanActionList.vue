@@ -27,7 +27,7 @@
               ><v-icon>swap_vert</v-icon>
             </v-list-tile-action>
 
-            <v-list-tile-avatar :title="item.type">
+            <v-list-tile-avatar :title="item.type==='song' ? item.lyrics : ''">
               <v-icon :class="[item.color]" class="white--text">{{ item.icon }}</v-icon>
             </v-list-tile-avatar>
 
@@ -40,7 +40,11 @@
                     @keydown.enter.stop="updateActivityText"
                     class="white-space-normal py-1 pr-1"
                   >
-                  {{ item.title }}
+                  <v-tooltip bottom lazy offset-overflow v-if="item.type==='song'">
+                    <span slot="activator">{{ item.title }}</span>
+                    <pre>{{ item.lyrics }}</pre>
+                  </v-tooltip>
+                  <span v-else>{{ item.title }}</span>
                   <span v-if="item.subtitle">({{ item.subtitle }})</span>
                 </strong>
                 <span

@@ -93,7 +93,7 @@ export default {
     startAdding () {
       this.staffEditingDlg = true
       // if staffList is still empty, pre-select role 'leader'
-      //TODO: the value '5' for leader must be computed !! !! ==================================
+      //TODO: the value '5' for leader must be computed !! !! ================================== TODO ==== TODO
       if (!this.plan.teams || !this.plan.teams.length) this.role = {text: 'leader', value: 5}
     },
     saveStaff () {
@@ -124,14 +124,16 @@ export default {
       let role = val.value
       if (!role || !this.roles[role]) return
 
-      let ul = []
-      for (let user in this.roles[role].users) {
-        ul.push({ id: this.users[user].id, name: this.users[user].name || this.users[user].email })
-      }
-      this.usersList = ul
+      this.usersList = []
+      this.roles[role].users.forEach((user) => {
+        this.usersList.push({ 
+          id: this.users[user.id].id,
+          name: this.users[user.id].name || this.users[user.id].email 
+        })
+      })
       // already select the user in the form if there's only one
-      if (ul.length === 1) {
-        this.person = ul[0]
+      if (this.usersList.length === 1) {
+        this.person = this.usersList[0]
       }
     },
 

@@ -360,20 +360,7 @@ class BibleController extends Controller
                      ->where('verse', '<=', $verseTo)
                      ->get();
 
-        // turn the collection into a html string (simple formatting like an ESV text!)
-        $html = '<div class="chap"><p class="p">';
-        foreach ($text as $verse) {
-            $html .= '<sup class="v"><b>'.$verse->verse.'</b></sup>';
-            $html .= $verse->text.'</p><p class="p">';
-        }
-        $html .= '</p></div>';
-
-        // assign the scripture HTML to the return object
-        $p[0]->copyright = Bibleversion::find($version_id)->copyright;
-        $p[0]->version_abbreviation = Bibleversion::find($version_id)->name;
-        $p[0]->text = $html;
-
-        return response()->json($this->createReturnObj($p));
+        return response()->json($text);
     }
 
 

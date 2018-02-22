@@ -44,6 +44,9 @@ export default {
     bibleBooksList () {
       return this.$store.getters.bibleBooksList
     },
+    scriptureRefs () {
+      return this.$store.state.plan.scriptureRefs
+    },
     activityColours () {
       return this.$store.state.plan.activityColours
     }
@@ -52,7 +55,7 @@ export default {
 
   methods: {
     userOwnsPlan (plan) {
-      if (!(plan instanceof Object)) return false
+      if (!(plan instanceof Object) || !plan.teams) return false
 
       // an admin is always owner
       if (this.$store.getters.userIsAdmin) return true

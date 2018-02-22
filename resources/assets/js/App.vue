@@ -29,8 +29,7 @@
       <v-snackbar
           transition="fade-transition"
           :timeout="timeout"
-          color="info"
-          top vertical
+          bottom
           v-model="showMessage"
         >
         {{ message }}

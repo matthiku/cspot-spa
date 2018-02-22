@@ -10,6 +10,7 @@ export default {
     apiBibleBooks: null,
     apiBibleChapters: null,
     apiBibleVerses: null,
+    scriptureRefs: {},
     newPlanId: null,
     activityColours: {
       song: 'indigo lighten-3',
@@ -60,6 +61,9 @@ export default {
     },
     setBibleVerses(state, payload) {
       state.apiBibleVerses = payload
+    },
+    addScriptureRef(state, payload) {
+      state.scriptureRefs[payload.label] = payload.text
     }
   },
 
@@ -355,7 +359,7 @@ export default {
       commit('clearNewPlanId')
     },
 
-    setSinglePlan({ state, commit, rootState }, payload) {
+    setSinglePlan({ rootState, state, commit, dispatch }, payload) {
       if (typeof payload !== 'object') {
         console.warn('STORE - payload is not an object!', payload)
         return
@@ -416,6 +420,7 @@ export default {
             obj.title = action.comment
             obj.color = 'cyan lighten-3'
             obj.icon = 'local_library'
+            dispatch('getScriptureRef', action.comment)
           } else {
             obj.type = 'text'
             obj.title = action.comment
@@ -431,6 +436,13 @@ export default {
 
       // now write everyting to the state
       commit('setPlan', payload)
+    },
+    getScriptureRef({state, commit}, payload) {
+      let bRef = splitBref(payload)
+      axios.get(`api/bible/passage/${bRef.version}/${bRef.book}/${bRef.chapter}/${bRef.verse_from}/${bRef.verse_to}`)
+      .then((data) => {
+        commit('addScriptureRef', {label: payload, text: data.data})
+      })
     }
   },
 
@@ -516,4 +528,58 @@ export default {
       }
     }
   }
+}
+
+// HELPER functions
+
+/* Split a bible reference into an object of version, book, chapter, verse_from, verse_to
+ */
+function splitBref(text) {
+  if (!text) {
+    return;
+  }
+
+  var obj = {};
+  var ref = text.split(' ');
+  var nr = 0
+  // check if book name starts with a number
+  if (!isNaN(ref[0])) {
+    obj.book = ref[nr++] + ' ' + ref[nr++];
+  } else if (text.substr(1, 1) == '_') {
+    obj.book = ref[nr++].replace('_', ' ');
+  } else {
+    obj.book = ref[nr++];
+  }
+  // detect chapter and verse
+  var chve = ref[nr++].split(':');
+  obj.chapter = chve[0];
+  // is there a verse reference?
+  if (chve.length > 1) {
+    // detect verse_from and verse_to
+    var vrs = chve[1].split('-');
+    obj.verse_from = vrs[0];
+    // analyze verse_to
+    if (vrs.length > 1) {
+      // there could be another reference being attached...
+      var vto = vrs[1].split(/[,;]/);
+      obj.verse_to = vto[0];
+    }
+    if (obj.verse_to === undefined)
+      obj.verse_to = obj.verse_from;
+  }
+  // no verse references detected, use generic values
+  else {
+    obj.verse_from = 0;
+    obj.verse_to = 199;
+  }
+
+  // name of the bible VERSION (without brackets!)
+  obj.version = ref[nr]
+  if (obj.version)
+    obj.version = obj.version.replace(/(\(|\))/g, '');
+
+  // problem with differing naming conventions for Psalm in NIV vs others
+  if (obj.book == 'Psalms')
+    obj.book = 'Psalm';
+  return obj;
 }

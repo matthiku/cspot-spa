@@ -46,9 +46,10 @@
                       }"
                     class="strong white-space-normal py-1 pr-1"
                   >
-                  <v-tooltip bottom lazy offset-overflow v-if="item.type==='song'">
+                  <v-tooltip bottom lazy offset-overflow v-if="item.type!=='text'">
                     <span slot="activator">{{ item.title }}</span>
-                    <pre>{{ item.lyrics }}</pre>
+                    <pre v-if="item.type==='song'">{{ item.lyrics }}</pre>
+                    <pre v-if="item.type==='read'">{{ getScriptureRefText(item.title) }}</pre>
                   </v-tooltip>
                   <span v-else>{{ item.title }}</span>
                   <span v-if="item.subtitle">({{ item.subtitle }})</span>
@@ -426,6 +427,8 @@
         })
         this.$router.push({name: 'addsongtoplan'})
       },
+
+      getScriptureRefText (label) {},
 
       addScriptureRefItem () {
         this.$store.dispatch('addActionItemToPlan', {

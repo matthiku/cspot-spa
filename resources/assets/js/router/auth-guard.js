@@ -8,12 +8,14 @@ export default (to, from, next) => {
   store.dispatch('clearMessage')
 
   // check if user data was send in the header of the page
-  var user
+  var dt
   try {
-    user = JSON.parse(window.cspot2_server_data).user
+    dt = JSON.parse(window.cspot2_server_data)
   } catch (error) {
     console.log(error, 'No user is signed in. FROM: ', from)
   }
+  var user 
+  if (dt) user = dt.user || null
   if (user) {
     store.commit('setUser', user)
   }

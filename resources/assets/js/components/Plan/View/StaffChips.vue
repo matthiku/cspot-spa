@@ -11,10 +11,10 @@
           <span slot="activator">
             <v-icon color="primary">{{ roles instanceof Object ? roles[staff.role_id].icon : staff.role_id }}</v-icon>
             <span>
-              {{ (users instanceof Object ? users[staff.user_id].name : staff.user_id) | firstWord }}
+              {{ (users instanceof Object && users[staff.user_id] ? users[staff.user_id].name : staff.user_id) | firstWord }}
             </span>
           </span>
-          <span>{{ (roles instanceof Object ? roles[staff.role_id].name : staff.role_id) | ucFirst }}</span>
+          <span>{{ (roles instanceof Object &&  roles[staff.role_id] ? roles[staff.role_id].name : staff.role_id) | ucFirst }}</span>
         </v-tooltip>
       </v-chip>
 

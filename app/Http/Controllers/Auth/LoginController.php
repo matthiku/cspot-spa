@@ -48,7 +48,8 @@ class LoginController extends Controller
      */
     protected function authenticated(\Illuminate\Http\Request $request, $user)
     {
-        if ($request->ajax() || $request->expectsJson()) {
+        // we ONLY have ajax requests...
+        // if ($request->ajax() || $request->expectsJson() || 'a'==='a') {
 
             $auth = auth()->check();
             $user = \App\Models\User::with('roles')->where('id', Auth::user()->id)->first();
@@ -61,7 +62,7 @@ class LoginController extends Controller
                 ]
             );
 
-        }
+        // }
     }
 
     /**

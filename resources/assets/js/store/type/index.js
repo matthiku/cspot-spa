@@ -16,7 +16,7 @@ export default {
   },
   actions: {
     refreshTypes ({state, commit, dispatch}, payload) {
-      if (payload === 'init' || !(state.types instanceof Object) || state.types === 'loading') {
+      if (payload === 'init' || !(state.types instanceof Object) || state.types === 'loading' || (state.types instanceof Array)) {
         let reason = payload === 'init' ? payload : state.types === 'loading' ? 'not loaded' : 'object empty'
         console.log('updating local list of TYPES from Server, reason:', reason)
         axios.get('/api/type')

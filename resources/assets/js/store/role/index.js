@@ -16,7 +16,7 @@ export default {
 
   actions: {
     refreshRoles ({state, commit, dispatch}, payload) {
-      if (payload === 'init' || !(state.roles instanceof Object)) {
+      if (payload === 'init' || !(state.roles instanceof Object) || (state.roles instanceof Array)) {
         let reason = payload === 'init' ? payload : 'object empty'
         console.log('updating local list of ROLES from Server, reason:', reason)
         axios.get('/api/role')

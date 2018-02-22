@@ -28,7 +28,7 @@ export default {
         let updateDate = data.data.date
         let oldDate = state.songsUpdatedAt
         commit('setSongsUpdateDate', updateDate)
-        if (payload === 'init' || oldDate !== updateDate || !(state.songs instanceof Object)) {
+        if (payload === 'init' || oldDate !== updateDate || !(state.songs instanceof Object) || (state.songs instanceof Array)) {
           let reason = payload === 'init' ? payload : oldDate !== updateDate ? 'out-of-date' : 'object empty'
           console.log('updating local list of SONGS from Server, reason:', reason)
           axios.get('/api/song')

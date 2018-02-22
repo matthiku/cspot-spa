@@ -39,7 +39,7 @@ export default {
         let oldDate = state.usersUpdatedAt
         commit('setUsersUpdateDate', updateDate)
 
-        if (payload === 'init' || oldDate !== updateDate || !(state.users instanceof Object)) {
+        if (payload === 'init' || oldDate !== updateDate || !(state.users instanceof Object) || (state.users instanceof Array)) {
           let reason = payload === 'init' ? payload : oldDate !== updateDate ? 'out-of-date' : 'object empty'
           console.log('updating local list of USERS from Server, reason:', reason)
           axios.get('/api/user')
@@ -124,6 +124,8 @@ export default {
       .then(() => {
         // Sign-out successful.
         commit('setLoading', false)
+        // clear header data
+        window.cspot2_server_data = null
         // clear the local state
         dispatch('clearAllItems')
       })
@@ -160,6 +162,7 @@ export default {
           // check if there is user data in the page header
           if (data.data.user) {
             user = data.data.user
+            console.log(data.data.requested)
           } else if (window.cspot2_server_data) {
             let dt
             try {
@@ -167,6 +170,7 @@ export default {
             } catch (error) {
               console.warn('backend data in header invalid or missing!')
             }
+            console.log('header data',dt)
             if (dt.user) {
               user = dt.user
             } else {
@@ -280,14 +284,14 @@ export default {
       return state.users
     },
     userIsAdmin (state) {
-      if (!state.user) { return false }
-      if (state.user.roles) {
-        return state.user.roles.find(elem => elem.id === 1 || elem.name === 'administrator') ? true : false
+      if (!state.user instanceof Object) { return false }
+      if (state.user && state.user.roles) {
+        let isAdmin = state.user.roles.find(elem =>
+          elem.id === 1 || elem.name === 'administrator'
+        )
+        return isAdmin ? true : false
       }
-      if (!state.users) { return false }
-      if (!state.users[state.user.id]) { return false }
-      if (!state.users[state.user.id].roles) { return false }
-      return state.users[state.user.id].roles.indexOf('admin') > -1
+      return false
     }
   }
 }

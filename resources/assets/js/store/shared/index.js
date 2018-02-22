@@ -68,7 +68,7 @@ export default {
       setTimeout(() => {
         console.log('checking all items....')
         dispatch('refreshAllItems')
-      }, 3000)      
+      }, 2000)      
     },
 
     refreshAllItems ({rootState, dispatch}) {

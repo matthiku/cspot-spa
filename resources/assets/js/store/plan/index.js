@@ -20,28 +20,27 @@ export default {
 
   // M U T A T I O N S  (commits)
   mutations: {
-
-    setPlan (state, payload) {
+    setPlan(state, payload) {
       state.plan = payload
     },
 
-    addPlan (state, payload) {
+    addPlan(state, payload) {
       if (payload instanceof Object) {
         if (!(state.plans instanceof Object)) state.plans = []
         state.plans.push(payload)
       }
     },
 
-    setPlans (state, payload) {
+    setPlans(state, payload) {
       state.plans = payload
     },
 
-    createPlan (state, payload) {
+    createPlan(state, payload) {
       // state.plans.push(payload) // not needed, as we get an update through firebase!
       state.newPlanId = payload.id
     },
 
-    clearNewPlanId (state) {
+    clearNewPlanId(state) {
       state.newPlanId = null
     },
 
@@ -52,153 +51,194 @@ export default {
     setPlanUpdateDate(state, payload) {
       state.planUpdatedAt = payload
     }
-
   },
 
   // A C T I O N S  (dispatches)
   actions: {
-    refreshPlans ({state, commit, dispatch}, payload) {
+    refreshPlans({ state, commit, dispatch }, payload) {
       // first get date of latest update to PLANS table
-      axios.get('/api/plan/latest')
-      .then((data) => {
-        let updateDate = data.data.date
-        let oldDate = state.plansUpdatedAt
-        commit('setPlansUpdateDate', updateDate)
-        if (payload === 'init' || oldDate !== updateDate || !(state.plans instanceof Object) || (state.plans && !state.plans.length)) {
-          let reason = payload === 'init' ? payload : oldDate !== updateDate ? 'out-of-date' : 'object empty'
-          console.log('updating local list of PLANS from Server, reason:', reason)
-          axios.get('/api/plan')
-          .then((data) => {
-            commit('setPlans', data.data)
-          })
-          .catch((error) => console.warn(error))
-        } else {
-          console.log('PLANS still up-to-date')
-        }
-      })
-      .catch((error) => console.warn(error))
+      axios
+        .get('/api/plan/latest')
+        .then(data => {
+          let updateDate = data.data.date
+          let oldDate = state.plansUpdatedAt
+          console.log('setPlansUpdateDate', updateDate)
+          commit('setPlansUpdateDate', updateDate)
+
+          if (
+            (payload === 'init' ||
+              oldDate !== updateDate ||
+              !(state.plans instanceof Object) ||
+              (state.plans && !state.plans.length)) &&
+            updateDate !== undefined
+          ) {
+            let reason =
+              payload === 'init'
+                ? payload
+                : oldDate !== updateDate ? 'out-of-date' : 'object empty'
+            console.log(
+              'updating local list of PLANS from Server, reason:',
+              reason
+            )
+            if (reason === 'out-of-date') {
+              console.log(oldDate, updateDate)
+            }
+            axios
+              .get('/api/plan')
+              .then(data => {
+                commit('setPlans', data.data)
+              })
+              .catch(error => console.warn(error))
+          } else if (updateDate === undefined) {
+            console.warn('could not get latest PLANS update date!')
+          } else {
+            console.log('PLANS still up-to-date')
+          }
+        })
+        .catch(error => console.warn(error))
     },
 
     // get complete data of a single plan
-    reloadPlan ({state, commit, dispatch}, payload) {
+    reloadPlan({ state, commit, dispatch }, payload) {
       // first check if data was meanwhile updated on the backend
-      axios.get(`/api/plan/${payload.planId}/latest`)
-        .then((data) => {
-          let updateDate = data.data.date
-          let oldDate = state.planUpdatedAt
-          commit('setPlanUpdateDate', updateDate)
-          // only request a new copy from the backend if the data has changed
-          if (oldDate !== updateDate || !(state.plan instanceof Object)) {
-            axios.get(`/api/plan/${payload.planId}`)
-            .then((data) => {
+      axios.get(`/api/plan/${payload.planId}/latest`).then(data => {
+        let updateDate = data.data.date
+        let oldDate = state.planUpdatedAt
+        commit('setPlanUpdateDate', updateDate)
+        // only request a new copy from the backend if the data has changed
+        if (oldDate !== updateDate || !(state.plan instanceof Object)) {
+          axios
+            .get(`/api/plan/${payload.planId}`)
+            .then(data => {
               // first 'empty' the plan in the store to make sure we do have just the updated plan!
               commit('setPlan', {})
               dispatch('setSinglePlan', data.data)
             })
-            .catch((error) => console.warn(error))
+            .catch(error => console.warn(error))
         }
       })
     },
 
     // create a new Plan item and possibly upload an image file
-    createPlan ({state, commit, dispatch}, payload) {
+    createPlan({ state, commit, dispatch }, payload) {
       let imageUrl
       let key
       // reach out to our DB and store it
       let planData = Object.assign({}, payload.planData)
-      axios.post('/api/plan', planData)
+      axios
+        .post('/api/plan', planData)
         .then(data => {
           // the database call will get us an id, which we need to add a new plan to the store
           key = data.data.id
           return key
         })
         // now check if there is a file to be uploaded
-        .then((key) => {
+        .then(key => {
           if (payload.image) {
             const filename = payload.image.name
             const ext = filename.slice(filename.lastIndexOf('.'))
-            return firebaseApp.storage().ref('plans/' + key + ext).put(payload.image)
+            return firebaseApp
+              .storage()
+              .ref('plans/' + key + ext)
+              .put(payload.image)
           }
         })
         // if applicable, write the newly uploaded image ULR to the plan data
-        .then((fileData) => {
+        .then(fileData => {
           if (fileData) {
             imageUrl = fileData.metadata.downloadURLs[0]
-            return plansRef.child(key).update({imageUrl: imageUrl})
+            return plansRef.child(key).update({ imageUrl: imageUrl })
           }
         })
         // now write the complete plan data to the local plan list
         .then(() => {
-          Object.assign(
-            planData, {
-              id: key,
-              imageUrl: imageUrl
-            })
+          Object.assign(planData, {
+            id: key,
+            imageUrl: imageUrl
+          })
           commit('createPlan', planData)
           commit('setPlan', planData)
           commit('setLoading', false)
           state.newPlanId = key
         })
 
-        .catch((error) => console.warn(error))
+        .catch(error => console.warn(error))
     },
 
     // update an existing plan
     // - - payload contains planID, field name and field value
-    updatePlan ({state, commit, dispatch}, payload) {
+    updatePlan({ state, commit, dispatch }, payload) {
       commit('setLoading', true)
       const updateObj = {}
       updateObj[payload.field] = payload.value
-      axios.patch(`/api/plan/${payload.id}`, payload)
-        .then((data) => {
+      axios
+        .patch(`/api/plan/${payload.id}`, payload)
+        .then(data => {
           commit('setPlan', {})
           dispatch('setSinglePlan', data.data)
           commit('setMessage', 'Plan successfully updated.')
           commit('setLoading', false)
         })
-        .catch((error) => dispatch('errorHandling', error))
+        .catch(error => dispatch('errorHandling', error))
     },
 
     // add a staff member to a plan
     // - - payload must contain plan id and staff object with userId and role name
-    addStaffToPlan ({commit, dispatch}, payload) {
+    addStaffToPlan({ commit, dispatch }, payload) {
       commit('setLoading', true)
-      axios.post(`/api/plan/${payload.planId}/team`, {
-        'role_id': payload.roleId,
-        'user_id': payload.userId
-      })
-        .then((data) => {
+      axios
+        .post(`/api/plan/${payload.planId}/team`, {
+          role_id: payload.roleId,
+          user_id: payload.userId
+        })
+        .then(data => {
           dispatch('reloadPlan', payload)
-          commit('appendMessage', `${payload.name} added as ${payload.role} to this plan`)
+          commit(
+            'appendMessage',
+            `${payload.name} added as ${payload.role} to this plan`
+          )
           commit('setLoading', false)
         })
-        .catch((error) => dispatch('errorHandling', error))
+        .catch(error => dispatch('errorHandling', error))
     },
 
     // remove a staff member from a plan
     // - - payload must contain plan id and staff id
-    removeStaffFromPlan ({commit, dispatch}, payload) {
+    removeStaffFromPlan({ commit, dispatch }, payload) {
       commit('setLoading', true)
-      axios.delete(`/api/plan/${payload.planId}/team/${payload.staffId}`)
-        .then((data) => {
+      axios
+        .delete(`/api/plan/${payload.planId}/team/${payload.staffId}`)
+        .then(data => {
           dispatch('reloadPlan', payload)
-          commit('appendMessage', `${payload.name} removed as ${payload.role} from this plan`)
+          commit(
+            'appendMessage',
+            `${payload.name} removed as ${payload.role} from this plan`
+          )
           commit('setLoading', false)
         })
-        .catch((error) => dispatch('errorHandling', error))
+        .catch(error => dispatch('errorHandling', error))
     },
 
-    addActionItemToPlan ({state, commit, dispatch}, payload) {
+    addActionItemToPlan({ state, commit, dispatch }, payload) {
       if (!payload.planId) {
-        dispatch('errorHandling', 'Error when trying to add action item: planId missing!')
+        dispatch(
+          'errorHandling',
+          'Error when trying to add action item: planId missing!'
+        )
         return
       }
       if (!payload.type) {
-        dispatch('errorHandling', 'Error when trying to add action item: action type missing!')
+        dispatch(
+          'errorHandling',
+          'Error when trying to add action item: action type missing!'
+        )
         return
       }
       if (isNaN(parseInt(payload.seqNo))) {
-        dispatch('errorHandling', 'Error when trying to add action item: seqNo missing!')
+        dispatch(
+          'errorHandling',
+          'Error when trying to add action item: seqNo missing!'
+        )
         return
       }
       commit('setLoading', true)
@@ -207,17 +247,18 @@ export default {
         type: payload.type,
         seqNo: payload.seqNo
       }
-      axios.post(`/api/plan/${payload.planId}/item`, newObj)
-        .then((data) => {
+      axios
+        .post(`/api/plan/${payload.planId}/item`, newObj)
+        .then(data => {
           dispatch('reloadPlan', payload)
           commit('appendMessage', '"' + payload.type + '" added to this plan')
           // dispatch('refreshPlans')
           commit('setLoading', false)
         })
-        .catch((error) => dispatch('errorHandling', error))
+        .catch(error => dispatch('errorHandling', error))
     },
 
-    updateActionItem ({rootState, commit, dispatch}, payload) {
+    updateActionItem({ rootState, commit, dispatch }, payload) {
       // payload must contain planId, itemId, field name and new value
       //
       let loadHandling = 'local'
@@ -228,70 +269,69 @@ export default {
       }
       const updateObj = {}
       updateObj[payload.field] = payload.newValue
-      axios.patch(
-        `/api/plan/${payload.planId}/item/${payload.actionId}`,
-        {
-          'field': payload.field,
-          'value': payload.newValue
-        }
-      )
-        .then((data) => {
+      axios
+        .patch(`/api/plan/${payload.planId}/item/${payload.actionId}`, {
+          field: payload.field,
+          value: payload.newValue
+        })
+        .then(data => {
           if (loadHandling === 'local') commit('setLoading', false)
           // update(replace) current plan and replace in the store!
           dispatch('reloadPlan', payload)
         })
-        .catch((error) => dispatch('errorHandling', error))
+        .catch(error => dispatch('errorHandling', error))
     },
 
     // remove an action from a plan
     // - - payload must contain plan id and action id
-    removeActionFromPlan ({state, commit, dispatch}, payload) {
+    removeActionFromPlan({ state, commit, dispatch }, payload) {
       commit('setLoading', true)
 
-      axios.delete(
-        `/api/plan/${payload.planId}/item/${payload.actionId}`
-      )
-        .then((data) => {
+      axios
+        .delete(`/api/plan/${payload.planId}/item/${payload.actionId}`)
+        .then(data => {
           console.log('removing action from plan', payload)
           dispatch('reloadPlan', payload)
           commit('appendMessage', 'Action removed from this plan')
           // dispatch('refreshPlans')
           commit('setLoading', false)
         })
-        .catch((error) => dispatch('errorHandling', error))
+        .catch(error => dispatch('errorHandling', error))
     },
 
     // move a plan to the bin
     // - - payload must be the full plan, as we send it to the bin and then delete it
-    binPlan ({commit, dispatch}, payload) {
+    binPlan({ commit, dispatch }, payload) {
       commit('setLoading', true)
-      axios.delete(`/api/plan/${payload.id}/soft`)
+      axios
+        .delete(`/api/plan/${payload.id}/soft`)
         .then(() => {
           dispatch('refreshPlans')
           commit('setLoading', false)
           commit('setMessage', 'Plan changed to hidden plan (private).')
         })
-        .catch((error) => dispatch('errorHandling', error))
+        .catch(error => dispatch('errorHandling', error))
     },
     // delete a plan finally
-    deletePlan ({state, commit, dispatch}, payload) {
+    deletePlan({ state, commit, dispatch }, payload) {
       commit('setLoading', true)
-      axios.delete(`/api/plan/${payload.id}`)
+      axios
+        .delete(`/api/plan/${payload.id}`)
         .then(() => {
           dispatch('refreshPlans')
           commit('setLoading', false)
           commit('setMessage', 'Plan was erased.')
           state.plan = null
         })
-        .catch((error) => dispatch('errorHandling', error))
+        .catch(error => dispatch('errorHandling', error))
     },
 
-    clearNewPlanId ({commit}) {
+    clearNewPlanId({ commit }) {
       commit('clearNewPlanId')
     },
 
-    setSinglePlan({state, commit, rootState}, payload) {
-      if (typeof(payload) !== 'object') {
+    setSinglePlan({ state, commit, rootState }, payload) {
+      if (typeof payload !== 'object') {
         console.warn('STORE - payload is not an object!', payload)
         return
       }
@@ -299,10 +339,13 @@ export default {
         console.warn('STORE - payload missing ID!', payload)
         return
       }
-      // is this the same plan? Does it (still) exist in the PLANS array? 
+      // is this the same plan? Does it (still) exist in the PLANS array?
       if (state.plan && state.plan.id && payload.id === state.plan.id) {
         // verify that plan still exists; e.g. wasn't deleted
-        if (state.plans instanceof Object && !state.plans.find((pl) => payload.id === pl.id)) {
+        if (
+          state.plans instanceof Object &&
+          !state.plans.find(pl => payload.id === pl.id)
+        ) {
           state.plan = null
         }
         console.log('STORE - same plan!', payload.id, state.plan)
@@ -319,7 +362,8 @@ export default {
           let bb = state.bibleBooks
           for (const key in bb) {
             if (bb.hasOwnProperty(key)) {
-              if (action.comment && action.comment.indexOf(key) >= 0) isScriptureRef = true
+              if (action.comment && action.comment.indexOf(key) >= 0)
+                isScriptureRef = true
             }
           }
           let obj = {
@@ -336,7 +380,7 @@ export default {
             obj.icon = 'record_voice_over'
             obj.title = action.song_id
             if (songs[action.song_id]) {
-              obj.title =  songs[action.song_id].title
+              obj.title = songs[action.song_id].title
               obj.subtitle = songs[action.song_id].title_2
               obj.book_ref = songs[action.song_id].book_ref
               obj.lyrics = songs[action.song_id].lyrics
@@ -355,7 +399,9 @@ export default {
           actionList.push(obj)
         }
       }
-      payload.actionList = actionList.sort((elemA, elemB) => elemA.seqNo - elemB.seqNo)
+      payload.actionList = actionList.sort(
+        (elemA, elemB) => elemA.seqNo - elemB.seqNo
+      )
 
       // now write everyting to the state
       commit('setPlan', payload)
@@ -364,8 +410,7 @@ export default {
 
   // G E T T E R S
   getters: {
-
-    bibleBooksList (state) {
+    bibleBooksList(state) {
       if (state.bibleBooks === '') return []
       let bb = state.bibleBooks
       let bibleBooks = []
@@ -382,11 +427,11 @@ export default {
       // })
     },
 
-    newPlanId (state) {
+    newPlanId(state) {
       return state.newPlanId
     },
 
-    plans (state) {
+    plans(state) {
       if (state.plans === 'loading') return 'loading'
       // return all plans ordered by date, descending
       return state.plans.sort((planA, planB) => {
@@ -394,13 +439,17 @@ export default {
       })
     },
 
-    nextSunday (state) {
+    nextSunday(state) {
       if (!state.plans || state.plans === 'loading') return
-      let nextSunday = moment().isoWeekday(7).startOf('day')
-      
+      let nextSunday = moment()
+        .isoWeekday(7)
+        .startOf('day')
+
       // find the plan with type_id 1 or 2 for next Sunday
       let plan = state.plans.find(plan => {
-        let isNextSunday = moment(plan.date).startOf('day').isSame(nextSunday, 'day')
+        let isNextSunday = moment(plan.date)
+          .startOf('day')
+          .isSame(nextSunday, 'day')
         // isNextSunday && (plan.type_id === 0 || plan.type_id === 1)
         return isNextSunday && [0, 1].indexOf(parseInt(plan.type_id)) >= 0
       })
@@ -409,7 +458,7 @@ export default {
     },
 
     // return only future plans (ordered by date)
-    futurePlans (state) {
+    futurePlans(state) {
       if (state.plans === 'loading') return 'loading'
 
       let plans = state.plans.filter(plan => {
@@ -421,8 +470,8 @@ export default {
     },
 
     // return only plans on a certain day
-    plansByDate (state) {
-      return (date) => {
+    plansByDate(state) {
+      return date => {
         if (state.plans === 'loading') return 'loading'
         if (!date) return 'date missing'
 
@@ -436,7 +485,7 @@ export default {
     },
 
     // return a plan when a proper planId was given as an argument
-    planById (state) {
+    planById(state) {
       return planId => {
         if (state.plans === 'loading') return 'loading'
         return state.plans.find(plan => {

@@ -10,97 +10,123 @@ export default {
   },
 
   mutations: {
-    setOldRoute (state, payload) {
+    setOldRoute(state, payload) {
       state.oldRoute = payload
     },
-    setUser (state, payload) {
+    setUser(state, payload) {
       state.user = payload
     },
-    setUserRole (state, payload) {
+    setUserRole(state, payload) {
       state.user.roles.push(payload)
     },
-    setUserRoles (state, payload) {
+    setUserRoles(state, payload) {
       state.user.roles = payload
     },
-    setUsers (state, payload) {
+    setUsers(state, payload) {
       state.users = payload
     },
-    setUsersUpdateDate (state, payload) {
+    setUsersUpdateDate(state, payload) {
       state.usersUpdatedAt = payload
     }
   },
 
   actions: {
-    refreshUsers ({state, commit, dispatch}, payload) {
+    refreshUsers({ state, commit, dispatch }, payload) {
       // first get date of latest update to USERS table
-      axios.get('/api/user/latest')
-      .then((data) => {
-        let updateDate = data.data.date
-        let oldDate = state.usersUpdatedAt
-        commit('setUsersUpdateDate', updateDate)
+      axios
+        .get('/api/user/latest')
+        .then(data => {
+          let updateDate = data.data.date
+          let oldDate = state.usersUpdatedAt
+          console.log('setUsersUpdateDate', updateDate)
+          commit('setUsersUpdateDate', updateDate)
 
-        if (payload === 'init' || oldDate !== updateDate || !(state.users instanceof Object) || (state.users instanceof Array)) {
-          let reason = payload === 'init' ? payload : oldDate !== updateDate ? 'out-of-date' : 'object empty'
-          console.log('updating local list of USERS from Server, reason:', reason)
-          axios.get('/api/user')
-          .then((data) => {
-            if (data.data.forEach) {
-              let users = {}
-              // turn array into an object
-              data.data.forEach(elem => {
-                let obj = elem
-                users[obj.id] = elem
-              })
-              commit('setUsers', users)
-            } else {
-              console.warn(data)
+          if (
+            (payload === 'init' ||
+              oldDate !== updateDate ||
+              !(state.users instanceof Object) ||
+              state.users instanceof Array) &&
+            updateDate !== undefined
+          ) {
+            let reason =
+              payload === 'init'
+                ? payload
+                : oldDate !== updateDate ? 'out-of-date' : 'object empty'
+            console.log(
+              'updating local list of USERS from Server, reason:',
+              reason,
+              state.users
+            )
+            if (reason === 'out-of-date') {
+              console.log(oldDate, updateDate)
             }
-          })
-          .catch((error) => console.warn(error))
-        } else {
-          console.log('USERS still up-to-date')
-          return
-        }
-      })
-      .catch((error) => console.warn(error))
+            axios
+              .get('/api/user')
+              .then(data => {
+                if (data.data.forEach) {
+                  let users = {}
+                  // turn array into an object
+                  data.data.forEach(elem => {
+                    let obj = elem
+                    users[obj.id] = elem
+                  })
+                  commit('setUsers', users)
+                } else {
+                  console.warn(data)
+                }
+              })
+              .catch(error => console.warn(error))
+          } else if (updateDate === undefined) {
+            console.warn('could not get USERS update date!')
+          } else {
+            console.log('USERS still up-to-date')
+            return
+          }
+        })
+        .catch(error => console.warn(error))
     },
 
     // update firebase user table
-    updateUser ({commit, dispatch}, payload) {
+    updateUser({ commit, dispatch }, payload) {
       if (!payload.id) return
       console.log(payload)
       // usersRef.child(payload.id).update(payload)
-      axios.post(`api/user/${payload.id}/update/`)
+      axios
+        .post(`api/user/${payload.id}/update/`)
         .then(() => {
           commit('setLoading', false)
         })
         .catch(error => dispatch('errorHandling', error))
     },
 
-    updateUserProfile ({state, commit, dispatch}, payload) {
+    updateUserProfile({ state, commit, dispatch }, payload) {
       commit('setLoading', true)
       // if this is the current user: update firebase user profile
       if (payload.id === state.user.id) {
-        firebaseApp.auth().currentUser.updateProfile({
-          displayName: payload.name
-        })
-        .then(
-          () => {
-            commit('appendMessage', 'User\'s Firebase data was updated!')
-          },
-          error => dispatch('errorHandling', error))
+        firebaseApp
+          .auth()
+          .currentUser.updateProfile({
+            displayName: payload.name
+          })
+          .then(
+            () => {
+              commit('appendMessage', "User's Firebase data was updated!")
+            },
+            error => dispatch('errorHandling', error)
+          )
       }
       // update project-specific user table
       dispatch('updateUser', payload)
-      commit('appendMessage', 'This user\'s profile was updated')
+      commit('appendMessage', "This user's profile was updated")
     },
 
-    fetchUserData ({commit, dispatch}, payload) {
+    fetchUserData({ commit, dispatch }, payload) {
       if (!payload) {
         return
       }
       console.log(payload)
-      axios.get(`/api/user/${payload.id}/get`)
+      axios
+        .get(`/api/user/${payload.id}/get`)
         .then(data => {
           const values = data.val()
           if (values && values.roles) {
@@ -111,7 +137,7 @@ export default {
         .catch(error => dispatch('errorHandling', error))
     },
 
-    signUserOut ({commit, dispatch}) {
+    signUserOut({ commit, dispatch }) {
       commit('setLoading', true)
       commit('clearError')
       axios({
@@ -121,18 +147,18 @@ export default {
           _token: window.csrf_token
         }
       })
-      .then(() => {
-        // Sign-out successful.
-        commit('setLoading', false)
-        // clear header data
-        window.cspot2_server_data = null
-        // clear the local state
-        dispatch('clearAllItems')
-      })
-      .catch(error => dispatch('errorHandling', error))
+        .then(() => {
+          // Sign-out successful.
+          commit('setLoading', false)
+          // clear header data
+          window.cspot2_server_data = null
+          // clear the local state
+          dispatch('clearAllItems')
+        })
+        .catch(error => dispatch('errorHandling', error))
     },
 
-    signUserIn ({state, commit, dispatch}, payload) {
+    signUserIn({ state, commit, dispatch }, payload) {
       commit('setLoading', true)
       commit('clearError')
       axios({
@@ -147,55 +173,56 @@ export default {
         // `validateStatus` defines whether to resolve or reject the promise for a given
         // HTTP response status code. If `validateStatus` returns `true` (or is set to `null`
         // or `undefined`), the promise will be resolved; otherwise, the promise will be rejected.
-        validateStatus: function (status) {
-          return status >= 200 && status < 500; // default
+        validateStatus: function(status) {
+          return status >= 200 && status < 500 // default
         }
       })
-      .then(data => {
-        commit('setLoading', false)
-        if (data.status && data.status != 200) {
-          dispatch('errorHandling', data.data.errors)
-          return
-        }
-        if (data.data) {
-          let user
-          // check if there is user data in the page header
-          if (data.data.user) {
-            user = data.data.user
-            console.log(data.data.requested)
-          } else if (window.cspot2_server_data) {
-            let dt
-            try {
-              dt = JSON.parse(window.cspot2_server_data)              
-            } catch (error) {
-              console.warn('backend data in header invalid or missing!')
-            }
-            console.log('header data',dt)
-            if (dt.user) {
-              user = dt.user
-            } else {
-              console.warn('backend failed to send user data!')
-            }
-          // check if there was user data in the HTTP response
-          } else {
-            console.warn('backend failed to send ANY data!')
+        .then(data => {
+          commit('setLoading', false)
+          if (data.status && data.status != 200) {
+            dispatch('errorHandling', data.data.errors)
             return
           }
-          commit('setMessage', '')
-          commit('setUser', user)
-          // load all basic cspot entities from the backend
-          dispatch('loadAllItems')
-        } else {
-          commit('setMessage', 'log in error')
-          console.log(data)         
-        }
-      })
-      .catch((error) => {
-        dispatch('errorHandling', error)
-      })
+          if (data.data) {
+            let user
+            // check if there is user data in the page header
+            if (data.data.user) {
+              user = data.data.user
+              console.log(data.data.requested)
+            } else if (window.cspot2_server_data) {
+              let dt
+              try {
+                dt = JSON.parse(window.cspot2_server_data)
+              } catch (error) {
+                console.warn('backend data in header invalid or missing!')
+              }
+              console.log('header data', dt)
+              if (dt.user) {
+                user = dt.user
+              } else {
+                console.warn('backend failed to send user data!')
+              }
+              // check if there was user data in the HTTP response
+            } else {
+              console.warn('backend failed to send ANY data!')
+              return
+            }
+            commit('setMessage', '')
+            commit('setUser', user)
+            // load all basic cspot entities from the backend
+            console.log('loadAllItems from USER store')
+            dispatch('loadAllItems')
+          } else {
+            commit('setMessage', 'log in error')
+            console.log(data)
+          }
+        })
+        .catch(error => {
+          dispatch('errorHandling', error)
+        })
     },
 
-    sendEmailVerification ({commit, dispatch}) {
+    sendEmailVerification({ commit, dispatch }) {
       let user = firebaseApp.auth().currentUser
       if (!user) return
       user
@@ -207,13 +234,13 @@ export default {
         .catch(error => dispatch('errorHandling', error))
     },
 
-    signinViaProvider ({commit, dispatch}, provider) {
+    signinViaProvider({ commit, dispatch }, provider) {
       if (provider === 'google') {
         provider = new firebase.auth.GoogleAuthProvider()
         firebaseApp
           .auth()
           .signInWithPopup(provider)
-          .then((result) => {
+          .then(result => {
             // This gives you a Google Access Token. You can use it to access the Google API.
             // var token = result.credential.accessToken
             // The signed-in user info.
@@ -221,11 +248,11 @@ export default {
             console.log(user)
             // ...
           })
-          .catch((error) => dispatch('errorHandling', error))
+          .catch(error => dispatch('errorHandling', error))
       }
     },
 
-    signUserUp ({ commit, dispatch }, payload) {
+    signUserUp({ commit, dispatch }, payload) {
       commit('setLoading', true)
       commit('clearError')
       firebaseApp
@@ -254,7 +281,8 @@ export default {
                   rolesRef
                     .child(newUser.roles[0])
                     .child('users')
-                    .child(newUser.id).set(true)
+                    .child(newUser.id)
+                    .set(true)
                     .then(() => {
                       dispatch('loadUsers')
                       commit('setLoading', false)
@@ -268,26 +296,28 @@ export default {
         .catch(error => dispatch('errorHandling', error))
     },
 
-    setOldRoute ({ commit }, payload) {
+    setOldRoute({ commit }, payload) {
       commit('setOldRoute', payload)
     }
   },
 
   getters: {
-    oldRoute (state) {
+    oldRoute(state) {
       return state.oldRoute
     },
-    user (state) {
+    user(state) {
       return state.user
     },
-    users (state) {
+    users(state) {
       return state.users
     },
-    userIsAdmin (state) {
-      if (!state.user instanceof Object) { return false }
+    userIsAdmin(state) {
+      if (!state.user instanceof Object) {
+        return false
+      }
       if (state.user && state.user.roles) {
-        let isAdmin = state.user.roles.find(elem =>
-          elem.id === 1 || elem.name === 'administrator'
+        let isAdmin = state.user.roles.find(
+          elem => elem.id === 1 || elem.name === 'administrator'
         )
         return isAdmin ? true : false
       }

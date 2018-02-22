@@ -30,7 +30,7 @@ export default {
             })
             commit('setRoles', roles)
           } else {
-            console.warn(data)
+            console.warn('refreshRoles: unexpected response!', data)
           }
         })
         .catch((error) => console.warn(error))

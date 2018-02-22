@@ -25,6 +25,11 @@ export default function startUpActions (store, router) {
   var user = serverData.user
   if (user) {
     store.commit('setUser', user)
+    setTimeout(() => {
+      console.log('loadAllItems from startUpActions')
+      store.dispatch('loadAllItems')
+    }, 1000)
+
   } else {
     // user is not signed in yet, so we store the desired page and let the user sign in first
     let from = store.getters.oldRoute
@@ -35,9 +40,5 @@ export default function startUpActions (store, router) {
     }
     router.replace('/login')
   }
-
-  setTimeout(() => {
-    store.dispatch('loadAllItems')
-  }, 1000)
 
 }

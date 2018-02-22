@@ -30,7 +30,7 @@ export default {
               })
               commit('setTypes', types)
             } else {
-              console.warn(data)
+              console.warn('refreshTypes: Unexpected Response!', data)
             }
           })
           .catch(error => console.warn(error))

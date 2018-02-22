@@ -43,17 +43,16 @@ export default {
 
   methods: {
     userOwnsPlan (plan) {
-      if (!plan) return false
+      if (!(plan instanceof Object)) return false
+
+      // an admin is always owner
+      if (this.$store.getters.userIsAdmin) return true
 
       // get plan from store and investigate the roles
       let user = this.$store.getters.user
       let check = false
-      for (let rl in plan.staff) {
-        let role = plan.staff[rl]
-        if (role.userId === user.id) check = true
-      }
-      // an admin is always owner
-      return this.$store.getters.userIsAdmin || check
+      check = plan.teams.find((rl) => rl.user_id === user.id)
+      return check ? true : false
     }
   },
 

@@ -64,6 +64,8 @@ export default {
       dispatch('refreshTypes', 'init')
       dispatch('refreshSongs', 'init')
       dispatch('refreshPlans', 'init')
+      // load basic bible structure (books, chapters, verses)
+      dispatch('loadBibleStructure')
       // repeat this later with conditions
       setTimeout(() => {
         console.log('checking all items....')

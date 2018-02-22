@@ -1,15 +1,15 @@
 import axios from 'axios'
 import * as moment from 'moment'
 
-import bibleBooks from './bibleBooks.js'
-
 export default {
   state: {
     plan: null,
     plans: 'loading',
     plansUpdatedAt: null,
     planUpdatedAt: null,
-    bibleBooks,
+    apiBibleBooks: null,
+    apiBibleChapters: null,
+    apiBibleVerses: null,
     newPlanId: null,
     activityColours: {
       song: 'indigo lighten-3',
@@ -50,11 +50,36 @@ export default {
 
     setPlanUpdateDate(state, payload) {
       state.planUpdatedAt = payload
+    },
+
+    setBibleBooks(state, payload) {
+      state.apiBibleBooks = payload
+    },
+    setBibleChapters(state, payload) {
+      state.apiBibleChapters = payload
+    },
+    setBibleVerses(state, payload) {
+      state.apiBibleVerses = payload
     }
   },
 
   // A C T I O N S  (dispatches)
   actions: {
+    loadBibleStructure({commit}) {
+      axios.get('/api/bible/books')
+      .then((data) => {
+        commit('setBibleBooks', data.data)        
+      })
+      axios.get('/api/bible/books/all/chapters')
+      .then((data) => {
+        commit('setBibleChapters', data.data)        
+      })
+      axios.get('/api/bible/books/all/verses')
+      .then((data) => {
+        commit('setBibleVerses', data.data)        
+      })
+    },
+
     refreshPlans({ state, commit, dispatch }, payload) {
       // first get date of latest update to PLANS table
       axios
@@ -62,7 +87,7 @@ export default {
         .then(data => {
           let updateDate = data.data.date
           let oldDate = state.plansUpdatedAt
-          console.log('setPlansUpdateDate', updateDate)
+          // console.log('setPlansUpdateDate', updateDate)
           commit('setPlansUpdateDate', updateDate)
 
           if (
@@ -358,13 +383,14 @@ export default {
       for (let key in planItems) {
         if (planItems.hasOwnProperty(key)) {
           let action = planItems[key]
+          // check if comment contains a bible ref
           let isScriptureRef = false
-          let bb = state.bibleBooks
-          for (const key in bb) {
-            if (bb.hasOwnProperty(key)) {
-              if (action.comment && action.comment.indexOf(key) >= 0)
+          if (state.apiBibleBooks && state.apiBibleBooks.forEach) {
+            state.apiBibleBooks.forEach((book) => {
+              if (action.comment && action.comment.indexOf(book) >= 0) {
                 isScriptureRef = true
-            }
+              }
+            })
           }
           let obj = {
             seqNo: parseInt(action.seq_no),
@@ -421,10 +447,6 @@ export default {
         }
       }
       return bibleBooks
-      // return state.bibleBooks.sort((bookA, bookB) => {
-      //   console.log(bookA.id < bookB.id, bookA.name, bookB.name)
-      //   return bookA.id > bookB.id
-      // })
     },
 
     newPlanId(state) {

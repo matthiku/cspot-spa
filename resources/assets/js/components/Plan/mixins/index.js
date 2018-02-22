@@ -32,6 +32,15 @@ export default {
     bibleBooks () {
       return this.$store.state.plan.bibleBooks
     },
+    apiBibleBooks () {
+      return this.$store.state.plan.apiBibleBooks
+    },
+    apiBibleChapters () {
+      return this.$store.state.plan.apiBibleChapters
+    },
+    apiBibleVerses () {
+      return this.$store.state.plan.apiBibleVerses
+    },
     bibleBooksList () {
       return this.$store.getters.bibleBooksList
     },

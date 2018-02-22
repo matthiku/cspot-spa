@@ -12,7 +12,7 @@
               <v-flex xs8 sm6 md4>
                 <v-select label="Book" ref="book"
                     v-model="book" 
-                    :items="bibleBooksList" 
+                    :items="apiBibleBooks" 
                     hint="Select the book"
                     autofocus
                     autocomplete
@@ -103,7 +103,8 @@ export default {
   computed: {
     selectedBook () {
       if (this.book) {
-        let bk = this.bibleBooks[this.book]
+        let bk = {}
+        bk.chapters = this.apiBibleVerses[this.book]
         bk.name = this.book
         return bk
       }
@@ -148,7 +149,7 @@ export default {
       if (val) {
         this.scriptureRef = val
         // create an array with chapter numbers
-        let ch = this.bibleBooks[val].chapters
+        let ch = this.apiBibleVerses[val]
         this.dialogValues.chapters = this.createNumArray(1, Object.keys(ch).length)
         this.chapter = 0
         this.verse_from = 0

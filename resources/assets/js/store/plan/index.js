@@ -439,9 +439,14 @@ export default {
     },
     getScriptureRef({state, commit}, payload) {
       let bRef = splitBref(payload)
-      axios.get(`api/bible/passage/${bRef.version}/${bRef.book}/${bRef.chapter}/${bRef.verse_from}/${bRef.verse_to}`)
+      axios.get(`/api/bible/passage/${bRef.version}/${bRef.book}/${bRef.chapter}/${bRef.verse_from}/${bRef.verse_to}`)
       .then((data) => {
-        commit('addScriptureRef', {label: payload, text: data.data})
+        let block = data.data
+        if (data.data.forEach) {
+          block = ''
+          data.data.forEach((verse) => block += `(${verse.verse}) ${verse.text}\n`)
+        }
+        commit('addScriptureRef', {label: payload, text: block})
       })
     }
   },
@@ -532,8 +537,19 @@ export default {
 
 // HELPER functions
 
-/* Split a bible reference into an object of version, book, chapter, verse_from, verse_to
- */
+/** 
+  Split a bible reference string into an object
+
+  @param string text Scripture reference in the format "[book] [chapter]{:[verse_from]:[verse_to]} ([version])"
+
+  @return object {
+      version:    [version],
+      book:       [book],
+      chapter:    [chapter],
+      verse_from: [verse_from],
+      verse_from: [verse_from]
+    }
+*/
 function splitBref(text) {
   if (!text) {
     return;

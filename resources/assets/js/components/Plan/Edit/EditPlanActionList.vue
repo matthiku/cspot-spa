@@ -27,7 +27,7 @@
               ><v-icon>swap_vert</v-icon>
             </v-list-tile-action>
 
-            <v-list-tile-avatar :title="item.type==='song' ? item.lyrics : ''">
+            <v-list-tile-avatar :title="item.type==='song' ? item.lyrics : item.type==='read' ? scriptureRefs[item.title] : ''">
               <v-icon :class="[item.color]" class="white--text">{{ item.icon }}</v-icon>
             </v-list-tile-avatar>
 
@@ -428,7 +428,11 @@
         this.$router.push({name: 'addsongtoplan'})
       },
 
-      getScriptureRefText (label) {},
+      getScriptureRefText (label) {
+        if (this.scriptureRefs.hasOwnProperty(label))
+          return this.scriptureRefs[label]
+        return 'not found'
+      },
 
       addScriptureRefItem () {
         this.$store.dispatch('addActionItemToPlan', {

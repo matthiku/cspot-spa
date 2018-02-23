@@ -131,92 +131,20 @@
       </v-list>
     </v-card-text>
 
-    <!-- provide dialog to add a scripture reference activity -->
-    <app-edit-plan-action-scripture-dialog></app-edit-plan-action-scripture-dialog>
-
-    <!-- action buttons -->
-    <v-slide-y-transition>
-      <v-card-actions v-if="userOwnsThisPlan" v-show="!editGenericItem">
-
-        <span class="button-group pa-1">
-          <span class="title">Add:</span>
-          <v-tooltip bottom lazy>
-            <v-btn slot="activator" :color="activityColours.song" small class="white--text" @click="addSong">
-              <v-icon>record_voice_over</v-icon>
-              &nbsp;Song</v-btn>
-            <span>Navigates to the song list.<br>There, select a song to be added to this plan.</span>
-          </v-tooltip>
-
-          <v-tooltip bottom lazy>
-            <v-btn slot="activator" :color="activityColours.read" small class="white--text" @click="addScriptureRefDlg">
-              <v-icon>local_library</v-icon>
-              &nbsp; Scripture</v-btn>
-            <span>Opens a dialog to add a Scripture Reference to this plan.</span>
-          </v-tooltip>
-
-          <v-tooltip bottom lazy>
-            <v-btn slot="activator" :color="activityColours.text" small class="white--text" @click="editGenericItem=true">
-              <v-icon>label</v-icon>
-              &nbsp; Gen. Item</v-btn>
-            <span>Opens a dialog to add a generic Text Item to this plan.</span>
-          </v-tooltip>
-        </span>
-
-        <v-spacer></v-spacer>
-        <v-btn small color="purple">
-          big Plan</v-btn>
-
-        <v-spacer></v-spacer>
-        <v-btn icon @click.native="show = !show">
-          <v-icon>{{ show ? 'keyboard_arrow_up' : 'help_outline' }}</v-icon>
-        </v-btn>
-
-      </v-card-actions>
-    </v-slide-y-transition>
-
-    <!-- show helper text -->
-    <v-slide-y-transition>
-      <v-card-text v-show="show">
-        I'm a thing. But, like most politicians, he promised more than he could deliver. You won't have time for sleeping, soldier, not with all the bed making you'll be doing. Then we'll go with that data file! Hey, you add a one and two zeros to that or we walk! You're going to do his laundry? I've got to find a way to escape.
-      </v-card-text>
-    </v-slide-y-transition>
-
-    <!-- add generic item (text) -->
-    <v-slide-y-transition>
-      <div v-show="editGenericItem">
-        <v-card-text class="pb-0 mb-0">
-          <v-text-field
-              @keyup.enter="addGenItem"
-              label="Item text"
-              v-model="genItemText"
-              class="mb-0 pb-0"
-              hint="enter text and click submit or hit Enter"
-              autofocus
-              clearable
-            ></v-text-field>
-        </v-card-text>
-        <v-card-actions class="mt-0 pt-0">
-          <v-spacer></v-spacer>
-          <v-btn color="secondary" flat @click.stop="editGenericItem=false">Close</v-btn>
-          <v-btn color="primary" flat @click.stop="addGenItem" :disabled="isEmpty(genItemText)">Submit</v-btn>
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </div>
-    </v-slide-y-transition>
+    <!-- action buttons to add activity items to this plan -->
+    <app-edit-plan-action-buttons
+        :insertAfter="insertAfter"
+        :userOwnsThisPlan="userOwnsThisPlan">
+    </app-edit-plan-action-buttons>
 
   </v-card>
 
 </template>
 
+
 <style>
   .min-w-25 {
     min-width: 25px;
-  }
-  .button-group {
-    border: 1px solid gray;
-    border-radius: 5px;
-    background-color: rgb(228, 229, 230);
-    box-shadow: 1px 2px 3px gray;
   }
   .white-space-normal {
     white-space: normal;
@@ -250,9 +178,7 @@
 
     data () {
       return {
-        show: false,
-        editGenericItem: false,
-        genItemText: '',
+        insertAfter: -1,
         showMenu: false,
         targetId: null,
         menuItems: [
@@ -403,31 +329,6 @@
         })
       },
 
-      isEmpty (what) {
-        if (what !== undefined && what !== '' & what !== null) return false
-        return true
-      },
-
-      addGenItem () {
-        if (!this.genItemText) return
-        this.editGenericItem = false
-        this.$store.dispatch('addActionItemToPlan', {
-          value: this.genItemText,
-          planId: this.plan.id,
-          type: 'text',
-          seqNo: this.activitiesCount
-        })
-        this.genItemText = ''
-      },
-
-      addSong () {
-        this.$store.dispatch('setDialog', {
-          selectedPlan: this.plan.id,
-          seqNo: this.activitiesCount
-        })
-        this.$router.push({name: 'addsongtoplan'})
-      },
-
       getScriptureRefText (label) {
         if (this.scriptureRefs.hasOwnProperty(label))
           return this.scriptureRefs[label]
@@ -439,17 +340,8 @@
           planId: this.plan.id,
           type: 'read',
           value: this.dialog.value,
-          seqNo: this.activitiesCount
+          seqNo: this.insertAfter
         })
-      },
-
-      addScriptureRefDlg () {
-        this.$store.dispatch('setDialog', {field: 'scriptureDlg'})
-        if (this.dialog) {
-          this.$store.dispatch('showDialog')
-          this.$store.dispatch('hideDialog')
-        }
-        this.$store.dispatch('showDialog')
       },
 
       removeAction (item) {
@@ -474,7 +366,10 @@
 
     created () {
       this.$store.dispatch('hideDialog')
+      // set initial location where new activities will be added
+      this.insertAfter = this.activitiesCount
     },
+
     watch: {
       dialog (val) {
         if (val.field === 'scriptureRef' && val.value) {

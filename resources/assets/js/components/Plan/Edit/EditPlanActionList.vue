@@ -182,10 +182,10 @@
         showMenu: false,
         targetId: null,
         menuItems: [
-          { title: 'Edit this item' },
-          { title: 'Add item above' },
-          { title: 'Add item below' },
-          { title: 'Delete this item' }
+          { id: 'edit', title: 'Edit this item' },
+          { id: 'insAbove', title: 'Insert item above' },
+          { id: 'insBelow', title: 'Insert item below' },
+          { id: 'delete', title: 'Delete this item' }
         ]
       }
     },
@@ -193,7 +193,11 @@
     methods: {
       // user selected an action on a listed plan activity (in the hamburger menu)
       mSelect (action, activity) {
-        console.log(action.title, activity.title)
+        console.log(action.id, activity.seqNo)
+        if (action.id === 'insAbove') {
+          this.moveInsertIndicator(activity.seqNo)
+          this.insertAfter = activity.seqNo - 1
+        }
       },
 
       updateActivityText (event) {
@@ -214,27 +218,30 @@
         })
       },
 
-      setInsertIndicator (where) {
-        // create a new LI element as InsertIndicator or (TODO!) get the existing one
-        let kid = document.createElement('li')
-        kid.classList.add('drop-insert-indicator')
-        kid.setAttribute('id', 'insert-indicator')
+      moveInsertIndicator (seqNo) {
+        // get the existing InsertIndicator LI element or create a new one
+        let indicLi = document.getElementById('insert-indicator')
+        if (!indicLi) {
+          indicLi = document.createElement('li')
+          indicLi.classList.add('drop-insert-indicator')
+          indicLi.setAttribute('id', 'insert-indicator')
+        }
         
-        // get the <DIV> of the activity indicated by "where"
-        let activityDiv = document.getElementById(`activity-item-${where}`)
+        // get the <DIV> of the activity indicated by "seqNo"
+        let activityDiv = document.getElementById(`activity-item-${seqNo}`)
         // initially, or when there are no action items, this will be null
         // then we have to append the indicator as last LI item in the UL
         if (activityDiv) {          
           // find the parent UL element
           let parentUL = activityDiv.parentElement.parentElement
           // insert the new LI before the current LI
-          parentUL.insertBefore(kid, activityDiv.parentElement)        
+          parentUL.insertBefore(indicLi, activityDiv.parentElement)        
         } else {
           // we need to get the last LI item so that we can get to the parent UL
-          let activityDiv = document.getElementById(`activity-item-${where - 1}`)
+          let activityDiv = document.getElementById(`activity-item-${seqNo - 1}`)
           let parentUL = activityDiv.parentElement.parentElement
           // now we can append the InsertIndicator as last LI item in the UL
-          parentUL.appendChild(kid)
+          parentUL.appendChild(indicLi)
         }
       },
 
@@ -397,7 +404,7 @@
     mounted () {
       // we only need an insert indicater if we already have some items...
       if (this.insertAfter > -1) {
-        this.setInsertIndicator(this.insertAfter)
+        this.moveInsertIndicator(this.insertAfter)
       }
     },
 

@@ -214,6 +214,30 @@
         })
       },
 
+      setInsertIndicator (where) {
+        // create a new LI element as InsertIndicator or (TODO!) get the existing one
+        let kid = document.createElement('li')
+        kid.classList.add('drop-insert-indicator')
+        kid.setAttribute('id', 'insert-indicator')
+        
+        // get the <DIV> of the activity indicated by "where"
+        let activityDiv = document.getElementById(`activity-item-${where}`)
+        // initially, or when there are no action items, this will be null
+        // then we have to append the indicator as last LI item in the UL
+        if (activityDiv) {          
+          // find the parent UL element
+          let parentUL = activityDiv.parentElement.parentElement
+          // insert the new LI before the current LI
+          parentUL.insertBefore(kid, activityDiv.parentElement)        
+        } else {
+          // we need to get the last LI item so that we can get to the parent UL
+          let activityDiv = document.getElementById(`activity-item-${where - 1}`)
+          let parentUL = activityDiv.parentElement.parentElement
+          // now we can append the InsertIndicator as last LI item in the UL
+          parentUL.appendChild(kid)
+        }
+      },
+
       // the user dropped the element on a Plan Activity - now handle the move
       drop (event) {
         event.target.style.opacity = '1'
@@ -332,7 +356,7 @@
       getScriptureRefText (label) {
         if (this.scriptureRefs.hasOwnProperty(label))
           return this.scriptureRefs[label]
-        return 'not found'
+        return 'loading...'
       },
 
       addScriptureRefItem () {
@@ -368,6 +392,13 @@
       this.$store.dispatch('hideDialog')
       // set initial location where new activities will be added
       this.insertAfter = this.activitiesCount
+    },
+
+    mounted () {
+      // we only need an insert indicater if we already have some items...
+      if (this.insertAfter > -1) {
+        this.setInsertIndicator(this.insertAfter)
+      }
     },
 
     watch: {

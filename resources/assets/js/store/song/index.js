@@ -28,7 +28,7 @@ export default {
         .then(data => {
           let updateDate = data.data.date
           let oldDate = state.songsUpdatedAt
-          console.log('setSongsUpdateDate', updateDate)
+          // console.log('setSongsUpdateDate', updateDate)
           commit('setSongsUpdateDate', updateDate)
 
           if (

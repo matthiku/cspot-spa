@@ -208,6 +208,10 @@
           this.insertBefore = activity.seqNo - 1
           this.moveInsertIndicator()
         }
+        if (action.id === 'insBelow') {
+          this.insertBefore = activity.seqNo
+          this.moveInsertIndicator()
+        }
       },
 
       updateActivityText (event) {
@@ -265,7 +269,7 @@
         if (!isNaN(start) && !isNaN(end) && start !== end) {
           // change the seqNo of the dragged Activity so that it comes AFTER the target Activity
           this.changeSeqNo(end, 1 * parseFloat(end) + 0.5)
-          this.changeSeqNo(start, parseFloat(end))
+          this.changeSeqNo(start, parseFloat(end) - 0.1)
           this.correctAllSeqNos()
         }
       },
@@ -336,7 +340,6 @@
         })
       },
       correctAllSeqNos () {
-        console.log('correctAllSeqNos')
         // first, sort the array again with the new, intermediate seqNos
         this.sortActionList()
         // now change the seqNo into integers again

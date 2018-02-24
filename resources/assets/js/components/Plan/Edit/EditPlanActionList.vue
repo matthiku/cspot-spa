@@ -413,6 +413,11 @@
     mounted () {
       // initialize the actionListCount watcher
       this.oldActionListCount = this.activitiesCount
+      // if a song was just added to this plan, dialog contains our plan id
+      // and the dialog.seqNo can be used to set the insert marker
+      if (this.dialog.selectedPlan === this.plan.id && this.dialog.seqNo) {
+        this.insertBefore = this.dialog.seqNo
+      }
     },
 
     watch: {

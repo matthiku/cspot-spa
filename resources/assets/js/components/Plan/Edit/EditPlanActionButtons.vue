@@ -44,7 +44,9 @@
     <!-- show helper text -->
     <v-slide-y-transition>
       <v-card-text v-show="show">
-        I'm a thing. But, like most politicians, he promised more than he could deliver. You won't have time for sleeping, soldier, not with all the bed making you'll be doing. Then we'll go with that data file! Hey, you add a one and two zeros to that or we walk! You're going to do his laundry? I've got to find a way to escape.
+        Activity items will be added into the plan at the location indicated by the thick, maroon-coloured line.
+        Initially, this is at the end of the list of items but you can move the "insert indicator" line by 
+        clicking on the hamburger menu icon at the right end of each item and selecting the appropriate menu item.
       </v-card-text>
     </v-slide-y-transition>
 
@@ -95,7 +97,7 @@ import planMixins from '../mixins'
 export default {
   mixins: [genericMixins, planMixins],
 
-  props: ['userOwnsThisPlan', 'insertAfter'],
+  props: ['userOwnsThisPlan', 'insertBefore'],
 
   data () {
     return {
@@ -113,7 +115,7 @@ export default {
         value: this.genItemText,
         planId: this.plan.id,
         type: 'text',
-        seqNo: this.insertAfter
+        seqNo: this.insertBefore
       })
       this.genItemText = ''
     },
@@ -135,7 +137,7 @@ export default {
     addSong () {
       this.$store.dispatch('setDialog', {
         selectedPlan: this.plan.id,
-        seqNo: this.insertAfter
+        seqNo: this.insertBefore
       })
       this.$router.push({name: 'addsongtoplan'})
     }

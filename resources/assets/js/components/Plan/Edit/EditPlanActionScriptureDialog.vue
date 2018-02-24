@@ -1,14 +1,18 @@
 <template>
   <v-layout row justify-center>
     <v-dialog v-model="scriptureDialog" max-width="700">
-      <v-card>
+
+      <v-card v-if="apiBibleBooks instanceof Array">
+
         <v-card-title class="headline">
           Select a Scripture Reference: &nbsp;
           <span v-if="scriptureRef" color="blue darken-2">{{ scriptureRef }}</span>
         </v-card-title>
+
         <v-card-text>
           <v-container grid-list-md>
             <v-layout wrap>
+
               <v-flex xs8 sm6 md4>
                 <v-select label="Book" ref="book"
                     v-model="book" 

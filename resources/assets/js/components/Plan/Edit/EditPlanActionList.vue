@@ -3,7 +3,8 @@
 
     <!-- show plan activity items -->
     <v-card-text class="grey lighten-3 pb-1">
-      <v-list two-line dense>
+
+      <v-list id="activities-list" two-line dense>
 
         <!-- loop through all plan action items -->
         <template v-for="(item, index) in plan.actionList">
@@ -45,7 +46,7 @@
                         'lime--text text--darken-3': item.type==='text'
                       }"
                     class="strong white-space-normal py-1 pr-1"
-                  >
+                  >({{ item.seqNo }})
                   <v-tooltip bottom lazy offset-overflow v-if="item.type!=='text'">
                     <span slot="activator">{{ item.title }}</span>
                     <pre v-if="item.type==='song'">{{ item.lyrics }}</pre>
@@ -59,6 +60,7 @@
                     v-if="userOwnsThisPlan && item.type === 'text'"
                     title="click text to edit"
                   ><v-icon>edit</v-icon></span> 
+
               </v-list-tile-title>
 
               <v-list-tile-sub-title>{{ item.book_ref }}</v-list-tile-sub-title>
@@ -125,15 +127,22 @@
           <v-divider v-if="plan.actionList && index + 1 < plan.actionList.length" :key="item.key"></v-divider>
         </template>
 
-        <p class="text-xs-center ma-0">
-          <span v-if="!plan.actionList || !plan.actionList.length">(no items added yet)</span>
-        </p>
+        <v-list-tile v-show="activitiesCount"
+            id="insert-indicator"
+            title="items will be inserted here"
+            class="drop-insert-indicator"></v-list-tile>
+
       </v-list>
+
+      <p class="text-xs-center ma-0">
+        <span v-if="!plan.actionList || !plan.actionList.length">(no activity items)</span>
+      </p>
+
     </v-card-text>
 
     <!-- action buttons to add activity items to this plan -->
     <app-edit-plan-action-buttons
-        :insertAfter="insertAfter"
+        :insertBefore="insertBefore"
         :userOwnsThisPlan="userOwnsThisPlan">
     </app-edit-plan-action-buttons>
 
@@ -150,7 +159,7 @@
     white-space: normal;
   }
   .drop-insert-indicator {
-    background-color:aqua;
+    background-color:maroon;
     height: 0.5em;
     line-height: 0.7;
   }
@@ -178,13 +187,15 @@
 
     data () {
       return {
-        insertAfter: -1,
+        needToMove: false,
+        oldActionListCount: 0,
+        insertBefore: -1,
         showMenu: false,
         targetId: null,
         menuItems: [
-          { id: 'edit', title: 'Edit this item' },
           { id: 'insAbove', title: 'Insert item above' },
           { id: 'insBelow', title: 'Insert item below' },
+          { id: 'edit', title: 'Edit this item' },
           { id: 'delete', title: 'Delete this item' }
         ]
       }
@@ -193,10 +204,9 @@
     methods: {
       // user selected an action on a listed plan activity (in the hamburger menu)
       mSelect (action, activity) {
-        console.log(action.id, activity.seqNo)
         if (action.id === 'insAbove') {
-          this.moveInsertIndicator(activity.seqNo)
-          this.insertAfter = activity.seqNo - 1
+          this.insertBefore = activity.seqNo - 1
+          this.moveInsertIndicator()
         }
       },
 
@@ -218,30 +228,28 @@
         })
       },
 
-      moveInsertIndicator (seqNo) {
+      moveInsertIndicator () {
+        let position = this.insertBefore + 1
+
         // get the existing InsertIndicator LI element or create a new one
-        let indicLi = document.getElementById('insert-indicator')
-        if (!indicLi) {
-          indicLi = document.createElement('li')
-          indicLi.classList.add('drop-insert-indicator')
-          indicLi.setAttribute('id', 'insert-indicator')
-        }
-        
-        // get the <DIV> of the activity indicated by "seqNo"
-        let activityDiv = document.getElementById(`activity-item-${seqNo}`)
-        // initially, or when there are no action items, this will be null
-        // then we have to append the indicator as last LI item in the UL
-        if (activityDiv) {          
-          // find the parent UL element
-          let parentUL = activityDiv.parentElement.parentElement
-          // insert the new LI before the current LI
-          parentUL.insertBefore(indicLi, activityDiv.parentElement)        
-        } else {
-          // we need to get the last LI item so that we can get to the parent UL
-          let activityDiv = document.getElementById(`activity-item-${seqNo - 1}`)
-          let parentUL = activityDiv.parentElement.parentElement
-          // now we can append the InsertIndicator as last LI item in the UL
+        let indicLi = document.getElementById('insert-indicator').parentNode
+
+        // get the parent UL element
+        let parentUL = indicLi.parentNode
+
+        // temporarily remove the indicator from the DOM
+        indicLi.parentNode.removeChild(indicLi)
+
+        // get all LI children in order to find the n-th child (according to the given seqNo)
+        let childrenLI = parentUL.getElementsByTagName('li')
+        let count = childrenLI.length
+
+        // if the seqNo is higher than the number of LI elements,
+        // append the indicator to the end
+        if (count < position) {
           parentUL.appendChild(indicLi)
+        } else {
+          parentUL.insertBefore(indicLi, childrenLI[position])
         }
       },
 
@@ -265,22 +273,17 @@
       dragover (event) {
         event.preventDefault()
       },
+      // set the insert indicator above this element
       dragenter (event) {
         let targetLi = this.getParent(event, '.list__tile')
         if (!targetLi) return
         if (this.targetId === targetLi.id) return
         this.targetId = targetLi.id
-
-        this.destroyOldInsertIndicator()
-        let kid = document.createElement('li')
-        kid.classList.add('drop-insert-indicator')
-        let parent = targetLi.parentElement.parentElement
-        parent.insertBefore(kid, targetLi.parentElement)
-      },
-      destroyOldInsertIndicator () {
-        let elms = document.getElementsByClassName('drop-insert-indicator')
-        if (!elms.length) return
-        elms[0].remove()
+        // get the indicator and move it above the current element
+        let kid = document.getElementById('insert-indicator').parentNode
+        kid.parentNode.removeChild(kid) // temporarily remove it from the (visible) DOM
+        let parentUL = targetLi.parentElement.parentElement // find the parent UL element
+        parentUL.insertBefore(kid, targetLi.parentElement) // insert the indicator into the new location
       },
       dragleave (event) {
         let targetLi = this.getParent(event, '.list__tile')
@@ -290,7 +293,6 @@
       },
       dragend (event) {
         event.target.style.opacity = '1'
-        this.destroyOldInsertIndicator()
       },
       // user begins the dragging - remember the corresponding seqNo of the Activity from where he started
       drag (event) {
@@ -334,29 +336,33 @@
         })
       },
       correctAllSeqNos () {
+        console.log('correctAllSeqNos')
         // first, sort the array again with the new, intermediate seqNos
         this.sortActionList()
         // now change the seqNo into integers again
         this.$store.commit('setLoading', true)
         let idx = 0
         this.actionList.forEach((elem) => {
+          let oldSeqNo = elem.seqNo
           // correct the seqNo
           elem.seqNo = idx++
           // report the change back to the backend DB
-          let obj = {
-            planId: this.plan.id,
-            actionId: elem.key,
-            field: 'seq_no',
-            newValue: elem.seqNo
+          if (oldSeqNo !== elem.seqNo) {
+            let obj = {
+              planId: this.plan.id,
+              actionId: elem.key,
+              field: 'seq_no',
+              newValue: elem.seqNo
+            }
+            this.$store.dispatch('updateActionItem', obj)
+              .then(() => {
+                // after the last action, make sure we update the local data
+                if (idx >= this.actionList.length) {
+                  this.$store.commit('setMessage', 'Plan Activities sequence updated.')
+                  this.$store.commit('setLoading', false)
+                }
+              })
           }
-          this.$store.dispatch('updateActionItem', obj)
-            .then(() => {
-              // after the last action, make sure we update the local data
-              if (idx >= this.actionList.length) {
-                this.$store.commit('setMessage', 'Plan Activities sequence updated.')
-                this.$store.commit('setLoading', false)
-              }
-            })
         })
       },
 
@@ -371,7 +377,7 @@
           planId: this.plan.id,
           type: 'read',
           value: this.dialog.value,
-          seqNo: this.insertAfter
+          seqNo: this.insertBefore
         })
       },
 
@@ -398,14 +404,12 @@
     created () {
       this.$store.dispatch('hideDialog')
       // set initial location where new activities will be added
-      this.insertAfter = this.activitiesCount
+      this.insertBefore = this.activitiesCount
     },
 
     mounted () {
-      // we only need an insert indicater if we already have some items...
-      if (this.insertAfter > -1) {
-        this.moveInsertIndicator(this.insertAfter)
-      }
+      // initialize the actionListCount watcher
+      this.oldActionListCount = this.activitiesCount
     },
 
     watch: {
@@ -413,6 +417,28 @@
         if (val.field === 'scriptureRef' && val.value) {
           this.addScriptureRefItem()
         }
+      },
+
+      // if an activity item was added or removed, make
+      // sure the sequence numbers are still correct
+      actionList (val) {
+        if (this.oldActionListCount !== this.activitiesCount) {
+          // also, if an item was added, move the insertion indicator
+          if (this.oldActionListCount < this.activitiesCount) {
+            this.insertBefore += 1
+            this.needToMove = true // trigger the move of the indicator after the re-render
+          }
+          this.correctAllSeqNos()
+          this.oldActionListCount = this.activitiesCount
+        }
+      }
+    },
+
+    updated () {
+      // see if the indicator needs to move after the list of activities was re-rendered
+      if (this.needToMove) {
+        this.moveInsertIndicator()
+        this.needToMove = false
       }
     }
   }

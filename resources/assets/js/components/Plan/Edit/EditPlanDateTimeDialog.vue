@@ -27,22 +27,20 @@
                   offset-y
                   full-width
                   :nudge-right="40"
-                  max-width="320px"
-                  min-width="320px"
+                  min-width="290px"
+                  :return-value.sync="startDate"
                 >
                 <v-text-field
                   slot="activator"
-                  label="Pick the plan date"
+                  label="Pick the Plan Date"
                   v-model="startDate"
                   prepend-icon="event"
                   readonly
                 ></v-text-field>
                 <v-date-picker 
                     v-model="startDate"
-                    autosave
                     no-title 
                     scrollable
-                    actions
                   >
                   <v-spacer></v-spacer>
                   <v-btn flat color="primary" @click="startDateMenu = false">Cancel</v-btn>
@@ -64,18 +62,18 @@
                   offset-y
                   full-width
                   :nudge-right="40"
-                  max-width="290px"
-                  min-width="290px"
+                  max-width="330px"
+                  min-width="330px"
                   :return-value.sync="startTime"
                 >
                 <v-text-field
-                  slot="activator"
-                  label="Pick the START time"
-                  v-model="startTime"
-                  prepend-icon="access_time"
-                  @change="saveDate"
-                  readonly
-                ></v-text-field>
+                    slot="activator"
+                    label="Pick the START time"
+                    v-model="startTime"
+                    @change="dateEditingDlg=true"
+                    prepend-icon="access_time"
+                    readonly
+                  ></v-text-field>
                 <v-time-picker 
                     format="24hr"
                     v-model="startTime"
@@ -96,14 +94,14 @@
                   offset-y
                   full-width
                   :nudge-right="40"
-                  max-width="290px"
-                  min-width="290px"
+                  max-width="330px"
+                  min-width="330px"
                 >
                 <v-text-field
                     slot="activator"
                     label="Pick the END time"
                     v-model="endTime"
-                    @change="saveDate"
+                    @change="dateEditingDlg=true"
                     prepend-icon="access_time"
                     readonly
                   ></v-text-field>
@@ -196,6 +194,10 @@ export default {
 
   created () {
     this.updateDates()
+    this.$store.dispatch('hideDialog')
+  },
+
+  destroyed () {
     this.$store.dispatch('hideDialog')
   }
 }

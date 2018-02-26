@@ -46,7 +46,8 @@
                         'lime--text text--darken-3': item.type==='text'
                       }"
                     class="strong white-space-normal py-1 pr-1"
-                  >({{ item.seqNo }})
+                  >
+                  <!-- ({{ item.seqNo }}) -->
                   <v-tooltip bottom lazy offset-overflow v-if="item.type!=='text'">
                     <span slot="activator">{{ item.title }}</span>
                     <pre v-if="item.type==='song'">{{ item.lyrics }}</pre>
@@ -195,7 +196,7 @@
         menuItems: [
           { id: 'insAbove', title: 'Insert item above' },
           { id: 'insBelow', title: 'Insert item below' },
-          { id: 'edit', title: 'Edit this item' },
+          { id: 'editFleo', title: 'Swap FLEO flag' },
           { id: 'delete', title: 'Delete this item' }
         ]
       }
@@ -211,6 +212,19 @@
         if (action.id === 'insBelow') {
           this.insertBefore = activity.seqNo
           this.moveInsertIndicator()
+        }
+        if (action.id === 'delete') {
+          activity.warning = true
+        }
+        if (action.id === 'editFleo') {
+          activity.forLeadersEyesOnly = !activity.forLeadersEyesOnly
+          let obj = {
+            planId: this.plan.id,
+            actionId: activity.key,
+            field: 'forLeadersEyesOnly',
+            newValue: activity.forLeadersEyesOnly
+          }
+          this.$store.dispatch('updateActionItem', obj)
         }
       },
 
@@ -351,7 +365,7 @@
           elem.seqNo = idx++
           // report the change back to the backend DB
           if (oldSeqNo !== elem.seqNo) {
-            console.log('seqNo has changed', oldSeqNo, elem.seqNo)
+            // console.log('seqNo has changed', oldSeqNo, elem.seqNo)
             let obj = {
               planId: this.plan.id,
               actionId: elem.key,
@@ -366,6 +380,9 @@
                   this.$store.commit('setLoading', false)
                 }
               })
+          }
+          if (idx >= this.actionList.length) {
+            this.$store.commit('setLoading', false)
           }
         })
       },
@@ -440,9 +457,6 @@
           this.correctAllSeqNos()
           this.oldActionListCount = this.activitiesCount
         }
-      },
-      insertBefore (val) {
-        console.log('insertBefore', val)
       }
     },
 

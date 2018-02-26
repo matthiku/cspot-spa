@@ -6,7 +6,10 @@
     <v-content>
 
       <v-flex xs12 v-if="loading">
-        <v-progress-linear class="ma-0 pa-0" v-bind:indeterminate="true"></v-progress-linear>
+        <v-progress-linear 
+            class="ma-0 pa-0"
+            height="5"
+            v-bind:indeterminate="true"></v-progress-linear>
       </v-flex>
 
       <!-- Alert Panel -->

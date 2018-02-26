@@ -27,8 +27,8 @@
                   offset-y
                   full-width
                   :nudge-right="40"
-                  max-width="290px"
-                  min-width="290px"
+                  max-width="320px"
+                  min-width="320px"
                 >
                 <v-text-field
                   slot="activator"
@@ -158,7 +158,6 @@ export default {
 
       // do not submit if nothing has changed
       if (date !== this.plan.date) {
-        console.log(date, this.plan.date)
         this.$store.dispatch('updatePlan', {
           id: this.plan.id,
           field: 'date',
@@ -166,7 +165,6 @@ export default {
         })
       }
       if (end !== this.plan.date_end) {
-        console.log(end, this.plan.date_end)
         this.$store.dispatch('updatePlan', {
           id: this.plan.id,
           field: 'date_end',

@@ -110,7 +110,7 @@ export default {
               reason
             )
             if (reason === 'out-of-date') {
-              console.log(oldDate, updateDate)
+              console.log('PLANS: old', oldDate, '- new', updateDate)
             }
             axios
               .get('/api/plan')
@@ -205,6 +205,7 @@ export default {
         .then(data => {
           commit('setPlan', {})
           dispatch('setSinglePlan', data.data)
+          dispatch('refreshPlans') // make sure the plans list will be updated also
           commit('setMessage', 'Plan successfully updated.')
           commit('setLoading', false)
         })

@@ -57,7 +57,8 @@
 
                                 <!-- show and edit plan STAFF -->
                                 <v-expansion-panel-content
-                                    v-model="showDetails.staff" :class="[showDetails.staff ? 'green lighten-3' : '']">
+                                    v-model="showDetails.staff"
+                                    :class="[showDetails.staff ? 'green lighten-3' : '']">
 
                                   <div slot="header">
                                     <span class="body-2 mr-3">
@@ -227,21 +228,23 @@ export default {
         let planId = parseInt(this.$route.params.planId)
         if (isNaN(planId) || (this.plan && this.plan.id === planId)) return
         plan = this.plans && this.plans.find ? this.plans.find((pl) => planId === pl.id) : null
-        // console.log(planId, 'found plan?', plan)
         // perhaps the plan was coming from the HTML header on page reload
         if ((!plan || plan === 'loading') && this.$store.state.plan && this.$store.state.plan.plan ) {
           plan = this.$store.state.plan.plan
-          // console.log('took plan from page header', plan)
         }
       }
 
       // open the staff list panel if no staff is assigned yet
-      if (plan && !plan.staffList && !this.pageStatus.hasOwnProperty(plan.id)) {
-        this.showDetails.staff = true
-        this.showDetails.activities = false
-      } else if (plan && !this.pageStatus.hasOwnProperty(plan.id)) {
-        this.showDetails.staff = false
-        this.showDetails.activities = true
+      if (plan && !this.pageStatus.hasOwnProperty(plan.id)) {
+        if (!plan.teams) {
+          this.showDetails.staff = true
+          this.showDetails.activities = false
+        } else {
+          this.showDetails.staff = false
+          this.showDetails.activities = true
+        }
+      } else if (plan) {
+        this.showDetails = this.pageStatus[this.plan.id].showDetails
       }
 
       // make sure we have the latest version from the backend of this plan
@@ -311,7 +314,9 @@ export default {
 
     // check which expansion panel should be open
     if (!this.plan || this.plan === undefined) return
-    if (this.pageStatus.hasOwnProperty(this.plan.id)) this.showDetails = this.pageStatus[this.plan.id].showDetails
+    if (this.pageStatus.hasOwnProperty(this.plan.id)) {
+      this.showDetails = this.pageStatus[this.plan.id].showDetails
+    }
   },
 
   updated () {

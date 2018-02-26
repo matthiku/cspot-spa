@@ -65,7 +65,7 @@ export default {
       dispatch('refreshSongs', 'init')
       dispatch('refreshPlans', 'init')
       // load basic bible structure (books, chapters, verses)
-      dispatch('loadBibleStructure')
+      dispatch('loadBibleStructure', 'init')
       // repeat this later with conditions
       setTimeout(() => {
         console.log('checking all items....')
@@ -83,13 +83,14 @@ export default {
       dispatch('refreshUsers')
       dispatch('refreshSongs')
       dispatch('refreshPlans')
+      dispatch('loadBibleStructure')
 
-      // repeat this every 5 mins (30 secs for tests)
+      // repeat this every min
       setTimeout(() => {
         // check if the initial loading of data (see below) had already been successful
         console.log('re-checking all items....')
         dispatch('refreshAllItems')
-      }, 300000)      
+      }, 60000)      
     },
 
     clearAllItems ({commit}) {

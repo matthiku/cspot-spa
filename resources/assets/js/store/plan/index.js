@@ -69,19 +69,25 @@ export default {
 
   // A C T I O N S  (dispatches)
   actions: {
-    loadBibleStructure({commit}) {
-      axios.get('/api/bible/books')
-      .then((data) => {
-        commit('setBibleBooks', data.data)        
-      })
-      axios.get('/api/bible/books/all/chapters')
-      .then((data) => {
-        commit('setBibleChapters', data.data)        
-      })
-      axios.get('/api/bible/books/all/verses')
-      .then((data) => {
-        commit('setBibleVerses', data.data)        
-      })
+    loadBibleStructure({state, commit}, payload) {
+      if (!(state.apiBibleBooks instanceof Array) || payload === 'init') {
+        axios.get('/api/bible/books')
+        .then((data) => {
+          commit('setBibleBooks', data.data)
+        })
+      }
+      if (!(state.apiBibleChapters instanceof Object) || payload === 'init') {
+        axios.get('/api/bible/books/all/chapters')
+        .then((data) => {
+          commit('setBibleChapters', data.data)
+        })
+      }
+      if (!(state.apiBibleVerses instanceof Object) || payload === 'init') {
+        axios.get('/api/bible/books/all/verses')
+        .then((data) => {
+          commit('setBibleVerses', data.data)
+        })
+      }
     },
 
     refreshPlans({ state, commit, dispatch }, payload) {
@@ -120,8 +126,6 @@ export default {
               .catch(error => console.warn(error))
           } else if (updateDate === undefined) {
             console.warn('could not get latest PLANS update date!')
-          } else {
-            console.log('PLANS still up-to-date')
           }
         })
         .catch(error => console.warn(error))
@@ -454,19 +458,6 @@ export default {
 
   // G E T T E R S
   getters: {
-    bibleBooksList(state) {
-      if (state.bibleBooks === '') return []
-      let bb = state.bibleBooks
-      let bibleBooks = []
-      for (const key in bb) {
-        if (bb.hasOwnProperty(key)) {
-          // const element = bb[key]
-          bibleBooks.push(key)
-        }
-      }
-      return bibleBooks
-    },
-
     newPlanId(state) {
       return state.newPlanId
     },

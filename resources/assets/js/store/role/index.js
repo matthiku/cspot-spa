@@ -34,8 +34,6 @@ export default {
           }
         })
         .catch((error) => console.warn(error))
-      } else {
-        console.log('ROLES still up-to-date')
       }
     },
 

@@ -78,9 +78,6 @@ export default {
               .catch(error => console.warn(error))
           } else if (updateDate === undefined) {
             console.warn('could not get USERS update date!')
-          } else {
-            console.log('USERS still up-to-date')
-            return
           }
         })
         .catch(error => console.warn(error))

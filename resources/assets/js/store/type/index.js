@@ -34,8 +34,6 @@ export default {
             }
           })
           .catch(error => console.warn(error))
-      } else {
-        console.log('TYPES still up-to-date')
       }
     },
 

@@ -72,8 +72,6 @@ export default {
               .catch(error => console.warn(error))
           } else if (updateDate === undefined) {
             console.warn('could not get SONGS update date!')
-          } else {
-            console.log('SONGS still up-to-date')
           }
         })
         .catch(error => console.warn(error))

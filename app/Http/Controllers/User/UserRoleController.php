@@ -22,7 +22,7 @@ class UserRoleController extends Controller
     public function store(Request $request, User $user)
     {
         $user->roles()->attach($request->role_id);
-        return response($role->jsonSerialize(), Response::HTTP_OK);       
+        return response($user->jsonSerialize(), Response::HTTP_OK);       
     }
 
 

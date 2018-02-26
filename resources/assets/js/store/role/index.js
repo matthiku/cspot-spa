@@ -115,6 +115,9 @@ export default {
   getters: {
     roles (state) {
       return state.roles
+    },
+    rolesByName (state) {
+      return state.rolesByName
     }
   }
 }

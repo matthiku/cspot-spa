@@ -25,6 +25,9 @@ export default {
     roles () {
       return this.$store.getters.roles
     },
+    rolesByName () {
+      return this.$store.getters.rolesByName
+    },
     userIsAdmin () {
       return this.$store.getters.userIsAdmin
     },

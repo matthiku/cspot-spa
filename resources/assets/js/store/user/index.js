@@ -88,7 +88,7 @@ export default {
       if (!payload.id) return
       console.log(payload)
       axios
-        .post(`api/user/${payload.id}/update/`)
+        .patch(`api/user/${payload.id}`)
         .then(() => {
           commit('setLoading', false)
         })
@@ -100,7 +100,8 @@ export default {
       console.log('updateUserProfile', payload)
       // if this is the current user: update user profile
       if (payload.id === state.user.id) {
-        axios.patch(`/api/users/${payload.id}`, payload)
+        axios
+          .patch(`/api/user/${payload.id}`, payload)
           .then(
             (data) => {
               console.log(data.data)

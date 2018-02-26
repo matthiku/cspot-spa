@@ -21,29 +21,35 @@ Route::middleware('auth:api')->get(
 
 // with Authentication
 Route::middleware('auth:api')->group(
-    function () {        
+    function () {
+
         // provide date of latest update to certain tables
         Route::get('/song/latest', 'SongController@latest');
-        Route::get('/user/latest', 'UserController@latest');
-        Route::get('/plan/latest', 'PlanController@latest');
-        Route::get('/plan/{plan}/latest', 'PlanController@planLatest');
+        Route::get('/user/latest', 'User\UserController@latest');
 
-        // provide the CRUD  resources
+        Route::get('/plan/latest', 'Plan\PlanController@latest');
+        Route::get('/plan/{plan}/latest', 'Plan\PlanController@planLatest');
+
+
+        // provide the  CRUD  resources
         Route::apiResources(
             [
-                'user' => 'UserController',
+                'user' => 'User\UserController',
+                'user.role' => 'User\UserRoleController',
+
                 'type' => 'TypeController',
                 'role' => 'RoleController',
                 'song' => 'SongController',
 
-                'plan' => 'PlanController',
-                'plan.team' => 'PlanTeamController',
-                'plan.item' => 'PlanItemController',
+                'plan' => 'Plan\PlanController',
+                'plan.team' => 'Plan\PlanTeamController',
+                'plan.item' => 'Plan\PlanItemController',
             ]
         );
+        
 
         // provide for 'soft-deletes' https://laravel.com/docs/5.5/eloquent#soft-deleting
-        Route::delete('/plan/{plan}/soft', 'PlanController@softdelete');
+        Route::delete('/plan/{plan}/soft', 'Plan\PlanController@softdelete');
 
         // API route to compile bible references
         Route::get('bible/books',                           'BibleController@books');         // get all books

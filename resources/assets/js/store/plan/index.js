@@ -98,11 +98,11 @@ export default {
           let updateDate = data.data.date
           let oldDate = state.plansUpdatedAt
           // console.log('setPlansUpdateDate', updateDate)
+          if (oldDate === updateDate) return
           commit('setPlansUpdateDate', updateDate)
 
           if (
             (payload === 'init' ||
-              oldDate !== updateDate ||
               !(state.plans instanceof Object) ||
               (state.plans && !state.plans.length)) &&
             updateDate !== undefined

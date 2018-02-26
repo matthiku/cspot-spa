@@ -39,11 +39,11 @@ export default {
           let updateDate = data.data.date
           let oldDate = state.usersUpdatedAt
           // console.log('setUsersUpdateDate', updateDate)
+          if (oldDate === updateDate) return
           commit('setUsersUpdateDate', updateDate)
 
           if (
             (payload === 'init' ||
-              oldDate !== updateDate ||
               !(state.users instanceof Object) ||
               state.users instanceof Array) &&
             updateDate !== undefined
@@ -87,7 +87,6 @@ export default {
     updateUser({ commit, dispatch }, payload) {
       if (!payload.id) return
       console.log(payload)
-      // usersRef.child(payload.id).update(payload)
       axios
         .post(`api/user/${payload.id}/update/`)
         .then(() => {
@@ -98,16 +97,14 @@ export default {
 
     updateUserProfile({ state, commit, dispatch }, payload) {
       commit('setLoading', true)
-      // if this is the current user: update firebase user profile
+      console.log('updateUserProfile', payload)
+      // if this is the current user: update user profile
       if (payload.id === state.user.id) {
-        firebaseApp
-          .auth()
-          .currentUser.updateProfile({
-            displayName: payload.name
-          })
+        axios.patch(`/api/users/${payload.id}`, payload)
           .then(
-            () => {
-              commit('appendMessage', "User's Firebase data was updated!")
+            (data) => {
+              console.log(data.data)
+              commit('appendMessage', "User's profile was updated!")
             },
             error => dispatch('errorHandling', error)
           )
@@ -293,7 +290,7 @@ export default {
             .catch(error => dispatch('errorHandling', error))
         })
         .catch(error => dispatch('errorHandling', error))
-    },
+    }
   },
 
   getters: {

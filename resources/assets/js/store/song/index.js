@@ -29,15 +29,13 @@ export default {
           let updateDate = data.data.date
           let oldDate = state.songsUpdatedAt
           // console.log('setSongsUpdateDate', updateDate)
+          if (oldDate === updateDate) return
           commit('setSongsUpdateDate', updateDate)
 
           if (
-            (
-              payload === 'init' ||
-              oldDate !== updateDate ||
+            (payload === 'init' ||
               !(state.songs instanceof Object) ||
-              state.songs instanceof Array
-            ) &&
+              state.songs instanceof Array) &&
             updateDate !== undefined
           ) {
             let reason =

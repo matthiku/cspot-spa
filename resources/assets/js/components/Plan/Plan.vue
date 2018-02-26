@@ -226,7 +226,7 @@ export default {
       } else {
         let planId = parseInt(this.$route.params.planId)
         if (isNaN(planId) || (this.plan && this.plan.id === planId)) return
-        plan = this.plans.find((pl) => planId === pl.id)
+        plan = this.plans && this.plans.find ? this.plans.find((pl) => planId === pl.id) : null
         // console.log(planId, 'found plan?', plan)
         // perhaps the plan was coming from the HTML header on page reload
         if ((!plan || plan === 'loading') && this.$store.state.plan && this.$store.state.plan.plan ) {
@@ -246,7 +246,7 @@ export default {
 
       // make sure we have the latest version from the backend of this plan
       if (plan && !isNaN(plan.id)) {
-        console.log('reloading plan', plan.id)
+        // console.log('reloading plan', plan.id)
         plan.planId = plan.id
         this.$store.dispatch('reloadPlan', plan)
       }

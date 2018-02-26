@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use Auth;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
@@ -54,11 +55,12 @@ class LoginController extends Controller
             $auth = auth()->check();
             $user = \App\Models\User::with('roles')->where('id', Auth::user()->id)->first();
 
+            $url = Redirect::intended('/')->getTargetUrl();
             return response()->json(
                 [
                     'auth' => $auth,
                     'user' => $user,
-                    'intended' => $this->redirectPath(),
+                    'intended' => $url,
                 ]
             );
 

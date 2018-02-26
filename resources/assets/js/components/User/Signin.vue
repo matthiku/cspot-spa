@@ -110,10 +110,12 @@ export default {
     user (value) {
       if (value !== null && value !== undefined) {
         if (this.$store.getters.oldRoute) {
-          this.$router.push({
-            name: this.$store.getters.oldRoute.name,
-            params: this.$store.getters.oldRoute.params })
-          this.$store.dispatch('setOldRoute', false)
+          let intendedRoute = this.$store.getters.oldRoute
+          console.log('signin.vue', intendedRoute)
+          this.$store.commit('setOldRoute', false)
+          let url = document.createElement('a')
+          url.href = intendedRoute
+          this.$router.push(url.pathname)
         } else {
           this.$router.push('/')
         }

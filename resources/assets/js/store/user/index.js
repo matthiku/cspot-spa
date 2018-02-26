@@ -188,7 +188,10 @@ export default {
             // check if there is user data in the page header
             if (data.data.user) {
               user = data.data.user
-              console.log(data.data.requested)
+              // store the intended URL that triggered the login
+              if (data.data.intended) {
+                commit('setOldRoute', data.data.intended)
+              }
             } else if (window.cspot2_server_data) {
               let dt
               try {
@@ -210,10 +213,9 @@ export default {
             commit('setMessage', '')
             commit('setUser', user)
             // load all basic cspot entities from the backend
-            console.log('loadAllItems from USER store')
             dispatch('loadAllItems')
           } else {
-            commit('setMessage', 'log in error')
+            commit('setMessage', 'login error')
             console.log(data)
           }
         })
@@ -295,10 +297,6 @@ export default {
         })
         .catch(error => dispatch('errorHandling', error))
     },
-
-    setOldRoute({ commit }, payload) {
-      commit('setOldRoute', payload)
-    }
   },
 
   getters: {

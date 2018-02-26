@@ -22,12 +22,12 @@ class AppController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $id=-1)
+    public function index(Request $request, $plan_id=-1)
     {
         $data = [];
 
         // check if url contains request for a single plan
-        if ($request->is('plans/*') && $id) {
+        if ($request->is('plans/*') && $plan_id) {
 
             $plan = \App\Models\Plan::with(
                 [
@@ -38,7 +38,7 @@ class AppController extends Controller
                     'histories'
                 ]
             )
-            ->where('id', $id)
+            ->where('id', $plan_id)
             ->first();
 
             if ($plan) {

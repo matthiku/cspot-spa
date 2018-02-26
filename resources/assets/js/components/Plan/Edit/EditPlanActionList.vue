@@ -189,7 +189,7 @@
       return {
         needToMove: false,
         oldActionListCount: 0,
-        insertBefore: -1,
+        insertBefore: 0,
         showMenu: false,
         targetId: null,
         menuItems: [
@@ -344,13 +344,14 @@
         this.sortActionList()
         // now change the seqNo into integers again
         this.$store.commit('setLoading', true)
-        let idx = 0
+        let idx = 1
         this.actionList.forEach((elem) => {
           let oldSeqNo = elem.seqNo
           // correct the seqNo
           elem.seqNo = idx++
           // report the change back to the backend DB
           if (oldSeqNo !== elem.seqNo) {
+            console.log('seqNo has changed', oldSeqNo, elem.seqNo)
             let obj = {
               planId: this.plan.id,
               actionId: elem.key,
@@ -430,7 +431,7 @@
       // if an activity item was added or removed, make
       // sure the sequence numbers are still correct
       actionList (val) {
-        if (this.oldActionListCount && this.oldActionListCount !== this.activitiesCount) {
+        if (this.oldActionListCount !== this.activitiesCount) {
           // also, if an item was added, move the insertion indicator
           if (this.oldActionListCount < this.activitiesCount) {
             this.insertBefore += 1
@@ -439,6 +440,9 @@
           this.correctAllSeqNos()
           this.oldActionListCount = this.activitiesCount
         }
+      },
+      insertBefore (val) {
+        console.log('insertBefore', val)
       }
     },
 

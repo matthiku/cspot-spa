@@ -1,8 +1,9 @@
 <template>
   <v-container fluid grid-list-xl>
+
     <v-layout row justify-center>
       <v-flex xs4 sm3 md2 lg1 class="pa-0">
-        <img src="/static/cspoticon.png" alt="c-SPOT icon">
+        <!-- <img src="/static/cspoticon.png" alt="c-SPOT icon"> -->
       </v-flex>
     </v-layout>
 

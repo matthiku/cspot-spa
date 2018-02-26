@@ -9,6 +9,7 @@
       floating
       app>
       <v-list>
+
         <v-list-tile ripple
             v-for="(item, i) in menuItems"
             :key="i"
@@ -19,10 +20,13 @@
           <v-list-tile-action>
             <v-icon v-html="item.icon"></v-icon>
           </v-list-tile-action>
+
           <v-list-tile-content>
             <v-list-tile-title v-text="item.title"></v-list-tile-title>
           </v-list-tile-content>
+
         </v-list-tile>
+        
       </v-list>
     </v-navigation-drawer>
 
@@ -35,12 +39,14 @@
       class="hidden-sm-and-up"
       app>
       <v-list>
+
         <v-list-tile v-if="userIsAuthenticated" @click="onLogout">
           <v-list-tile-action>
             <v-icon>lock_open</v-icon>
           </v-list-tile-action>
           <v-list-tile-title>Logout</v-list-tile-title>
         </v-list-tile>
+
         <v-list-tile v-else
             v-for="(item, i) in menuItems"
             :key="i"
@@ -50,10 +56,13 @@
           <v-list-tile-action>
             <v-icon v-html="item.icon"></v-icon>
           </v-list-tile-action>
+
           <v-list-tile-content>
             <v-list-tile-title v-text="item.title"></v-list-tile-title>
           </v-list-tile-content>
+
         </v-list-tile>
+
       </v-list>
     </v-navigation-drawer>
 
@@ -73,7 +82,7 @@
         <router-link
           class="mr-3"
           tag="v-toolbar-title"
-          :to="{ name: 'home' }" 
+          :to="{ name: 'plans' }" 
           style="cursor: pointer"
           v-text="appTitle">
         </router-link>
@@ -187,8 +196,8 @@ export default {
           },
           {
             icon: 'notes',
-            title: 'All Plans',
-            link: 'plans',
+            title: 'Plans',
+            link: 'home',
             auth: 'user',
             where: 'drawer'
           },

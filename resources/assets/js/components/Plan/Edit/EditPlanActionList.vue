@@ -430,7 +430,7 @@
       // if an activity item was added or removed, make
       // sure the sequence numbers are still correct
       actionList (val) {
-        if (this.oldActionListCount !== this.activitiesCount) {
+        if (this.oldActionListCount && this.oldActionListCount !== this.activitiesCount) {
           // also, if an item was added, move the insertion indicator
           if (this.oldActionListCount < this.activitiesCount) {
             this.insertBefore += 1

@@ -83,7 +83,7 @@ export default {
         .catch(error => console.warn(error))
     },
 
-    // update firebase user table
+    // update user record
     updateUser({ commit, dispatch }, payload) {
       if (!payload.id) return
       console.log(payload)
@@ -93,6 +93,15 @@ export default {
           commit('setLoading', false)
         })
         .catch(error => dispatch('errorHandling', error))
+    },
+
+    addRoleToUser({ commit, dispatch }, payload) {
+      commit('setLoading', true)
+      axios
+        .post(`/api/user/${payload.userId}/role/${payload.roleId}`)
+        .then((data) => {
+          console.log(data.data)
+        })
     },
 
     updateUserProfile({ state, commit, dispatch }, payload) {

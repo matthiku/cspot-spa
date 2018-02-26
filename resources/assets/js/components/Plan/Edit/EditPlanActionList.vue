@@ -233,7 +233,7 @@
       },
 
       moveInsertIndicator () {
-        let position = this.insertBefore + 1
+        let position = this.insertBefore
 
         // get the existing InsertIndicator LI element or create a new one
         let indicLi = document.getElementById('insert-indicator').parentNode

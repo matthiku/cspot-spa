@@ -98,7 +98,7 @@ export default {
     addRoleToUser({ commit, dispatch }, payload) {
       commit('setLoading', true)
       axios
-        .post(`/api/user/${payload.userId}/role/${payload.roleId}`)
+        .post(`/api/user/${payload.userId}/role`, {role_id: payload.roleId})
         .then((data) => {
           console.log(data.data)
         })

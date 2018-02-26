@@ -2,12 +2,20 @@ import axios from 'axios'
 
 export default {
   state: {
-    roles: 'loading'
+    roles: 'loading',
+    rolesByName: null
   },
 
   mutations: {
     setRoles (state, payload) {
       state.roles = payload
+      if (Object.values(payload)) {
+        state.rolesByName = {}
+        Object.values(payload).forEach((elem) => {
+          state.rolesByName[elem.name] = elem.id
+        })
+      }
+
     },
     addDummyRole (state, payload) {
       state.roles[payload.id] = payload

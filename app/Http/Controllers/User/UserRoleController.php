@@ -14,15 +14,14 @@ class UserRoleController extends Controller
     /**
      * Store a new ROLE for a USER in storage.
      *
+     * @param \Illuminate\Http\Request $request the HTTP PATCH request
      * @param \App\Models\User $user the User
-     * @param \App\Models\Role $role the ROLE object
      * 
      * @return \Illuminate\Http\Response         JSON response
      */
-    public function store(User $user, Role $role)
+    public function store(Request $request, User $user)
     {
-        // attach role to this user        
-        $user->roles()->save($role);
+        $user->roles()->attach($request->role_id);
         return response($role->jsonSerialize(), Response::HTTP_OK);       
     }
 

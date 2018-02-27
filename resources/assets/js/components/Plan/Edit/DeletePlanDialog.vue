@@ -73,6 +73,7 @@
         this.dialog = false // close the dialog again
         // send the delete command to the store....
         this.$store.dispatch('deletePlan', this.plan)
+          .then(() => this.$router.push({ name: 'home' }))
       }
     }
   }

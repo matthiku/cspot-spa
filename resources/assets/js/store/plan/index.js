@@ -11,7 +11,6 @@ export default {
     apiBibleChapters: null,
     apiBibleVerses: null,
     scriptureRefs: {},
-    newPlanId: null,
     activityColours: {
       song: 'indigo lighten-3',
       read: 'cyan lighten-3',
@@ -36,15 +35,6 @@ export default {
       state.plans = payload
     },
 
-    createPlan(state, payload) {
-      // state.plans.push(payload) // not needed, as we get an update through firebase!
-      state.newPlanId = payload.id
-    },
-
-    clearNewPlanId(state) {
-      state.newPlanId = null
-    },
-
     setPlansUpdateDate(state, payload) {
       state.plansUpdatedAt = payload
     },
@@ -62,6 +52,7 @@ export default {
     setBibleVerses(state, payload) {
       state.apiBibleVerses = payload
     },
+
     addScriptureRef(state, payload) {
       state.scriptureRefs[payload.label] = payload.text
     }
@@ -97,8 +88,8 @@ export default {
         .then(data => {
           let updateDate = data.data.date
           let oldDate = state.plansUpdatedAt
-          // console.log('setPlansUpdateDate', updateDate)
-          if (oldDate === updateDate) return
+          console.log('setPlansUpdateDate', updateDate)
+          if (oldDate === updateDate && state.plans instanceof Object) return
           commit('setPlansUpdateDate', updateDate)
 
           if (
@@ -154,48 +145,52 @@ export default {
 
     // create a new Plan item and possibly upload an image file
     createPlan({ state, commit, dispatch }, payload) {
-      let imageUrl
-      let key
-      // reach out to our DB and store it
-      let planData = Object.assign({}, payload.planData)
-      axios
-        .post('/api/plan', planData)
-        .then(data => {
-          // the database call will get us an id, which we need to add a new plan to the store
-          key = data.data.id
-          return key
-        })
-        // now check if there is a file to be uploaded
-        .then(key => {
-          if (payload.image) {
-            const filename = payload.image.name
-            const ext = filename.slice(filename.lastIndexOf('.'))
-            return firebaseApp
-              .storage()
-              .ref('plans/' + key + ext)
-              .put(payload.image)
-          }
-        })
-        // if applicable, write the newly uploaded image ULR to the plan data
-        .then(fileData => {
-          if (fileData) {
-            imageUrl = fileData.metadata.downloadURLs[0]
-            return plansRef.child(key).update({ imageUrl: imageUrl })
-          }
-        })
-        // now write the complete plan data to the local plan list
-        .then(() => {
-          Object.assign(planData, {
-            id: key,
-            imageUrl: imageUrl
+      return new Promise((resolve, reject) => {
+        let imageUrl, key
+        let planData = Object.assign({}, payload.planData)
+        axios
+          .post('/api/plan', planData)
+          .then(data => {
+            // the database call will get us an id, which we need to add a new plan to the store
+            key = data.data.id
+            planData = data.data
+            return key
           })
-          commit('createPlan', planData)
-          commit('setPlan', planData)
-          commit('setLoading', false)
-          state.newPlanId = key
-        })
-
-        .catch(error => console.warn(error))
+          // now check if there is a file to be uploaded
+          .then(key => {
+            if (payload.image) {
+              const filename = payload.image.name
+              const ext = filename.slice(filename.lastIndexOf('.'))
+              return firebaseApp
+                .storage()
+                .ref('plans/' + key + ext)
+                .put(payload.image)
+            }
+          })
+          // if applicable, write the newly uploaded image ULR to the plan data
+          .then(fileData => {
+            if (fileData) {
+              imageUrl = fileData.metadata.downloadURLs[0]
+              return plansRef.child(key).update({ imageUrl: imageUrl })
+            }
+          })
+          // now write the complete plan data to the local plan list
+          .then(() => {
+            Object.assign(planData, {
+              id: key,
+              imageUrl: imageUrl
+            })
+            commit('setPlan', {}) // prepare plan data for the view
+            dispatch('setSinglePlan', planData)
+            dispatch('refreshPlans', 'init') // also force a PLANS reload
+            commit('setLoading', false)
+            resolve(planData)
+          })
+          .catch(error => {
+            console.warn(error)
+            reject()
+          })
+      })
     },
 
     // update an existing plan
@@ -348,20 +343,22 @@ export default {
     },
     // delete a plan finally
     deletePlan({ state, commit, dispatch }, payload) {
-      commit('setLoading', true)
-      axios
-        .delete(`/api/plan/${payload.id}`)
-        .then(() => {
-          dispatch('refreshPlans')
-          commit('setLoading', false)
-          commit('setMessage', 'Plan was erased.')
-          state.plan = null
-        })
-        .catch(error => dispatch('errorHandling', error))
-    },
-
-    clearNewPlanId({ commit }) {
-      commit('clearNewPlanId')
+      return new Promise((resolve, reject) => {
+        commit('setLoading', true)
+        axios
+          .delete(`/api/plan/${payload.id}`)
+          .then(() => {
+            dispatch('refreshPlans', 'init') // force a PLANS reload
+            commit('setPlan', {})
+            commit('setMessage', 'Plan was erased.')
+            commit('setLoading', false)
+            resolve()
+          })
+          .catch(error => {
+            dispatch('errorHandling', error)
+            reject()
+          })
+      })
     },
 
     setSinglePlan({ rootState, state, commit, dispatch }, payload) {

@@ -209,6 +209,7 @@ export default {
 
   computed: {
     userOwnsThisPlan () {
+      if (this.userIsAdmin) return true
       return this.userOwnsPlan(this.plan)
     },
     pageStatus () {

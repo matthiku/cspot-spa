@@ -333,11 +333,11 @@ export default {
         planData,
         image: this.image
       })
+      // once the plan was created successfully, open it
+      .then((plan) => {
+        this.$router.push({ name: 'plan', params: { planId: plan.id } })
+      })
     }
-  },
-
-  created () {
-    this.$store.dispatch('clearNewPlanId')
   },
 
   watch: {
@@ -385,13 +385,6 @@ export default {
       this.arrayEvents = val.map((pl) => {
         return pl.date.substr(0, 10)
       })
-    },
-
-    // wait until the new plan was added to the array of plans
-    // then open the new plan
-    planId () {
-      if (!this.planId) return
-      this.$router.push({ name: 'plan', params: { planId: this.planId } })
     },
 
     time () {

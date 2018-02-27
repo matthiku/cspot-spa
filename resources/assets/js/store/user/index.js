@@ -39,7 +39,7 @@ export default {
           let updateDate = data.data.date
           let oldDate = state.usersUpdatedAt
           // console.log('setUsersUpdateDate', updateDate)
-          if (oldDate === updateDate) return
+          if (oldDate === updateDate && state.users instanceof Object) return
           commit('setUsersUpdateDate', updateDate)
 
           if (

@@ -38,8 +38,13 @@
                   </span>
                 </v-flex>
 
+
                 <!-- iterate through each registered plan -->
-                <app-show-list-of-plans v-if="plans !== 'loading'"></app-show-list-of-plans>
+                <app-show-list-of-plans
+                    :filter="filter"
+                    v-if="plans !== 'loading'"
+                  ></app-show-list-of-plans>
+
 
               </v-layout>
             </v-container>
@@ -62,6 +67,7 @@ export default {
 
   data () {
     return {
+      filter: null,
       planMenuItems: [
         { icon: 'replay', action: 'refresh', title: 'Refresh Plan List' }
       ]

@@ -37,8 +37,12 @@
                   <v-progress-linear v-bind:indeterminate="true"></v-progress-linear>
                 </v-flex>
 
+
                 <!-- iterate through each registered plan -->
-                <app-show-list-of-plans v-if="upcomingPlans !== 'loading'"></app-show-list-of-plans>
+                <app-show-plans-datatable
+                    v-if="upcomingPlans !== 'loading'"
+                  ></app-show-plans-datatable>
+
                 
               </v-layout>
             </v-container>

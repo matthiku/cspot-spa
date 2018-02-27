@@ -66,6 +66,8 @@ import planMixins from '../mixins'
 export default {
   name: 'ListSinglePlan',
 
+  props: ['filter'],
+
   mixins: [genericMixins, planMixins],
 
   computed: {

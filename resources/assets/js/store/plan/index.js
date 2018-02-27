@@ -88,7 +88,7 @@ export default {
         .then(data => {
           let updateDate = data.data.date
           let oldDate = state.plansUpdatedAt
-          console.log('setPlansUpdateDate', updateDate)
+          // console.log('setPlansUpdateDate', updateDate)
           if (oldDate === updateDate && state.plans instanceof Object) return
           commit('setPlansUpdateDate', updateDate)
 

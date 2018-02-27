@@ -22,7 +22,7 @@ class UserRoleController extends Controller
     public function store(Request $request, User $user)
     {
         $user->roles()->attach($request->role_id);
-        return response($user->jsonSerialize(), Response::HTTP_OK);       
+        return response($user->roles()->get(), Response::HTTP_OK);       
     }
 
 
@@ -55,7 +55,7 @@ class UserRoleController extends Controller
     public function destroy(User $user, Role $role)
     {
         // remove this role member from the user role
-        $role->delete();
-        return response($role->jsonSerialize(), Response::HTTP_OK);
+        $user->roles()->detach($role->id);
+        return response($user->roles()->get(), Response::HTTP_OK);
     }
 }

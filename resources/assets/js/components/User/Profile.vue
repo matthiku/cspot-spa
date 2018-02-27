@@ -183,22 +183,27 @@
       },
 
       modifyRole (role) {
-        console.log(role)
         if (!role) return
         // add the role if it wasn't in the list of user roles
         let roleId = this.rolesByName[role]
         if (roleId) {
-          // check if user has this role already, then we remove it
+          // check if user has this role already, then remove it
           if (this.userRoles.indexOf(role) > -1) {
             this.$store.dispatch('removeRoleFromUser', {
+              name: role,
               userId: this.userData.id,
               roleId
             })
+            // dispatch returns a promise...
+            .then(() => this.createRolesArrays()) 
           } else {
+            // otherwise add this role
             this.$store.dispatch('addRoleToUser', {
+              name: role,
               userId: this.userData.id,
               roleId
             })
+            .then(() => this.createRolesArrays())
           }
         }
       },

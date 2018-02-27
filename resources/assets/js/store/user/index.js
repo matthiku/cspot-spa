@@ -95,13 +95,54 @@ export default {
         .catch(error => dispatch('errorHandling', error))
     },
 
-    addRoleToUser({ commit, dispatch }, payload) {
-      commit('setLoading', true)
-      axios
-        .post(`/api/user/${payload.userId}/role`, {role_id: payload.roleId})
-        .then((data) => {
-          console.log(data.data)
-        })
+    addRoleToUser({ state, commit, dispatch }, payload) {
+      return new Promise((resolve, reject) => {
+        commit('setLoading', true)
+        axios
+          .post(`/api/user/${payload.userId}/role`, { role_id: payload.roleId })
+          .then(data => {
+            // update corresponding user profile data
+            state.users[payload.userId].roles = data.data
+            if (state.user.id === payload.userId) {
+              state.user.roles = data.data
+            }
+            commit(
+              'appendMessage',
+              `Role "${payload.name}" was added to this user`
+            )
+            commit('setLoading', false)
+            resolve()
+          })
+          .catch(error => {
+            commit('errorHandling', error)
+            reject()
+          })
+      })
+    },
+
+    removeRoleFromUser({ state, commit, dispatch }, payload) {
+      return new Promise((resolve, reject) => {
+        commit('setLoading', true)
+        axios
+          .delete(`/api/user/${payload.userId}/role/${payload.roleId}`)
+          .then(data => {
+            // update corresponding user profile data
+            state.users[payload.userId].roles = data.data
+            if (state.user.id === payload.userId) {
+              state.user.roles = data.data
+            }
+            commit(
+              'appendMessage',
+              `Role "${payload.name}" was removed from this user`
+            )
+            commit('setLoading', false)
+            resolve()
+          })
+          .catch(error => {
+            commit('errorHandling', error)
+            reject()
+          })
+      })
     },
 
     updateUserProfile({ state, commit, dispatch }, payload) {
@@ -109,15 +150,13 @@ export default {
       console.log('updateUserProfile', payload)
       // if this is the current user: update user profile
       if (payload.id === state.user.id) {
-        axios
-          .patch(`/api/user/${payload.id}`, payload)
-          .then(
-            (data) => {
-              console.log(data.data)
-              commit('appendMessage', "User's profile was updated!")
-            },
-            error => dispatch('errorHandling', error)
-          )
+        axios.patch(`/api/user/${payload.id}`, payload).then(
+          data => {
+            console.log(data.data)
+            commit('appendMessage', "User's profile was updated!")
+          },
+          error => dispatch('errorHandling', error)
+        )
       }
       // update project-specific user table
       dispatch('updateUser', payload)

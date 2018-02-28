@@ -7,25 +7,24 @@
         <v-card>
           <v-card-text>
 
-            <v-toolbar color="blue">
-              <v-menu open-on-hover bottom right offset-y>
-                <v-btn icon slot="activator" dark>
-                  <v-toolbar-side-icon></v-toolbar-side-icon>
-                </v-btn>
-                <v-list>
-                  <v-list-tile v-for="item in planMenuItems" :key="item.title" @click="planAction(item.action)">
-                    <v-icon>{{ item.icon }}</v-icon>&nbsp;
-                    <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-                  </v-list-tile>
-                </v-list>
-              </v-menu>
-
-              <v-toolbar-title class="white--text">All Plans</v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-btn icon>
-                <v-icon>search</v-icon>
-              </v-btn>
-            </v-toolbar>
+            <v-expansion-panel>
+              <v-expansion-panel-content v-model="showFilter" class="primary white--text">
+                <div slot="header">
+                  <v-container fluid class="ma-0 pa-0">
+                    <v-layout>
+                      <v-flex xs6 class="display-1">All Plans</v-flex>
+                      <v-flex xs6 class="text-xs-right lh-3">(Click for filter selection)</v-flex>
+                    </v-layout>
+                  </v-container>
+                </div>
+                <v-card>
+                  <v-card-text>
+                    <app-show-plans-filter></app-show-plans-filter>
+                  </v-card-text>
+                </v-card>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+            
 
             <v-container>
               <v-layout row wrap>
@@ -43,7 +42,8 @@
                 <app-show-list-of-plans
                     :filter="filter"
                     v-if="plans !== 'loading'"
-                  ></app-show-list-of-plans>
+                  >
+                </app-show-list-of-plans>
 
 
               </v-layout>
@@ -57,6 +57,15 @@
   </v-container>
 </template>
 
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+.lh-3 {
+  line-height: 3;
+}
+</style>
+
+
 <script>
 import genericMixins from '../../mixins/'
 
@@ -67,7 +76,8 @@ export default {
 
   data () {
     return {
-      filter: null,
+      filter: [],
+      showFilter: false,
       planMenuItems: [
         { icon: 'replay', action: 'refresh', title: 'Refresh Plan List' }
       ]
@@ -89,7 +99,3 @@ export default {
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-</style>

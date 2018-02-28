@@ -1,11 +1,11 @@
 <template>
   <v-container fluid>
     <v-flex xs12
-        v-if="listedPlans !== 'loading'"
-        v-for="plan in listedPlans" 
+        v-if="plans !== 'loading'"
+        v-for="plan in filteredPlans" 
         :key="plan.id"
       >
-      <v-card class="accent mb-2">
+      <v-card class="accent lighten-1 mb-2">
         <v-container fluid class="pa-0">
           <v-layout row>
 
@@ -15,12 +15,12 @@
 
                 <div @click="showSinglePlan(plan.id)" class="cursor-pointer">   
 
-                  <h3 class="white--text mb-0">
+                  <h2 class="white--text mb-0">
                     {{ plan.date | dateShort }}<span v-if="plan.date_end">-{{ plan.date_end | time }}</span> - 
                     <span style="font-style: italic;">
                       {{ types instanceof Object && types[plan.type_id] ? types[plan.type_id].name : plan.type_id }}
                     </span>
-                  </h3>
+                  </h2>
 
                   <div>
                     <strong>Staff: </strong>
@@ -66,17 +66,38 @@ import planMixins from '../mixins'
 export default {
   name: 'ListSinglePlan',
 
-  props: ['filter'],
-
   mixins: [genericMixins, planMixins],
 
-  computed: {
-    listedPlans () {
-      if (this.$route && this.$route.name === 'home') {
-        return this.$store.getters.futurePlans
-      } else {
-        return this.plans
+  data () {
+    return {
+      unfilteredPlans: [],
+      filteredPlans: []
+    }
+  },
+
+  created () {
+    if (this.$route && this.$route.name === 'home') {
+      this.unfilteredPlans = this.$store.getters.futurePlans
+    } else {
+      this.unfilteredPlans = this.plans
+    }
+    this.filteredPlans = this.unfilteredPlans
+  },
+
+  watch: {
+    search (val) {
+      let type = parseInt(val.filter.type)
+      let user = parseInt(val.filter.user)
+      let plans = this.unfilteredPlans // start with the unfiltered set of plans
+      // set the filter for TYPE
+      if (type >= 0) {
+        plans = plans.filter(plan => plan.type_id === type)
       }
+      // set the filter for USER
+      if (user >= 0) {
+        plans = plans.filter(plan => this.userOwnsPlan(plan, user))
+      }
+      this.filteredPlans = plans
     }
   },
 

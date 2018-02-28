@@ -4,16 +4,22 @@ import axios from 'axios'
 
 export default {
   state: {
+    typesArray: [],
     types: 'loading'
   },
+
   mutations: {
     setTypes (state, payload) {
       state.types = payload
+    },
+    setTypesArray (state, payload) {
+      state.typesArray = payload
     },
     addDummyType (state, payload) {
       state.types[payload.id] = payload
     }
   },
+
   actions: {
     refreshTypes ({state, commit, dispatch}, payload) {
       if (payload === 'init' || !(state.types instanceof Object) || state.types === 'loading' || (state.types instanceof Array)) {
@@ -22,6 +28,8 @@ export default {
         axios.get('/api/type')
           .then(data => {
             if (data.data.forEach) {
+              // save as array and as object
+              commit('setTypesArray', data.data)
               let types = {}
               // turn array into an object
               data.data.forEach(elem => {

@@ -23,7 +23,7 @@ import EditPlanActionButtons from './components/Plan/Edit/EditPlanActionButtons'
 import EditPlanActionScriptureDialog from './components/Plan/Edit/EditPlanActionScriptureDialog'
 import DeletePlanDialog from './components/Plan/Edit/DeletePlanDialog'
 import ShowListOfPlans from './components/Plan/View/PlansView.vue'
-import ShowPlansDataTable from './components/Plan/View/PlansDataTable.vue'
+import ShowPlansFilter from './components/Plan/View/PlansFilter.vue'
 import ShowPlanTitleToolbar from './components/Plan/View/PlanTitleToolbar.vue'
 import ShowActionsChips from './components/Plan/View/ActionsChips.vue'
 import ShowStaffChips from './components/Plan/View/StaffChips.vue'
@@ -56,7 +56,7 @@ export default function sharedComponents () {
   Vue.component('app-delete-plan-dialog', DeletePlanDialog)
   Vue.component('app-show-plan-title-toolbar', ShowPlanTitleToolbar)
   Vue.component('app-show-list-of-plans', ShowListOfPlans)
-  Vue.component('app-show-plans-datatable', ShowPlansDataTable)
+  Vue.component('app-show-plans-filter', ShowPlansFilter)
   Vue.component('app-show-youtube-modal', ShowYoutubeModal)
   Vue.component('app-show-staff-chips', ShowStaffChips)
   Vue.component('app-show-action-chips', ShowActionsChips)

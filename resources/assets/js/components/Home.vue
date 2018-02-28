@@ -39,9 +39,9 @@
 
 
                 <!-- iterate through each registered plan -->
-                <app-show-plans-datatable
+                <app-show-list-of-plans
                     v-if="upcomingPlans !== 'loading'"
-                  ></app-show-plans-datatable>
+                  ></app-show-list-of-plans>
 
                 
               </v-layout>

@@ -36,6 +36,9 @@ export default {
     setDialog (state, payload) {
       state.dialog = payload
     },
+    setSearch (state, payload) {
+      state.search = payload
+    },
     hideDialog (state) {
       state.dialogShow = false
     },

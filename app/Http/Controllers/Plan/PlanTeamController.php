@@ -32,6 +32,10 @@ class PlanTeamController extends Controller
             ]);
             $plan->teams()->save($team);
 
+            // make sure the update gets reported to the 'parent' record as well
+            $plan->updated_at = Carbon::now();
+            $plan->save();
+
             return response($team->jsonSerialize(), Response::HTTP_OK);
         }
     }
@@ -66,6 +70,11 @@ class PlanTeamController extends Controller
     {
         // remove this team member from the plan team
         $team->delete();
+
+        // make sure the update gets reported to the 'parent' record as well
+        $plan->updated_at = Carbon::now();
+        $plan->save();
+
         return response($team->jsonSerialize(), Response::HTTP_OK);
     }
 }

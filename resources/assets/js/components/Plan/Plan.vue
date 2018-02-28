@@ -93,12 +93,12 @@
 
                                 </v-expansion-panel-content>
 
-                                <!-- show and edit plan INFO -->
+                                <!-- show and edit plan SUBTITLE -->
                                 <v-expansion-panel-content v-show="showDetails.planDetails || showDetails.staff"
-                                    v-model="showDetails.info" :class="[showDetails.info ? 'green lighten-3' : '']">
+                                    v-model="showDetails.subtitle" :class="[showDetails.subtitle ? 'green lighten-3' : '']">
                                   <div slot="header">
                                     <span class="body-2 mr-3"><v-icon class="mr-3">info</v-icon> Subtitle</span>
-                                    <span v-if="!showDetails.info" class="caption">({{
+                                    <span v-if="!showDetails.subtitle" class="caption">({{
                                         plan.info | sentenceMax(55, 'none')
                                       }})</span>
                                   </div>
@@ -130,6 +130,26 @@
                                   <v-card>
                                     <v-card-text class="grey lighten-3">
                                       ...
+                                    </v-card-text>
+                                  </v-card>
+                                </v-expansion-panel-content>
+
+                                <!-- show and edit plan INFO -->
+                                <v-expansion-panel-content  v-show="showDetails.planDetails || showDetails.staff"
+                                    v-model="showDetails.info" :class="[showDetails.info ? 'green lighten-3' : '']">
+                                  <div slot="header">
+                                    <span class="body-2 mr-3"><v-icon class="mr-3">info</v-icon> Plan Info:</span>
+                                    <span v-if="!showDetails.info" class="caption">
+                                      Updated <strong>{{ $moment(plan.updated_at).fromNow() }}</strong>
+                                      by <strong>{{ plan.changer }}</strong>
+                                    </span>
+                                  </div>
+                                  <v-card>
+                                    <v-card-text class="grey lighten-3">
+                                      Plan was last updated
+                                      {{ $moment(plan.updated_at).fromNow() }}
+                                      by <strong>{{ plan.changer }}</strong>, on 
+                                      <strong>{{ plan.updated_at | date }}</strong>
                                     </v-card-text>
                                   </v-card>
                                 </v-expansion-panel-content>
@@ -199,6 +219,7 @@ export default {
         planDetails: false,
         resources: false,
         notes: false,
+        subtitle: false,
         info: false,
         activities: true
       },
@@ -258,7 +279,7 @@ export default {
     openPlanSubtitleEdit () {
       if (!this.userOwnsThisPlan) return
       this.showDetails.planDetails = true
-      this.showDetails.info = true
+      this.showDetails.subtitle = true
     },
     openDateEditing () {
       if (!this.userOwnsThisPlan) return

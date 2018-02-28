@@ -4,17 +4,20 @@
 
       <v-layout column align-center>
         <v-card class="w-100">
+
           <v-card-title>
+
             <h2>{{ pageTitle }}</h2>
             <v-spacer></v-spacer>
+
             <v-text-field
-              append-icon="search"
-              label="Search"
-              clearable
-              single-line
-              hide-details
-              v-model="searchString"
-            ></v-text-field>
+                append-icon="search"
+                label="Search"
+                clearable
+                single-line
+                hide-details
+                v-model="searchString"
+              ></v-text-field>
           </v-card-title>
 
           <v-data-table

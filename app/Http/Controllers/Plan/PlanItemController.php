@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Plan;
 
+use Carbon\Carbon;
 use App\Models\Plan;
 use App\Models\Item;
 use Illuminate\Http\Request;
@@ -29,6 +30,9 @@ class PlanItemController extends Controller
             ]
         );
         $plan->items()->save($item);
+        // make sure the update gets reported to the 'parent' record as well
+        $plan->updated_at = Carbon::now();
+        $plan->save();
 
         return response($item->jsonSerialize(), Response::HTTP_OK);
     }
@@ -47,6 +51,10 @@ class PlanItemController extends Controller
         // $request must contain field name and new value
         $item[$request->field] = $request->value;
         $item->save();
+        // make sure the update gets reported to the 'parent' record as well
+        $plan->updated_at = Carbon::now();
+        $plan->save();
+
         return response($item->jsonSerialize(), Response::HTTP_OK);
     }
 
@@ -62,7 +70,9 @@ class PlanItemController extends Controller
     {
         // no need to use soft-deletes
         $item->forceDelete();
-        // need to re-calculate seq.nos!
+        // make sure the update gets reported to the 'parent' record as well
+        $plan->updated_at = Carbon::now();
+        $plan->save();
         return response($item->jsonSerialize(), Response::HTTP_OK);
     }
 

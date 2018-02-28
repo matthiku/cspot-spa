@@ -22,6 +22,11 @@ class UserRoleController extends Controller
     public function store(Request $request, User $user)
     {
         $user->roles()->attach($request->role_id);
+
+        // make sure the update gets reported to the 'parent' record as well
+        $user->updated_at = Carbon::now();
+        $user->save();
+        
         return response($user->roles()->get(), Response::HTTP_OK);       
     }
 
@@ -56,6 +61,11 @@ class UserRoleController extends Controller
     {
         // remove this role member from the user role
         $user->roles()->detach($role->id);
+
+        // make sure the update gets reported to the 'parent' record as well
+        $user->updated_at = Carbon::now();
+        $user->save();
+        
         return response($user->roles()->get(), Response::HTTP_OK);
     }
 }

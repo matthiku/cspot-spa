@@ -60,22 +60,19 @@ export default {
 
   // A C T I O N S  (dispatches)
   actions: {
-    loadBibleStructure({state, commit}, payload) {
+    loadBibleStructure({ state, commit }, payload) {
       if (!(state.apiBibleBooks instanceof Array) || payload === 'init') {
-        axios.get('/api/bible/books')
-        .then((data) => {
+        axios.get('/api/bible/books').then(data => {
           commit('setBibleBooks', data.data)
         })
       }
       if (!(state.apiBibleChapters instanceof Object) || payload === 'init') {
-        axios.get('/api/bible/books/all/chapters')
-        .then((data) => {
+        axios.get('/api/bible/books/all/chapters').then(data => {
           commit('setBibleChapters', data.data)
         })
       }
       if (!(state.apiBibleVerses instanceof Object) || payload === 'init') {
-        axios.get('/api/bible/books/all/verses')
-        .then((data) => {
+        axios.get('/api/bible/books/all/verses').then(data => {
           commit('setBibleVerses', data.data)
         })
       }
@@ -204,7 +201,7 @@ export default {
         .then(data => {
           commit('setPlan', {})
           dispatch('setSinglePlan', data.data)
-          dispatch('refreshPlans') // make sure the plans list will be updated also
+          dispatch('refreshPlans', 'init') // make sure the plans list will be updated also
           commit('setMessage', 'Plan successfully updated.')
           commit('setLoading', false)
         })
@@ -226,6 +223,7 @@ export default {
             'appendMessage',
             `${payload.name} added as ${payload.role} to this plan`
           )
+          dispatch('refreshPlans', 'init') // make sure the plans list will be updated also
           commit('setLoading', false)
         })
         .catch(error => dispatch('errorHandling', error))
@@ -243,6 +241,7 @@ export default {
             'appendMessage',
             `${payload.name} removed as ${payload.role} from this plan`
           )
+          dispatch('refreshPlans', 'init') // make sure the plans list will be updated also
           commit('setLoading', false)
         })
         .catch(error => dispatch('errorHandling', error))
@@ -281,7 +280,7 @@ export default {
         .then(data => {
           dispatch('reloadPlan', payload)
           commit('appendMessage', '"' + payload.type + '" added to this plan')
-          // dispatch('refreshPlans')
+          dispatch('refreshPlans', 'init') // make sure the plans list will be updated also
           commit('setLoading', false)
         })
         .catch(error => dispatch('errorHandling', error))
@@ -322,7 +321,7 @@ export default {
           console.log('removing action from plan', payload)
           dispatch('reloadPlan', payload)
           commit('appendMessage', 'Action removed from this plan')
-          // dispatch('refreshPlans')
+          dispatch('refreshPlans', 'init') // make sure the plans list will be updated also
           commit('setLoading', false)
         })
         .catch(error => dispatch('errorHandling', error))
@@ -335,7 +334,7 @@ export default {
       axios
         .delete(`/api/plan/${payload.id}/soft`)
         .then(() => {
-          dispatch('refreshPlans')
+          dispatch('refreshPlans', 'init') // make sure the plans list will be updated also
           commit('setLoading', false)
           commit('setMessage', 'Plan changed to hidden plan (private).')
         })
@@ -392,7 +391,7 @@ export default {
           // check if comment contains a bible ref
           let isScriptureRef = false
           if (state.apiBibleBooks && state.apiBibleBooks.forEach) {
-            state.apiBibleBooks.forEach((book) => {
+            state.apiBibleBooks.forEach(book => {
               if (action.comment && action.comment.indexOf(book) >= 0) {
                 isScriptureRef = true
               }
@@ -439,17 +438,24 @@ export default {
       // now write everyting to the state
       commit('setPlan', payload)
     },
-    getScriptureRef({state, commit}, payload) {
+    getScriptureRef({ state, commit }, payload) {
       let bRef = splitBref(payload)
-      axios.get(`/api/bible/passage/${bRef.version}/${bRef.book}/${bRef.chapter}/${bRef.verse_from}/${bRef.verse_to}`)
-      .then((data) => {
-        let block = data.data
-        if (data.data.forEach) {
-          block = ''
-          data.data.forEach((verse) => block += `(${verse.verse}) ${verse.text}\n`)
-        }
-        commit('addScriptureRef', {label: payload, text: block})
-      })
+      axios
+        .get(
+          `/api/bible/passage/${bRef.version}/${bRef.book}/${bRef.chapter}/${
+            bRef.verse_from
+          }/${bRef.verse_to}`
+        )
+        .then(data => {
+          let block = data.data
+          if (data.data.forEach) {
+            block = ''
+            data.data.forEach(
+              verse => (block += `(${verse.verse}) ${verse.text}\n`)
+            )
+          }
+          commit('addScriptureRef', { label: payload, text: block })
+        })
     }
   },
 
@@ -541,50 +547,46 @@ export default {
 */
 function splitBref(text) {
   if (!text) {
-    return;
+    return
   }
 
-  var obj = {};
-  var ref = text.split(' ');
+  var obj = {}
+  var ref = text.split(' ')
   var nr = 0
   // check if book name starts with a number
   if (!isNaN(ref[0])) {
-    obj.book = ref[nr++] + ' ' + ref[nr++];
+    obj.book = ref[nr++] + ' ' + ref[nr++]
   } else if (text.substr(1, 1) == '_') {
-    obj.book = ref[nr++].replace('_', ' ');
+    obj.book = ref[nr++].replace('_', ' ')
   } else {
-    obj.book = ref[nr++];
+    obj.book = ref[nr++]
   }
   // detect chapter and verse
-  var chve = ref[nr++].split(':');
-  obj.chapter = chve[0];
+  var chve = ref[nr++].split(':')
+  obj.chapter = chve[0]
   // is there a verse reference?
   if (chve.length > 1) {
     // detect verse_from and verse_to
-    var vrs = chve[1].split('-');
-    obj.verse_from = vrs[0];
+    var vrs = chve[1].split('-')
+    obj.verse_from = vrs[0]
     // analyze verse_to
     if (vrs.length > 1) {
       // there could be another reference being attached...
-      var vto = vrs[1].split(/[,;]/);
-      obj.verse_to = vto[0];
+      var vto = vrs[1].split(/[,;]/)
+      obj.verse_to = vto[0]
     }
-    if (obj.verse_to === undefined)
-      obj.verse_to = obj.verse_from;
-  }
-  // no verse references detected, use generic values
-  else {
-    obj.verse_from = 0;
-    obj.verse_to = 199;
+    if (obj.verse_to === undefined) obj.verse_to = obj.verse_from
+  } else {
+    // no verse references detected, use generic values
+    obj.verse_from = 0
+    obj.verse_to = 199
   }
 
   // name of the bible VERSION (without brackets!)
   obj.version = ref[nr]
-  if (obj.version)
-    obj.version = obj.version.replace(/(\(|\))/g, '');
+  if (obj.version) obj.version = obj.version.replace(/(\(|\))/g, '')
 
   // problem with differing naming conventions for Psalm in NIV vs others
-  if (obj.book == 'Psalms')
-    obj.book = 'Psalm';
-  return obj;
+  if (obj.book == 'Psalms') obj.book = 'Psalm'
+  return obj
 }

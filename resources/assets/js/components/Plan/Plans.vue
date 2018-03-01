@@ -12,7 +12,7 @@
                 <div slot="header">
                   <v-container fluid class="ma-0 pa-0">
                     <v-layout>
-                      <v-flex xs6 class="display-1">{{ pageTitle }}</v-flex>
+                      <v-flex xs6 class="headline">{{ pageTitle }}</v-flex>
                       <v-flex xs6 class="text-xs-right lh-3">(Click for filter selection)</v-flex>
                     </v-layout>
                   </v-container>

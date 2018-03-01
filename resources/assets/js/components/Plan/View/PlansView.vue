@@ -23,13 +23,16 @@
                   </h2>
 
                   <div>
-                    <strong>Staff: </strong>
+                    <v-tooltip bottom v-if="plan.items">                      
+                      <v-btn fab dark small color="primary" ma-0 slot="activator">
+                        {{ plan.items instanceof Object ? plan.items.length : 0 }}
+                      </v-btn>
+                      <span><v-icon>list</v-icon> &nbsp; Activities</span>
+                    </v-tooltip>
+                    <small v-else>(empty plan or still loading)</small>
+                    
                     <app-show-staff-chips :single-plan="plan"></app-show-staff-chips>
 
-                    <span v-if="plan.items">
-                      {{ plan.items instanceof Object ? plan.items.length : 0 }} items</span>
-                    <small v-else>(empty plan)</small>
-                    
                   </div>
 
                   <div v-if="plan.info"><strong>Note: </strong>{{ plan.info }}</div>

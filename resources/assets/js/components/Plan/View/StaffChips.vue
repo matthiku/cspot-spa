@@ -1,10 +1,11 @@
 <template>
   <span>
 
-      <v-chip outline 
+      <v-chip 
           v-for="(staff, index) in staffList"
           :key="index"
-          color="primary"
+          color="accent"
+          text-color="white"
           class="plan-actions-title my-0 caption"
         >
         <v-tooltip bottom lazy>

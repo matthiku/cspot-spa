@@ -64,7 +64,7 @@ import genericMixins from '../../../mixins/'
 import planMixins from '../mixins'
 
 export default {
-  name: 'ListSinglePlan',
+  name: 'PlansList',
 
   mixins: [genericMixins, planMixins],
 
@@ -78,6 +78,12 @@ export default {
   created () {
     if (this.$route && this.$route.name === 'home') {
       this.unfilteredPlans = this.$store.getters.futurePlans
+      this.$store.commit('setSearch', {
+        filter: {
+          type: '*',
+          user: this.user.id
+        }
+      })
     } else {
       this.unfilteredPlans = this.plans
     }

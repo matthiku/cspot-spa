@@ -12,7 +12,7 @@
                 <div slot="header">
                   <v-container fluid class="ma-0 pa-0">
                     <v-layout>
-                      <v-flex xs6 class="display-1">All Plans</v-flex>
+                      <v-flex xs6 class="display-1">{{ pageTitle }}</v-flex>
                       <v-flex xs6 class="text-xs-right lh-3">(Click for filter selection)</v-flex>
                     </v-layout>
                   </v-container>
@@ -40,7 +40,6 @@
 
                 <!-- iterate through each registered plan -->
                 <app-show-list-of-plans
-                    :filter="filter"
                     v-if="plans !== 'loading'"
                   >
                 </app-show-list-of-plans>
@@ -68,19 +67,44 @@
 
 <script>
 import genericMixins from '../../mixins/'
+import planMixins from './mixins'
 
 export default {
   name: 'AllPlansList',
 
-  mixins: [genericMixins],
+  mixins: [genericMixins, planMixins],
 
   data () {
     return {
-      filter: [],
+      pageTitle: 'Your Plans',
       showFilter: false,
       planMenuItems: [
         { icon: 'replay', action: 'refresh', title: 'Refresh Plan List' }
       ]
+    }
+  },
+
+  watch: {
+    search (val) {
+      if (val.dialog && val.dialog.hasOwnProperty('show')) {
+        this.showFilter = val.dialog.show
+      }
+      let who, what
+      if (val.filter && this.users && this.types) {
+        if (val.filter.user === '*') {
+          who = 'All' 
+        } else if (val.filter.user === this.user.id) {
+          who = 'Your'
+        } else {
+          who = this.users[val.filter.user].name + '\'s'
+        }
+        if (val.filter.type === '*') {
+          what = 'Plans' 
+        } else if (!isNaN(val.filter.type)) {
+          what = this.types[val.filter.type].name + 's'
+        }
+        this.pageTitle = who + ' ' + what
+      }
     }
   },
 

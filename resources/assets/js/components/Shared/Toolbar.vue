@@ -196,10 +196,10 @@ export default {
           },
           {
             icon: 'notes',
-            title: 'Plans',
+            title: 'Your Plans',
             link: 'home',
             auth: 'user',
-            where: 'drawer'
+            where: 'both'
           },
           {
             icon: 'perm_identity',

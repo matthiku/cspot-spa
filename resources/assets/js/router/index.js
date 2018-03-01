@@ -115,7 +115,8 @@ export default new Router({
       path: '/',
       name: 'home',
       meta: {title: 'Home'},
-      component: Home
+      component: Plans,
+      beforeEnter: AuthGuard
     }
   ],
   mode: 'history'

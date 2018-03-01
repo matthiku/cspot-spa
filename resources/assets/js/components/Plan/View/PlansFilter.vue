@@ -7,7 +7,7 @@
       </v-flex>
       <v-flex xs6>
         <v-select
-          :items="typesArray"
+          :items="typesList"
           item-text="name"
           item-value="id"
           v-model="filterType"
@@ -18,11 +18,11 @@
       </v-flex>
 
       <v-flex xs6>
-        <v-subheader>Filter by Staff involved</v-subheader>
+        <v-subheader>Filter by Member of Staff involved</v-subheader>
       </v-flex>
       <v-flex xs6>
         <v-select
-          :items="userList"
+          :items="usersList"
           item-text="name"
           item-value="id"
           v-model="filterUser"
@@ -31,11 +31,12 @@
       </v-flex>
 
       <v-flex xs6>
-        <v-subheader>Reset Filter</v-subheader>
+        <v-subheader>Show All Plans</v-subheader>
       </v-flex>
       <v-flex xs6>
         <v-btn @click="resetFilter">
-          <v-icon>highlight_off</v-icon>
+          Show All &nbsp;
+          <v-icon>done_all</v-icon>
         </v-btn>
       </v-flex>
 
@@ -53,37 +54,51 @@ export default {
 
   data () {
     return {
-      filterType: null,
-      filterUser: null
+      filterUser: '*',
+      filterType: '*'
     }
   },
 
   computed: {
-    userList () {
-      let list = []
+    // create an array of users for the drop-down select
+    usersList () {
+      let list = [{id: '*', name: 'All'}]
       Object.keys(this.users).forEach((u) => list.push(this.users[u]))
       return list
+    },
+    typesList () {
+      // add an id for showing all types (that is, no filter is set)
+      return [{id: '*', name: 'All'}, ...this.typesArray]
     }
   },
 
   watch: {
     filterType () {this.setFilter()},
-    filterUser () {this.setFilter()}
+    filterUser () {this.setFilter()},
+    search () {this.readFilter()}
   },
 
   methods: {
-    setFilter () {
-      this.$store.commit('setSearch', {
+    // Reflect existing filter settings from the store in the form
+    readFilter () {
+      this.filterType = this.search ? this.search.filter ? this.search.filter.type : '*' : '*'
+      this.filterUser = this.search ? this.search.filter ? this.search.filter.user : '*' : '*'
+    },
+    setFilter (reset) {
+      let obj = {
         filter: {
-          type: this.filterType,
-          user: this.filterUser
-        }
-      })
+          type: reset ? '*' : this.filterType,
+          user: reset ? '*' : this.filterUser
+        },
+      }
+      if (reset) {
+        // whether to close the dialog in the parent component
+        obj.dialog = {show: false}
+      }
+      this.$store.commit('setSearch', obj)
     },
     resetFilter () {
-      this.filterType = -1
-      this.filterUser = -1
-      this.setFilter()
+      this.setFilter('reset!')
     }
   }
 }

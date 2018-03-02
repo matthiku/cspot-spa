@@ -31,12 +31,15 @@
       </v-flex>
 
       <v-flex xs6>
-        <v-subheader>Show All Plans</v-subheader>
-      </v-flex>
-      <v-flex xs6>
         <v-btn @click="resetFilter">
           Show All &nbsp;
           <v-icon>done_all</v-icon>
+        </v-btn>
+      </v-flex>
+      <v-flex xs6>
+        <v-btn @click="filterUser = user.id">
+          Show Your Plans &nbsp;
+          <v-icon>assignment_ind</v-icon>
         </v-btn>
       </v-flex>
 
@@ -91,14 +94,15 @@ export default {
           user: reset ? '*' : this.filterUser
         },
       }
-      if (reset) {
-        // whether to close the dialog in the parent component
-        obj.dialog = {show: false}
-      }
       this.$store.commit('setSearch', obj)
+      // close the filter dialog in the parent component
+      this.closeFilterPanel()
     },
     resetFilter () {
       this.setFilter('reset!')
+    },
+    closeFilterPanel () {
+      this.$emit('closeFilterPanel')
     }
   }
 }

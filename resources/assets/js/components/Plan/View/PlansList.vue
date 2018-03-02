@@ -1,5 +1,12 @@
 <template>
   <v-container fluid>
+
+    <v-flex xs12 text-xs-center>
+      <span v-if="!filteredPlans.length">No</span>
+      <span v-else>{{ filteredPlans.length }}</span>
+      Plans found
+    </v-flex>
+
     <v-flex xs12
         v-if="filteredPlans.length"
         v-for="plan in filteredPlans" 
@@ -58,11 +65,10 @@
         </v-container>
       </v-card>
     </v-flex>
-
-    <v-flex xs12 v-if="!filteredPlans.length">No plans found.</v-flex>
     
   </v-container>
 </template>
+
 
 <script>
 import genericMixins from '../../../mixins/'

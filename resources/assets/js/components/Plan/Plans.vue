@@ -7,6 +7,7 @@
         <v-card>
           <v-card-text>
 
+            <!-- show a form to filter the list of plans -->
             <v-expansion-panel>
               <v-expansion-panel-content 
                   v-model="showFilter"
@@ -21,13 +22,17 @@
                 </div>
                 <v-card>
                   <v-card-text>
-                    <app-show-plans-filter></app-show-plans-filter>
+                    <app-show-plans-filter
+                        v-on:closeFilterPanel="showFilter = false"
+                      >
+                    </app-show-plans-filter>
                   </v-card-text>
                 </v-card>
               </v-expansion-panel-content>
             </v-expansion-panel>
             
 
+            <!-- show the filtered list of plans -->
             <v-container>
               <v-layout row wrap>
 
@@ -81,6 +86,10 @@ export default {
       pageTitle: 'Your Plans',
       showFilter: false
     }
+  },
+
+  destroy () {
+    this.$off('closeFilterPanel')
   },
 
   watch: {

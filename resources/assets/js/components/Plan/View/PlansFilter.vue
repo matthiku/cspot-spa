@@ -30,14 +30,14 @@
         ></v-select>
       </v-flex>
 
-      <v-flex xs6>
+      <v-flex xs6 class="text-xs-right">
         <v-btn @click="resetFilter">
           Show All &nbsp;
           <v-icon>done_all</v-icon>
         </v-btn>
       </v-flex>
       <v-flex xs6>
-        <v-btn @click="filterUser = user.id">
+        <v-btn @click="filterUser = user.id" class="ml-0">
           Show Your Plans &nbsp;
           <v-icon>assignment_ind</v-icon>
         </v-btn>

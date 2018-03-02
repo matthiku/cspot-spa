@@ -5,6 +5,7 @@ export default {
   state: {
     plan: null,
     plans: 'loading',
+    filteredPlans: [],
     plansUpdatedAt: null,
     planUpdatedAt: null,
     apiBibleBooks: null,
@@ -41,6 +42,10 @@ export default {
 
     setPlanUpdateDate(state, payload) {
       state.planUpdatedAt = payload
+    },
+
+    setFilteredPlans(state, payload) {
+      state.filteredPlans = payload
     },
 
     setBibleBooks(state, payload) {
@@ -471,6 +476,10 @@ export default {
       return state.plans.sort((planA, planB) => {
         return moment(planB.date).unix() - moment(planA.date).unix()
       })
+    },
+
+    filteredPlans (state) {
+      return state.filteredPlans
     },
 
     nextSunday(state) {

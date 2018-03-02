@@ -51,6 +51,8 @@
                   >
                 </app-show-list-of-plans>
 
+                <app-show-plans-calendar></app-show-plans-calendar>
+
 
               </v-layout>
             </v-container>

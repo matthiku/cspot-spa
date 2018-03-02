@@ -1,10 +1,11 @@
 <template>
   <v-container fluid>
 
-    <v-flex xs12 text-xs-center>
+    <v-flex xs12 text-xs-center pt-0>
       <span v-if="!filteredPlans.length">No</span>
       <span v-else>{{ filteredPlans.length }}</span>
       Plans found
+      <span v-if="filteredPlans.length < unfilteredPlans.length">for this selection</span>
     </v-flex>
 
     <v-flex xs12
@@ -115,6 +116,9 @@ export default {
         plans = plans.filter(plan => this.userOwnsPlan(plan, user))
       }
       this.filteredPlans = plans
+    },
+    filteredPlans (val) {
+      this.$store.commit('setFilteredPlans', val)
     }
   },
 

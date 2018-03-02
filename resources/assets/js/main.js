@@ -6,6 +6,11 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 
+import vueCalendar from 'vue2-simple-calendar';
+Vue.use(vueCalendar, {
+  // configuration goes here.
+});
+
 // use customized styling
 import '../stylus/main.styl'
 

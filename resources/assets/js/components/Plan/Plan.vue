@@ -265,7 +265,7 @@ export default {
           this.showDetails.staff = false
           this.showDetails.activities = true
         }
-      } else if (plan) {
+      } else if (plan && this.plan) {
         this.showDetails = this.pageStatus[this.plan.id].showDetails
       }
 

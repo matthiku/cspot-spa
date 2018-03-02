@@ -12,8 +12,7 @@
           item-value="id"
           v-model="filterType"
           label="Select Event Type"
-          single-line dense
-          bottom
+          dense
         ></v-select>
       </v-flex>
 
@@ -26,7 +25,8 @@
           item-text="name"
           item-value="id"
           v-model="filterUser"
-          label="Select Staff"
+          label="Select User Name"
+          dense
         ></v-select>
       </v-flex>
 

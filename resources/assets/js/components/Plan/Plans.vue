@@ -8,8 +8,10 @@
           <v-card-text>
 
             <v-expansion-panel>
-              <v-expansion-panel-content v-model="showFilter" class="primary white--text">
-                <div slot="header">
+              <v-expansion-panel-content 
+                  v-model="showFilter"
+                  class="primary white--text">
+                <div slot="header" title="click to open">
                   <v-container fluid class="ma-0 pa-0">
                     <v-layout>
                       <v-flex xs6 class="headline">{{ pageTitle }}</v-flex>
@@ -77,10 +79,7 @@ export default {
   data () {
     return {
       pageTitle: 'Your Plans',
-      showFilter: false,
-      planMenuItems: [
-        { icon: 'replay', action: 'refresh', title: 'Refresh Plan List' }
-      ]
+      showFilter: false
     }
   },
 

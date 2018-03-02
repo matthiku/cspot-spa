@@ -85,8 +85,8 @@ export default {
         .then(data => {
           let updateDate = data.data.date
           let oldDate = state.plansUpdatedAt
-          // console.log('setPlansUpdateDate', updateDate)
-          if (oldDate === updateDate && state.plans instanceof Object) return
+          // if our current PLANS entity is still empty, the updateDate is irrelevant...
+          if (oldDate === updateDate && state.plans instanceof Object && !(state.plans instanceof Array)) return
           commit('setPlansUpdateDate', updateDate)
 
           if (

@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-flex xs12
-        v-if="plans !== 'loading'"
+        v-if="filteredPlans.length"
         v-for="plan in filteredPlans" 
         :key="plan.id"
       >
@@ -59,7 +59,7 @@
       </v-card>
     </v-flex>
 
-    <v-flex xs12 v-else>Loading...</v-flex>
+    <v-flex xs12 v-if="!filteredPlans.length">No plans found.</v-flex>
     
   </v-container>
 </template>

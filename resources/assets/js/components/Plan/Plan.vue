@@ -342,7 +342,7 @@ export default {
   },
 
   updated () {
-    // console.log((new Date()).getMilliseconds(), 'updated', this.plans.length)
+    // console.log('updated', (new Date()).getMilliseconds(), 'updated', this.plans.length)
     if (this.plans instanceof Array && this.plans.length) {
       this.loadCurrentPlan()
       this.savePageStatus()

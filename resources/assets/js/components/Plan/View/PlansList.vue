@@ -13,7 +13,9 @@
             <v-flex>
               <v-card-title primary-title class="my-0 py-0">
 
-                <div @click="showSinglePlan(plan.id)" class="cursor-pointer">   
+                <div title="click to open" 
+                    @click="showSinglePlan(plan.id)"
+                    class="cursor-pointer">   
 
                   <h2 class="white--text mb-0">
                     {{ plan.date | dateShort }}<span v-if="plan.date_end">-{{ plan.date_end | time }}</span> - 

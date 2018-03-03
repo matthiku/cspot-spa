@@ -12,14 +12,39 @@
               <v-expansion-panel-content 
                   v-model="showFilter"
                   class="primary white--text">
-                <div slot="header" title="click to open">
+
+                <div slot="header" class="plans-list-header" title="click to open">
                   <v-container fluid class="ma-0 pa-0">
                     <v-layout>
-                      <v-flex xs6 class="headline">{{ pageTitle }}</v-flex>
-                      <v-flex xs6 class="text-xs-right lh-3">More ...</v-flex>
+
+                      <v-flex xs6>
+                        <span class="headline">{{ pageTitle }}</span>
+                        <span v-if="filteredPlans">({{ filteredPlans.length }})</span>
+                      </v-flex>
+
+                      <v-flex xs6>
+                        <v-chip
+                            title="Show/Hide Calendar"
+                            color="teal"
+                            @click.stop="switchCalendar"
+                            text-color="white">
+                          <v-avatar>
+                            <v-icon class="white--text">date_range</v-icon>
+                          </v-avatar>
+                          <span v-if="!showCalendar">Show</span>
+                          <span v-else>Hide</span>
+                          Calendar
+                        </v-chip>
+                      </v-flex>
+
+                      <v-flex xs6 class="text-xs-right lh-3">
+                        <span v-if="!showFilter">More</span>
+                        <span v-else>Less</span> ...
+                      </v-flex>
                     </v-layout>
                   </v-container>
                 </div>
+
                 <v-card>
                   <v-card-text>
                     <app-show-plans-filter
@@ -28,6 +53,7 @@
                     </app-show-plans-filter>
                   </v-card-text>
                 </v-card>
+
               </v-expansion-panel-content>
             </v-expansion-panel>
             
@@ -46,7 +72,7 @@
 
 
                 <!-- show events in a calendar -->
-                <app-show-plans-calendar
+                <app-show-plans-calendar v-show="showCalendar"
                     :types="types"
                   >
                 </app-show-plans-calendar>
@@ -72,9 +98,12 @@
 
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style>
 .lh-3 {
   line-height: 3;
+}
+.expansion-panel__header > .header__icon > .material-icons {
+  color: white !important;
 }
 </style>
 
@@ -121,16 +150,25 @@ export default {
         }
         this.pageTitle = who + ' ' + what
       }
+    },
+    showFilter () {
+      this.showCalendar = !this.showFilter
     }
   },
 
   computed: {
     plans () {
       return this.$store.getters.plans
+    },
+    filteredPlans () {
+      return this.$store.getters.filteredPlans
     }
   },
 
   methods: {
+    switchCalendar () {
+      this.showCalendar = !this.showCalendar
+    },
     planAction (what) {
       if (what === 'refresh') {
         this.$store.dispatch('refreshPlans')

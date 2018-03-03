@@ -2,10 +2,7 @@
   <v-container fluid>
 
     <v-flex xs12 text-xs-center pt-0>
-      <span v-if="!filteredPlans.length">No</span>
-      <span v-else>{{ filteredPlans.length }}</span>
-      Plan<span v-if="filteredPlans.length>1">s</span> found
-      <span v-if="filteredPlans.length < unfilteredPlans.length">for this selection</span>
+      <span v-if="!filteredPlans.length">No Plans found</span>
     </v-flex>
 
     <v-flex xs12

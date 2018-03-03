@@ -1,3 +1,8 @@
+<!-- 
+
+      Component to show/edit a single Staff (team member) of a single Plan
+
+-->
 <template>
   <v-list-tile avatar>
 
@@ -25,7 +30,7 @@
     </v-list-tile-content>
 
 
-    <v-list-tile-action v-show="!item.warning" v-if="userOwnsThisPlan">
+    <v-list-tile-action v-show="!item.warning" v-if="userOwnsThisPlan && userCanRemoveThisRole">
       <v-btn icon ripple title="remove this role" @click="warning = true">
         <v-icon color="red lighten-1">delete</v-icon>
       </v-btn>
@@ -58,6 +63,14 @@ export default {
     },
     user_name () {
       return Object.keys(this.users).length && this.users[this.item.user_id] ? this.users[this.item.user_id].name : this.item.user_id
+    },
+    userCanRemoveThisRole () {
+      if (this.userIsAdmin) return true // Admins can always remove roles
+      if (this.user.id === this.item.user_id) return false // user cannot remove himself from a plan
+      if (!this.rolesByName) return false // missing object - unable to verify
+      if (this.rolesByName['leader'] === this.item.role_id) return false // cannot remove a leader role
+      if (this.plan.teams.length < 2) return false // cannot remove the last role of a plan
+      return true
     }
   },
 

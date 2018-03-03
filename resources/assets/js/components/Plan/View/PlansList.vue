@@ -4,7 +4,7 @@
     <v-flex xs12 text-xs-center pt-0>
       <span v-if="!filteredPlans.length">No</span>
       <span v-else>{{ filteredPlans.length }}</span>
-      Plans found
+      Plan<span v-if="filteredPlans.length>1">s</span> found
       <span v-if="filteredPlans.length < unfilteredPlans.length">for this selection</span>
     </v-flex>
 

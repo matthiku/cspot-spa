@@ -16,7 +16,7 @@
                   <v-container fluid class="ma-0 pa-0">
                     <v-layout>
                       <v-flex xs6 class="headline">{{ pageTitle }}</v-flex>
-                      <v-flex xs6 class="text-xs-right lh-3">(Click for filter selection)</v-flex>
+                      <v-flex xs6 class="text-xs-right lh-3">More ...</v-flex>
                     </v-layout>
                   </v-container>
                 </div>
@@ -45,13 +45,18 @@
                 </v-flex>
 
 
-                <!-- iterate through each registered plan -->
+                <!-- show events in a calendar -->
+                <app-show-plans-calendar
+                    :types="types"
+                  >
+                </app-show-plans-calendar>
+
+
+                <!-- show events as a list -->
                 <app-show-list-of-plans
                     v-if="plans !== 'loading'"
                   >
                 </app-show-list-of-plans>
-
-                <app-show-plans-calendar></app-show-plans-calendar>
 
 
               </v-layout>
@@ -86,6 +91,7 @@ export default {
   data () {
     return {
       pageTitle: 'Your Plans',
+      showCalendar: true,
       showFilter: false
     }
   },

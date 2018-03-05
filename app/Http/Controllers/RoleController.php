@@ -28,6 +28,7 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         //
+        return "not yet implemented";
     }
 
 
@@ -40,7 +41,13 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
-        //
+        // check if field and value are provided
+        if ($request->has('field') && $request->has('value')) {
+            $role[$request->field] = $request->value;
+            $role->save();
+            return response($role, Response::HTTP_OK);       
+        }
+        return 'invalid request';
     }
 
     /**
@@ -52,5 +59,6 @@ class RoleController extends Controller
     public function destroy(Role $role)
     {
         //
+        return "not yet implemented";
     }
 }

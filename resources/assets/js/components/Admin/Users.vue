@@ -13,10 +13,10 @@
               label="Search"
               single-line
               hide-details
-              v-model="search.filter"
+              v-model="search.userFilter"
             ></v-text-field>
 
-          <v-btn title="reset the search" small round @click="search.filter=null">clear</v-btn>
+          <v-btn title="reset the search" small round @click="search.userFilter=null">clear</v-btn>
 
         </v-card-title>
 
@@ -24,7 +24,7 @@
         <v-data-table
             v-bind:headers="headers"
             :items="userList"
-            :search="search.filter"
+            :search="search.userFilter"
             hide-actions
             class="elevation-1"
           >

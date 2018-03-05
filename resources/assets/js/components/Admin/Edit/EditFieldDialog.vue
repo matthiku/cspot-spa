@@ -5,8 +5,9 @@
       <v-card v-if="dialog.field">
 
         <v-card-title>
-          <span class="headline" v-if="dialog.type">Create new {{ dialog.type }}:</span>
+          <span class="headline" v-if="dialog.item && dialog.item.id==='new'">Create new {{ dialog.type }}:</span>
           <span class="headline" v-else-if="dialog.item && dialog.item.name">Edit {{ dialog.field }} of '{{ dialog.item.name }}'</span>
+          <span class="headline" v-else>What? {{ dialog.field }} of '{{ dialog.item.name }}'</span>
         </v-card-title>
 
         <v-card-text>

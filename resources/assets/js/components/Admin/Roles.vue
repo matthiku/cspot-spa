@@ -23,7 +23,7 @@
 
             <td class="text-xs-right" @click="editField('name', props.item)">{{ props.item.name }}</td>
 
-            <td class="text-xs-right" @click="updateEvent(props.item)">
+            <td class="text-xs-right" @click="updateForEvents(props.item)">
               <v-checkbox v-model="props.item.for_events" light></v-checkbox>
             </td>
 
@@ -41,7 +41,7 @@
               </span>
 
               <v-btn
-                v-if="!props.item.users.length"
+                v-if="!props.item.users"
                 color="error" fab small dark
                 @click="removeRole(props.item)"
                 class="ma-0">
@@ -67,7 +67,7 @@
       return {
         headers: [
           { text: 'Id', value: 'id' },
-          { text: 'Icon', value: 'icon' },
+          { text: 'Icon Name', value: 'icon' },
           { text: 'Name', value: 'name' },
           { text: 'For Events?', value: 'forEvents' },
           { text: 'User(s)', value: 'users' }
@@ -122,11 +122,11 @@
       gotoUserProfile (id) {
         this.$router.push({name: 'user', params: {userId: id}})
       },
-      updateEvent (event) {
+      updateForEvents (event) {
         this.$store.dispatch('updateRole', {
           id: event.id,
-          field: 'forEvents',
-          value: event.forEvents
+          field: 'for_events',
+          value: event.for_events ? 1 : 0
         })
       }
     }

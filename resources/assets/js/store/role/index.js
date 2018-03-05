@@ -47,18 +47,11 @@ export default {
 
     updateRole ({state, commit, dispatch}, payload) {
       commit('setLoading', true)
-      const updateObj = {}
-      // for a name change, we also need to change the id
-      // which means creating a copy and deleting the old node
-      if (payload.field === 'name') {
-        Object.assign(updateObj, state.roles[payload.id])
-        updateObj.id = payload.value
-        rolesRef.child(payload.value).set(updateObj)
-        return
-      }
-      updateObj[payload.field] = payload.value
-      rolesRef.child(payload.id).update(updateObj)
-        .then(() => {
+      console.log(payload)
+      axios.patch(`/api/role/${payload.id}`, payload)
+        .then((data) => {
+          // use returned ROLE object to update the local list of ROLES
+          state.roles[payload.id] = data.data
           commit('setMessage', 'Role updated!')
           commit('setLoading', false)
         })

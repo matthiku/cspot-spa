@@ -2,8 +2,24 @@
   <v-container fluid>
     <v-slide-y-transition mode="out-in">
 
-      <v-layout column align-center>
-        <h2 v-if="!standAlone">User List</h2>
+      <v-card>
+        <v-card-title>
+
+          <h2 v-if="!standAlone">User List</h2>
+          <v-spacer></v-spacer>
+
+          <v-text-field
+              append-icon="search"
+              label="Search"
+              single-line
+              hide-details
+              v-model="search.filter"
+            ></v-text-field>
+
+          <v-btn title="reset the search" small round @click="search.filter=null">clear</v-btn>
+
+        </v-card-title>
+
 
         <v-data-table
             v-bind:headers="headers"
@@ -29,9 +45,18 @@
                 </v-avatar>
               </td>
 
+              <td>
+                {{ props.item.last_name }},
+                {{ props.item.first_name }}
+              </td>
+
               <td class="text-xs-right mr-0 pr-0">
                 {{ props.item.email }}
                 <v-icon :color="props.item.verified ? 'green' : 'red'">{{ props.item.verified ? 'check' : 'close' }}</v-icon>
+              </td>
+
+              <td :title="props.item.last_access">
+                <span v-if="props.item.last_access">{{ props.item.last_access | dateShort }}</span>
               </td>
 
               <td class="text-xs-right small">
@@ -42,7 +67,8 @@
             </tr>
           </template>
         </v-data-table>
-      </v-layout>
+
+      </v-card>
 
     </v-slide-y-transition>
   </v-container>
@@ -63,9 +89,11 @@
     data () {
       return {
         headers: [
-          { text: 'id', value: 'id', align: 'left', sortable: false },
-          { text: 'Name', value: 'name' },
+          { text: 'id', value: 'id', align: 'left' },
+          { text: 'User Name', value: 'name' },
+          { text: 'Full Name', value: 'last_name' },
           { text: 'Email Address - Verified?', value: 'email', class: 'mr-0 pr-0', align: 'right' },
+          { text: 'Last Access', value: 'last_access', align: 'left' },
           { text: 'Role(s)', value: 'roles', align: 'right' }
         ],
         standAlone: true,
@@ -76,9 +104,6 @@
       // only show title when this is not a component of the Admin page
       this.standAlone = this.$route.name === 'admin'
 
-      if (this.userIsAdmin) {
-        this.headers[0].text = 'id (click id to edit item)'
-      }
       this.updateUsersList()
     },
     watch: {

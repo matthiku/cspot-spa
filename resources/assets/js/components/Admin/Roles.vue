@@ -9,7 +9,6 @@
         <v-data-table
             v-bind:headers="headers"
             :items="rolesList"
-            :search="search.filter"
             hide-actions
             class="elevation-1"
           >

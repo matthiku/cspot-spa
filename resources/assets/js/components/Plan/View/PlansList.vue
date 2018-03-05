@@ -90,7 +90,7 @@ export default {
       this.$store.commit('setSearch', {
         filter: {
           type: '*',
-          user: this.user.id
+          user: this.userIsAdmin ? '*' : this.user.id  // for Admins, show all plans first
         }
       })
     } else {

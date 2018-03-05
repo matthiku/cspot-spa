@@ -1,3 +1,17 @@
+<!-- 
+
+    Show List of (Upcoming) Plans
+
+    DESCRIPTION
+        Initially shows list of upcoming plans for the current user
+
+    COMPONENTS:
+        View\Plansfilter.vue      Provides a form to filter which plans should be listed
+        View\PlansCalendar.vue    Shows filtered plans in a Calendar grid
+        View\PlansList.vue        Shows filtered plans as a list
+
+-->
+
 <template>
   <v-container fluid grid-list-xl>
 
@@ -157,9 +171,6 @@ export default {
   },
 
   computed: {
-    plans () {
-      return this.$store.getters.plans
-    },
     filteredPlans () {
       return this.$store.getters.filteredPlans
     }
@@ -168,11 +179,6 @@ export default {
   methods: {
     switchCalendar () {
       this.showCalendar = !this.showCalendar
-    },
-    planAction (what) {
-      if (what === 'refresh') {
-        this.$store.dispatch('refreshPlans')
-      }
     }
   }
 }

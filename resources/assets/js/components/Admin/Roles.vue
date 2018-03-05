@@ -32,7 +32,7 @@
                 <v-chip small
                   @click="gotoUserProfile(users[user.id].id)"
                   class="cursor-pointer"
-                  :title="user.id">
+                  title="Go to user profile">
                   <v-avatar v-if="users[user.id].providerData && users[user.id].providerData[0].photoURL">
                     <img :src="users[user.id].providerData[0].photoURL" alt="avatar">
                   </v-avatar>

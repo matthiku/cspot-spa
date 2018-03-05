@@ -66,7 +66,18 @@ export default {
     // create an array of users for the drop-down select
     usersList () {
       let list = [{id: '*', name: 'All'}]
-      Object.keys(this.users).forEach((u) => list.push(this.users[u]))
+      Object.keys(this.users)
+        .forEach((u) => {
+          // check if one of the roles is an 'event' role
+          let forEvent = false
+          let roles = this.users[u].roles // array of user roles
+          if (roles && roles.forEach) {
+            roles.forEach((rl) => {
+              if (rl.for_events) forEvent = true
+            })
+          }
+          if (forEvent) list.push(this.users[u])
+        })
       return list
     },
     typesList () {

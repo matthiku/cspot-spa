@@ -203,7 +203,11 @@
               userId: this.userData.id,
               roleId
             })
-            .then(() => this.createRolesArrays())
+            .then(() => {
+              this.createRolesArrays()
+              // make sure the full users list is also refreshed
+              this.$store.dispatch('refreshUsers', 'init')
+            })
           }
         }
       },

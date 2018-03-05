@@ -39,7 +39,7 @@ export default {
           let updateDate = data.data.date
           let oldDate = state.usersUpdatedAt
           // console.log('setUsersUpdateDate', updateDate)
-          if (oldDate === updateDate && state.users instanceof Object) return
+          if (oldDate === updateDate && state.users instanceof Object && (!state.users instanceof Array)) return
           commit('setUsersUpdateDate', updateDate)
 
           if (
@@ -84,12 +84,14 @@ export default {
     },
 
     // update user record
-    updateUser({ commit, dispatch }, payload) {
+    updateUser({ state, commit, dispatch }, payload) {
       if (!payload.id) return
-      console.log(payload)
+      console.log('updateUser', payload)
       axios
-        .patch(`api/user/${payload.id}`)
-        .then(() => {
+        .patch(`/api/user/${payload.id}`, payload)
+        .then((data) => {
+          // update the user in the local Users List object
+          state.users[payload.id] = data.data
           commit('setLoading', false)
         })
         .catch(error => dispatch('errorHandling', error))
@@ -152,14 +154,17 @@ export default {
       if (payload.id === state.user.id) {
         axios.patch(`/api/user/${payload.id}`, payload).then(
           data => {
+            // the data returned contains the full user record with roles
+            commit('setUser', data.data)
             console.log(data.data)
             commit('appendMessage', "User's profile was updated!")
           },
           error => dispatch('errorHandling', error)
         )
+      } else {
+        // update project-specific user table
+        dispatch('updateUser', payload)
       }
-      // update project-specific user table
-      dispatch('updateUser', payload)
       commit('appendMessage', "This user's profile was updated")
     },
 

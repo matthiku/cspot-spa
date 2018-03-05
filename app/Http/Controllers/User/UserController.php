@@ -47,7 +47,15 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        // currently, only the name can be changed here
+        if ($request->has('name')) {
+            $user->name = $request->name;
+            $user->save();
+            // reload this user with the related roles
+            $user = User::where('id', $user->id)->with('roles')->first();
+            return response($user, Response::HTTP_OK);       
+        }
+        return;
     }
 
     /**

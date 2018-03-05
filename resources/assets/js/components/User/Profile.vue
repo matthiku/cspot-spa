@@ -214,7 +214,6 @@
 
       submit () {
         if (this.$refs.form.validate()) {
-          this.userData.roles = this.userRoles
           const profileData = {
             id: this.userData.id,
             email: this.userData.email,

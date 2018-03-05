@@ -3,7 +3,7 @@
     <v-slide-y-transition mode="out-in">
 
       <v-layout column align-center>
-        <v-card class="w-100">
+        <v-card class="w-100 elevation-7">
 
           <v-card-title>
 

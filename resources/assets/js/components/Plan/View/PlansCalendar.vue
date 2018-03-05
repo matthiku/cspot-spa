@@ -1,5 +1,6 @@
 <template>
   <calendar-view
+      transition="scale-transition"
       :events="events"
       :showDate="showDate.toDate()"
 			:time-format-options="{hour: 'numeric', minute:'2-digit'}"

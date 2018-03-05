@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-slide-y-transition mode="out-in">
 
-      <v-card>
+      <v-card class="elevation-7">
         <v-card-title>
 
           <h2 v-if="!standAlone">User List</h2>

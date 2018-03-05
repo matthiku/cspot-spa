@@ -4,6 +4,7 @@
 
     DESCRIPTION
         Initially shows list of upcoming plans for the current user
+        For admins, show all plans
 
     COMPONENTS:
         View\Plansfilter.vue      Provides a form to filter which plans should be listed
@@ -13,100 +14,107 @@
 -->
 
 <template>
-  <v-container fluid grid-list-xl>
+  <v-container fluid>
+    <v-slide-y-transition mode="out-in">
 
-    <!-- Show upcoming plans -->
-    <v-layout row justify-center>
-      <v-flex sm12 md11 lg10 xl9>
-        <v-card>
-          <v-card-text>
+      <!-- Show upcoming plans -->
+      <v-card class="elevation-7">
+        <v-card-text>
 
-            <!-- show a form to filter the list of plans -->
-            <v-expansion-panel>
-              <v-expansion-panel-content 
-                  v-model="showFilter"
-                  class="primary white--text">
+          <!-- show a form to filter the list of plans -->
+          <v-expansion-panel>
+            <v-expansion-panel-content 
+                v-model="showFilter"
+                class="primary white--text">
 
-                <div slot="header" class="plans-list-header" title="click to open">
-                  <v-container fluid class="ma-0 pa-0">
-                    <v-layout>
+              <div slot="header" class="plans-list-header" title="click to open">
+                <v-container fluid class="ma-0 pa-0">
+                  <v-layout>
 
-                      <v-flex xs6>
-                        <span class="headline">{{ pageTitle }}</span>
-                        <span v-if="filteredPlans">({{ filteredPlans.length }})</span>
-                      </v-flex>
+                    <v-flex xs6>
+                      <span class="headline">{{ pageTitle }}</span>
+                      <span v-if="filteredPlans">({{ filteredPlans.length }})</span>
+                    </v-flex>
 
-                      <v-flex xs6>
-                        <v-chip
-                            title="Show/Hide Calendar"
-                            color="teal"
-                            @click.stop="switchCalendar"
-                            text-color="white">
-                          <v-avatar>
-                            <v-icon class="white--text">date_range</v-icon>
-                          </v-avatar>
-                          <span v-if="!showCalendar">Show</span>
-                          <span v-else>Hide</span>
-                          Calendar
-                        </v-chip>
-                      </v-flex>
+                    <v-flex xs6>
+                      <v-chip
+                          title="Show/Hide Calendar"
+                          color="teal"
+                          @click.stop="switchCalendar"
+                          text-color="white">
+                        <v-avatar>
+                          <v-icon class="white--text">date_range</v-icon>
+                        </v-avatar>
+                        <span v-if="!showCalendar">Show</span>
+                        <span v-else>Hide</span>
+                        &nbsp;Calendar
+                      </v-chip>
+                    </v-flex>
 
-                      <v-flex xs6 class="text-xs-right lh-3">
-                        <span v-if="!showFilter">More</span>
-                        <span v-else>Less</span> ...
-                      </v-flex>
-                    </v-layout>
-                  </v-container>
-                </div>
+                    <v-flex xs6 class="text-xs-right lh-3">
+                      <span v-if="!showFilter">More</span>
+                      <span v-else>Less</span> ...
+                    </v-flex>
+                  </v-layout>
+                </v-container>
+              </div>
 
-                <v-card>
-                  <v-card-text>
-                    <app-show-plans-filter
-                        v-on:closeFilterPanel="showFilter = false"
-                      >
-                    </app-show-plans-filter>
-                  </v-card-text>
-                </v-card>
+              <v-card>
+                <v-card-text>
+                  <app-show-plans-filter
+                      v-on:closeFilterPanel="showFilter = false"
+                    >
+                  </app-show-plans-filter>
+                </v-card-text>
+              </v-card>
 
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-            
+            </v-expansion-panel-content>
 
-            <!-- show the filtered list of plans -->
-            <v-container>
-              <v-layout row wrap>
+            <v-expansion-panel-content
+                v-model="showCalendar">
 
-                <v-flex xs12 mb-2 v-if="(!plans.length && !loading) || plans === 'loading'">
-                  <span v-if="plans === 'loading'">Loading plans ...</span>
-                  <span v-else>
-                    There are no Plans.<br>
-                    <v-btn v-if="userIsAdmin" :to="{name: 'createplan'}">Create one!</v-btn>
-                  </span>
-                </v-flex>
+              <!-- show events in a calendar -->
+              <app-show-plans-calendar :types="types">
+              </app-show-plans-calendar>
+              
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+          
+
+          <!-- show the filtered list of plans -->
+          <v-container>
+            <v-layout row wrap>
+
+              <v-flex v-if="(!plans.length && !loading) || plans === 'loading'"
+                  class="text-xs-center"
+                  xs12 mb-2 
+                >
+                <span v-if="plans === 'loading'">
+                  <v-progress-circular indeterminate :width="3" color="red"></v-progress-circular>
+                  Loading plans ...
+                </span>
+                <span v-else>
+                  There are no Plans.<br>
+                  <v-btn v-if="userIsAdmin" :to="{name: 'createplan'}">Create one!</v-btn>
+                </span>
+              </v-flex>
 
 
-                <!-- show events in a calendar -->
-                <app-show-plans-calendar v-show="showCalendar"
-                    :types="types"
-                  >
-                </app-show-plans-calendar>
+
+              <!-- show events as a list -->
+              <app-show-list-of-plans
+                  v-if="plans !== 'loading'"
+                >
+              </app-show-list-of-plans>
 
 
-                <!-- show events as a list -->
-                <app-show-list-of-plans
-                    v-if="plans !== 'loading'"
-                  >
-                </app-show-list-of-plans>
+            </v-layout>
+          </v-container>
 
+        </v-card-text>
+      </v-card>
 
-              </v-layout>
-            </v-container>
-
-          </v-card-text>
-        </v-card>
-      </v-flex>
-    </v-layout>
-
+    </v-slide-y-transition>
   </v-container>
 </template>
 

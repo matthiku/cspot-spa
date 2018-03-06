@@ -138,9 +138,9 @@
       addType () {
         if (!this.userIsAdmin) return
         // create a new dummy type
-        this.types.push({name: '', id: this.types.length})
+        this.typesArray.push({name: '', id: 'new'})
         // let the user give it a proper name
-        this.$store.dispatch('setDialog', {field: 'name', item: this.types[this.types.length - 1], type: 'type'})
+        this.$store.dispatch('setDialog', {field: 'name', item: this.typesArray[this.typesArray.length - 1], type: 'type'})
         // the following command makes the edit dialog visible
         this.$store.dispatch('showDialog')
         // the watcher of showDialog will then dispatch the creation of the new type in the DB

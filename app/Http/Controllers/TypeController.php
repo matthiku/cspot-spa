@@ -28,7 +28,17 @@ class TypeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if ($request->has('field') && $request->has('value')) {
+            // create a new TYPE
+            $type = new Type;
+            $type->name = $request->value;
+            $type->start = $request->start;
+            $type->end = $request->end;
+            $type->save();
+            // return back full list of all types
+            return response(Type::all()->jsonSerialize(), Response::HTTP_OK);
+        }
+        return 'invalid request';
     }
 
 
@@ -36,22 +46,30 @@ class TypeController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\ModelsType  $modelsType
+     * @param  \App\Type  $type
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ModelsType $modelsType)
+    public function update(Request $request, Type $type)
     {
-        //
+        // check if field and value are provided
+        if ($request->has('field') && $request->has('value')) {
+            $type[$request->field] = $request->value;
+            $type->save();
+            return response(Type::all()->jsonSerialize(), Response::HTTP_OK);       
+        }
+        return 'invalid request';
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\ModelsType  $modelsType
+     * @param  \App\Type  $type
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ModelsType $modelsType)
+    public function destroy(Type $type)
     {
-        //
+        // remove TYPE
+        $type->delete();
+        return response(Type::all()->jsonSerialize(), Response::HTTP_OK);
     }
 }

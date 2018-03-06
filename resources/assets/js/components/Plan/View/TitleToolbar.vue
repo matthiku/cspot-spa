@@ -69,30 +69,19 @@
           <v-icon>airplay</v-icon>
           <v-icon>close</v-icon>
         </v-btn>
-        <v-tooltip bottom>
-          <v-btn fab dark small color="green" slot="activator">
-            <v-icon>airplay</v-icon>
+
+        <v-tooltip v-for="(item, index) in planMenuItems"
+            :key="index" bottom>
+          <v-btn @click="planAction(item.action)"
+              fab dark small 
+              slot="activator"
+              :color="item.color"
+              >
+            <v-icon>{{ item.icon }}</v-icon>
           </v-btn>
-          <span>Full Presentation</span>
+          <span>{{ item.title2 }}</span>
         </v-tooltip>
-        <v-tooltip bottom>
-          <v-btn fab dark small color="indigo" slot="activator">
-            <v-icon>account_circle</v-icon>
-          </v-btn>
-          <span>Leader</span>
-        </v-tooltip>
-        <v-tooltip bottom>
-          <v-btn fab dark small color="indigo" slot="activator">
-            <v-icon>queue_music</v-icon>
-          </v-btn>
-          <span>Chords</span>
-        </v-tooltip>
-        <v-tooltip bottom>
-          <v-btn fab dark small color="red" slot="activator">
-            <v-icon>music_video</v-icon>
-          </v-btn>
-          <span>Sheetmusic</span>
-        </v-tooltip>
+        
       </v-speed-dial>
       <span>Select Show Mode</span>
     </v-tooltip>
@@ -108,10 +97,10 @@ export default {
   data () {
     return {
       planMenuItems: [
-        { icon: 'account_circle', action: 'lead', title: 'Lead' },
-        { icon: 'airplay', action: 'present', title: 'Present' },
-        { icon: 'queue_music', action: 'chords', title: 'Chords' },
-        { icon: 'music_video', action: 'music', title: 'Music' }
+        { icon: 'airplay', action: 'present', title: 'Present', title2: 'Full Presentation', color: 'green' },
+        { icon: 'account_circle', action: 'lead', title: 'Lead', title2: 'Leader\'s Script', color: 'indigo' },
+        { icon: 'queue_music', action: 'chords', title: 'Chords', title2: 'Chords', color: 'lime' },
+        { icon: 'music_video', action: 'music', title: 'Music', title2: 'Sheetmusic', color: 'red' }
       ],
       fab: false      
     }
@@ -128,6 +117,12 @@ export default {
       }
       return 'Loading Plan...'
     }    
+  },
+
+  methods: {
+    planAction (what) {
+      this.$router.push({name: what})
+    }
   }
 }
 </script>

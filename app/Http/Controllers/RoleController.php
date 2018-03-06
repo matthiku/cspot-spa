@@ -19,6 +19,8 @@ class RoleController extends Controller
         return response(Role::with('users')->get()->jsonSerialize(), Response::HTTP_OK);
     }
 
+
+
     /**
      * Store a newly created resource in storage.
      *
@@ -27,9 +29,17 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        return "not yet implemented";
+        if ($request->has('field') && $request->has('value')) {
+            // create a new ROLE
+            $role = new Role;
+            $role->name = $request->value;
+            $role->save();
+            // return back full list of all roles
+            return response(Role::with('users')->get()->jsonSerialize(), Response::HTTP_OK);
+        }
+        return 'invalid request';
     }
+
 
 
     /**
@@ -50,6 +60,7 @@ class RoleController extends Controller
         return 'invalid request';
     }
 
+
     /**
      * Remove the specified resource from storage.
      *
@@ -58,7 +69,8 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        //
-        return "not yet implemented";
+        // remove role
+        $role->delete();
+        return response(Role::with('users')->get()->jsonSerialize(), Response::HTTP_OK);
     }
 }

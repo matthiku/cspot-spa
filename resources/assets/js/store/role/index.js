@@ -7,108 +7,104 @@ export default {
   },
 
   mutations: {
-    setRoles (state, payload) {
+    setRoles(state, payload) {
       state.roles = payload
       if (Object.values(payload)) {
         state.rolesByName = {}
-        Object.values(payload).forEach((elem) => {
+        Object.values(payload).forEach(elem => {
           state.rolesByName[elem.name] = elem.id
         })
       }
-
     },
-    addDummyRole (state, payload) {
+    addDummyRole(state, payload) {
       state.roles[payload.id] = payload
     }
   },
 
   actions: {
-    refreshRoles ({state, commit, dispatch}, payload) {
-      if (payload === 'init' || !(state.roles instanceof Object) || (state.roles instanceof Array)) {
+    refreshRoles({ state, commit, dispatch }, payload) {
+      if (
+        payload === 'init' ||
+        !(state.roles instanceof Object) ||
+        state.roles instanceof Array
+      ) {
         let reason = payload === 'init' ? payload : 'object empty'
         console.log('updating local list of ROLES from Server, reason:', reason)
-        axios.get('/api/role')
-        .then((data) => {
-          if (data.data.forEach) {
-            // turn array into an object
-            let roles = {}
-            data.data.forEach(elem => {
-              let obj = elem
-              roles[obj.id] = elem
-            })
-            commit('setRoles', roles)
-          } else {
-            console.warn('refreshRoles: unexpected response!', data)
-          }
-        })
-        .catch((error) => console.warn(error))
+        axios
+          .get('/api/role')
+          .then(data => {
+            if (data.data.forEach) {
+              // turn array into an object
+              let roles = {}
+              data.data.forEach(elem => {
+                let obj = elem
+                roles[obj.id] = elem
+              })
+              commit('setRoles', roles)
+            } else {
+              console.warn('refreshRoles: unexpected response!', data)
+            }
+          })
+          .catch(error => console.warn(error))
       }
     },
 
-    updateRole ({state, commit, dispatch}, payload) {
+    updateRole({ state, commit, dispatch }, payload) {
+      // deviate, if this is for creating a new ROLE
+      if (payload.id === 'new') {
+        dispatch('addRole', payload)
+        return
+      }
       commit('setLoading', true)
-      axios.patch(`/api/role/${payload.id}`, payload)
-        .then((data) => {
+      axios
+        .patch(`/api/role/${payload.id}`, payload)
+        .then(data => {
           // use returned ROLE object to update the local list of ROLES
-          state.roles[payload.id] = data.data
+          state.roles = data.data
           commit('setMessage', `Role "${data.data.name}" updated!`)
           commit('setLoading', false)
         })
-        .catch((error) => dispatch('errorHandling', error))
+        .catch(error => dispatch('errorHandling', error))
     },
 
-    addDummyRole ({commit}, payload) {
-      // adding a local-only dummy role before it get's its proper name
+    addDummyRole({ commit }, payload) {
+      // adding a local-only dummy role before it get's its proper name and id
       commit('addDummyRole', payload)
     },
 
-    removeRole ({commit, dispatch}, payload) {
+    addRole({ state, commit }, payload) {
       commit('setLoading', true)
-      // first, move the old role to the bin
-      binRef.child('roles/' + payload.name).set(payload)
-        .then(() => {
-          commit('setMessage', 'role moved into the bin...')
-          rolesRef.child(payload.id).remove()
-          .then(() => {
-            commit('setMessage', 'role removed and placed in the bin!')
-            commit('setLoading', false)
-          })
-          .catch((error) => dispatch('errorHandling', error))
+      axios
+        .post('/api/role', payload)
+        .then(data => {
+          // when successful, will return full list of ROLES
+          state.roles = data.data
+          commit('setMessage', `Role "${data.data.name}" created!`)
+          commit('setLoading', false)
         })
-        .catch((error) => dispatch('errorHandling', error))
-    },
-    // update the users for a list of roles
-    updateRolesUserList ({commit, dispatch}, payload) {
-      // console.log('updateRolesUserList', payload)
-      // payload contains a user, add-roles and remove-roles objects
-      commit('setLoading', true)
-      // first, go through the list of roles to be added
-      if (Object.keys(payload.add).length) { commit('appendMessage', 'User was added to a role') }
-      for (const key in payload.add) {
-        if (payload.add.hasOwnProperty(key)) {
-          const element = payload.add[key]
-          // console.log(payload.user.name, 'adding to role', element)
-          rolesRef.child(element).child('users').child(payload.user.id).set(true)
-            .catch((error) => dispatch('errorHandling', error))
-        }
-      }
-      if (Object.keys(payload.remove).length) { commit('appendMessage', 'User was removed from a role') }
-      for (const key in payload.remove) {
-        if (payload.remove.hasOwnProperty(key)) {
-          const element = payload.remove[key]
-          // console.log(payload.user.name, 'removing from role', element)
-          rolesRef.child(element).child('users').child(payload.user.id).remove()
-          .catch((error) => dispatch('errorHandling', error))
-        }
-      }
+        .catch(error => dispatch('errorHandling', error))
+      },
+      
+      removeRole({ state, commit, dispatch }, payload) {
+        commit('setLoading', true)
+        // first, move the old role to the bin
+        axios
+        .delete(`/api/role/${payload.id}`)
+        .then(data => {
+          // when successful, will return full list of ROLES
+          state.roles = data.data
+          commit('setMessage', 'role removed')
+          commit('setLoading', false)
+        })
+        .catch(error => dispatch('errorHandling', error))
     }
   },
 
   getters: {
-    roles (state) {
+    roles(state) {
       return state.roles
     },
-    rolesByName (state) {
+    rolesByName(state) {
       return state.rolesByName
     }
   }

@@ -1,9 +1,13 @@
 <template>
   <v-app>
 
-    <app-toolbar></app-toolbar>
+    <app-toolbar v-if="$route.name!=='present'"></app-toolbar>
 
-    <v-content>
+    <v-content v-if="$route.name==='present'">
+      <router-view></router-view>
+    </v-content>
+
+    <v-content v-else>
 
       <v-flex xs12 v-if="loading">
         <v-progress-linear 

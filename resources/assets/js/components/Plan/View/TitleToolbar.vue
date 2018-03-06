@@ -121,7 +121,7 @@ export default {
 
   methods: {
     planAction (what) {
-      this.$router.push({name: what})
+      this.$router.push({ name: what })
     }
   }
 }

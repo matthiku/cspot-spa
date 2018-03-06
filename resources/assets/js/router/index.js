@@ -21,6 +21,7 @@ import Songs from '../components/Song/Songs'
 
 import Plan from '../components/Plan/Plan'
 import Plans from '../components/Plan/Plans'
+import Presentation from '../components/Plan/View/Presentation'
 import CreatePlan from '../components/Plan/CreatePlan'
 
 Vue.use(Router)
@@ -90,6 +91,13 @@ export default new Router({
       name: 'nextsunday',
       component: Plan,
       meta: {title: 'Next Sunday'},
+      beforeEnter: AuthGuard
+    },
+    {
+      path: '/present',
+      name: 'present',
+      component: Presentation,
+      meta: {title: 'Presentation'},
       beforeEnter: AuthGuard
     },
     {

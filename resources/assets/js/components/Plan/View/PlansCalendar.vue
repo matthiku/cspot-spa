@@ -50,7 +50,7 @@
         this.$store.getters.filteredPlans.forEach((pl) => {
           let obj = {
             startDate: pl.date,
-            title: this.types ? this.types[pl.type_id].name : pl.type_id,
+            title: (this.types instanceof Object) ? this.types[pl.type_id].name : pl.type_id,
             id: pl.id
           }
           evs.push(obj)

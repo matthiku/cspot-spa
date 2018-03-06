@@ -47,12 +47,11 @@ export default {
 
     updateRole ({state, commit, dispatch}, payload) {
       commit('setLoading', true)
-      console.log(payload)
       axios.patch(`/api/role/${payload.id}`, payload)
         .then((data) => {
           // use returned ROLE object to update the local list of ROLES
           state.roles[payload.id] = data.data
-          commit('setMessage', 'Role updated!')
+          commit('setMessage', `Role "${data.data.name}" updated!`)
           commit('setLoading', false)
         })
         .catch((error) => dispatch('errorHandling', error))

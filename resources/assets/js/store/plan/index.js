@@ -453,6 +453,7 @@ export default {
       // now write everyting to the state
       commit('setPlan', payload)
     },
+
     getScriptureRef({ state, commit }, payload) {
       let bRef = splitBref(payload)
       if (bRef.version === undefined) return

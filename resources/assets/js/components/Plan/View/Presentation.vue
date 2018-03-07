@@ -20,7 +20,7 @@
 
         <!-- READING -->
         <span v-if="item.type==='read'">
-          <pre>{{ scriptureRefs[item.title] }}</pre>
+          <pre>{{ getScriptureRef(item.title) }}</pre>
         </span>
 
       </div>
@@ -81,6 +81,19 @@ export default {
   },
 
   methods: {
+    getScriptureRef (str) {
+      // a scripture reference might have other text or have 
+      // multiple references - all separated by a semicolon
+      let text = ''
+      let arBref = str.split(';')
+      arBref.forEach(bRef => {
+        if (this.scriptureRefs.hasOwnProperty(bRef)) {
+          text += this.scriptureRefs[bRef] + '\r'
+        }
+      })
+      return text
+    },
+
     showNext(dir) {
       // default direction is forward, -1 for backwards
       if (dir === undefined) dir = 1
@@ -88,8 +101,13 @@ export default {
       // look for the next non-hidden and non-text activity
       // but make sure we do not iterate endlessly
       for (let i = 0; i < this.plan.actionList.length; i++) {
+
         // go to the next/previous activity
         this.showSeqNo = this.showSeqNo + dir
+
+        // wrap around if end (or beginning) of action list is reached
+        if (dir > 0 && this.showSeqNo > this.plan.actionList.length) this.showSeqNo = 1
+        if (dir < 0 && this.showSeqNo < 1) this.showSeqNo = this.plan.actionList.length
         // console.log(this.showSeqNo, 'testing', this.plan.actionList[this.showSeqNo-1].title)
 
         // see if we have found the next showable activity
@@ -99,10 +117,6 @@ export default {
             break
           }
         // console.log(this.showSeqNo, 'skipping', this.plan.actionList[this.showSeqNo-1].title)
-
-        // wrap around if end (or beginning) of action list is reached
-        if (dir > 0 && this.showSeqNo >= this.plan.actionList.length) this.showSeqNo = 1
-        if (dir < 0 && this.showSeqNo < 2) this.showSeqNo = this.plan.actionList.length
       }
       // console.log(this.showSeqNo, 'showing', this.plan.actionList[this.showSeqNo-1].title)
     }

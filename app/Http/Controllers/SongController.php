@@ -16,10 +16,10 @@ class SongController extends Controller
      */
     public function index()
     {
-        //orderBy('title', 'asc')->
-        $songs = DB::table('songs')->get();
-        return response($songs->toArray(), Response::HTTP_OK);
-        // return response($songs->jsonSerialize(), Response::HTTP_OK);
+        // get full table with related data // 
+        // DEFECT: id # 141, 838,
+        $songs = Song::with('onsongs')->take(145)->get();
+        return response($songs->jsonSerialize(), Response::HTTP_OK);
     }
 
     // get date of latest change in this table:

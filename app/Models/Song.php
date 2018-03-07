@@ -22,12 +22,14 @@ class Song extends Model
     use SoftDeletes;
 
 
+    // for now, we don't need the relatiionship with the ITEMS table in the API calls
+    protected $hidden = ['items'];
+
 
     protected $fillable = [
         'title',
         'title_2',
         'lyrics',
-        'chords',
         'ccli_no',
         'book_ref',
         'author',

@@ -288,19 +288,19 @@ class Song extends Model
      *
      * Musicians, Leaders and users with higher roles are normally part of the local church
      * and therefore covered by the church's CCLI MRL license.
-     */
-    public function getLyricsAttribute( $value )
-    {
-        // return full value for all PD songs and for users >= Leaders
-        // if ($this->license=='PD' || Auth::user()->isMusician() ) {
-        if ($this->license=='PD') {
-            return $value;
-        }
-
-        // For unauthorized users, return only part of the lyrics and a note
-        return substr($value, 0, 100).'...(copyrighted material)';
-
-    }
+     public function getLyricsAttribute( $value )
+     {
+         // return full value for all PD songs and for users >= Leaders
+         // if ($this->license=='PD' || Auth::user()->isMusician() ) {
+             if ($this->license=='PD') {
+                 return $value;
+                }
+                
+                // For unauthorized users, return only part of the lyrics and a note
+                return substr($value, 0, 100).'...(copyrighted material)';
+                
+            }
+    */
 
 
     /**
@@ -308,20 +308,20 @@ class Song extends Model
      *
      * Leaders (and users with higher roles) are normally part of the local church
      * and therefore covered by the church's CCLI MRL license.
-     */
-    public function getChordsAttribute( $value )
-    {
-        // return full value for all PD songs and for users >= Leaders
-        // if ($this->license=='PD' || Auth::user()->isMusician() ) {
-        if ($this->license=='PD') {
-            return $value;
-        }
-
-        // return only part of the lyrics and a note
-        return substr($value, 0, 100).'...(copyrighted material)';
-
-    }
-
+     * public function getChordsAttribute( $value )
+     * {
+         // return full value for all PD songs and for users >= Leaders
+         // if ($this->license=='PD' || Auth::user()->isMusician() ) {
+             if ($this->license=='PD') {
+                 return $value;
+                }
+                
+                // return only part of the lyrics and a note
+                return substr($value, 0, 100).'...(copyrighted material)';
+                
+            }
+            
+    */
 
 
     /**

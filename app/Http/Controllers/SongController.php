@@ -9,6 +9,8 @@ use Illuminate\Http\Response;
 
 class SongController extends Controller
 {
+
+
     /**
      * Display a listing of the resource.
      *
@@ -16,11 +18,12 @@ class SongController extends Controller
      */
     public function index()
     {
-        // get full table with related data // 
+        // get full table with related data // with('onsongs')->
         // DEFECT: id # 141, 838,
-        $songs = Song::with('onsongs')->take(145)->get();
+        $songs = Song::get();
         return response($songs->jsonSerialize(), Response::HTTP_OK);
     }
+
 
     // get date of latest change in this table:
     public function latest()
@@ -28,6 +31,17 @@ class SongController extends Controller
         $latest = Song::latest('updated_at')->first()->updated_at;
         return response($latest, Response::HTTP_OK);
     }
+
+
+    /**
+     * Get a single resource with all related data
+     */
+    public function show(Song $song)
+    {
+        $songWithRel = Song::with('onsongs')->where('id', $song->id)->first();
+        return response($songWithRel, Response::HTTP_OK);
+    }
+
 
 
     /**
@@ -53,6 +67,8 @@ class SongController extends Controller
     {
         //
     }
+
+
 
     /**
      * Remove the specified resource from storage.

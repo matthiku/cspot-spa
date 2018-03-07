@@ -126,12 +126,16 @@ export default {
 
     // get complete data of a single plan
     reloadPlan({ state, commit, dispatch }, payload) {
-      // first check if data was meanwhile updated on the backend
+      /*
+        first check if data was meanwhile updated on the backend
+      */
       axios.get(`/api/plan/${payload.planId}/latest`).then(data => {
         let updateDate = data.data.date
         let oldDate = state.planUpdatedAt
         commit('setPlanUpdateDate', updateDate)
-        // only request a new copy from the backend if the data has changed
+        /* 
+          only request a new copy from the backend if the data has changed
+        */
         if (oldDate !== updateDate || !(state.plan instanceof Object)) {
           axios
             .get(`/api/plan/${payload.planId}`)
@@ -386,7 +390,9 @@ export default {
         console.log('STORE - same plan!', payload.id, state.plan)
         return
       }
-      // add plan activities list property
+      /*
+        add plan activities list property
+      */
       let actionList = []
       let planItems = payload.items
       let songs = rootState.song.songs
@@ -426,7 +432,11 @@ export default {
             obj.title = action.comment
             obj.color = 'cyan lighten-3'
             obj.icon = 'local_library'
-            dispatch('getScriptureRef', action.comment)
+            let arBref = action.comment.split(';')
+            arBref.forEach(bRef => {
+              dispatch('getScriptureRef', bRef)
+            })
+            
           } else {
             obj.type = 'text'
             obj.title = action.comment
@@ -445,6 +455,7 @@ export default {
     },
     getScriptureRef({ state, commit }, payload) {
       let bRef = splitBref(payload)
+      if (bRef.version === undefined) return
       axios
         .get(
           `/api/bible/passage/${bRef.version}/${bRef.book}/${bRef.chapter}/${
@@ -559,17 +570,18 @@ function splitBref(text) {
     return
   }
 
-  var obj = {}
-  var ref = text.split(' ')
-  var nr = 0
+  let ref = text.split(' ')
+  let obj = {}, nr = 0, book
   // check if book name starts with a number
   if (!isNaN(ref[0])) {
-    obj.book = ref[nr++] + ' ' + ref[nr++]
+    book = ref[nr++] + ' ' + ref[nr++]
   } else if (text.substr(1, 1) == '_') {
-    obj.book = ref[nr++].replace('_', ' ')
+    book = ref[nr++].replace('_', ' ')
   } else {
-    obj.book = ref[nr++]
+    book = ref[nr++]
   }
+  obj.book = book.trim()
+
   // detect chapter and verse
   var chve = ref[nr++].split(':')
   obj.chapter = chve[0]

@@ -1,15 +1,15 @@
 <template>
-  <v-container fluid>
+  <v-container fluid v-if="plan instanceof Object && plan.hasOwnProperty('actionList')">
 
-    <div v-if="plan" v-for="item in plan.actionList"
+    <div v-for="item in plan.actionList"
         :key="item.seqNo"
         class="fullwindow"
         @click.left="showNext()"
-        @click.right="showNext(-1)"
+        @click.right.stop.prevent="showNext(-1)"
       >
-
+      <!-- {{ showSeqNo }} = {{ item.seqNo }}? - {{ item.title }} -->
       <!-- show only current item -->
-      <div v-if="item.seqNo===showSeqNo"
+      <div v-show="item.seqNo===showSeqNo"
         >
 
         <!-- SONG -->
@@ -49,20 +49,30 @@ export default {
 
   data () {
     return {
-      showSeqNo: 1
+      /* NOTE:
+        Each item in the array of activities (plan.actionList) has a sequence number.
+        The seq. number is always 1 higher than the array index number of that item.
+        This value, showSeqNo, determines which activity will be shown in the presentation.
+      */
+      showSeqNo: 0
     }
   },
 
-  created () {    
-    if (!this.plan) {
-      console.log('no plan found!', this.plan)
+  created () {
+    // make sure we have a plan
+    if (!(this.plan instanceof Object)) {
+      console.log('no plan found, returning to plans list')
       this.$router.push('/plans')
+      return
     }
-    if (!this.plan.actionList.length) {
+    // ... and the plan contains actions!
+    if (this.plan && (!this.plan.hasOwnProperty('actionList') || !this.plan.actionList.length)) {
       this.$store.commit('setError', 'Cannot present, this plan has no actions!')
       this.$router.go(-1) // go back to previous page
+      return
     }
-    // make sure we show the first non-hidden slide
+
+    // go to the first non-hidden activity
     this.showNext()
 
     // remove the scrollbar on the right side
@@ -74,18 +84,27 @@ export default {
     showNext(dir) {
       // default direction is forward, -1 for backwards
       if (dir === undefined) dir = 1
+
       // look for the next non-hidden and non-text activity
-      while (
-        this.plan.actionList[this.showSeqNo].forLeadersEyesOnly || 
-        this.plan.actionList[this.showSeqNo].type === 'text'
-      ) {
+      // but make sure we do not iterate endlessly
+      for (let i = 0; i < this.plan.actionList.length; i++) {
+        // go to the next/previous activity
         this.showSeqNo = this.showSeqNo + dir
-        // go no further than the last or the first showable activity
-        if (
-          this.showSeqNo > this.plan.actionList.length ||
-          this.showSeqNo < 1
-        ) break
+        // console.log(this.showSeqNo, 'testing', this.plan.actionList[this.showSeqNo-1].title)
+
+        // see if we have found the next showable activity
+        if (!(this.plan.actionList[this.showSeqNo-1].forLeadersEyesOnly ||
+          this.plan.actionList[this.showSeqNo-1].type === 'text')) {
+            // console.log('break!', this.plan.actionList[this.showSeqNo-1].forLeadersEyesOnly, this.plan.actionList[this.showSeqNo-1].type)
+            break
+          }
+        // console.log(this.showSeqNo, 'skipping', this.plan.actionList[this.showSeqNo-1].title)
+
+        // wrap around if end (or beginning) of action list is reached
+        if (dir > 0 && this.showSeqNo >= this.plan.actionList.length) this.showSeqNo = 1
+        if (dir < 0 && this.showSeqNo < 2) this.showSeqNo = this.plan.actionList.length
       }
+      // console.log(this.showSeqNo, 'showing', this.plan.actionList[this.showSeqNo-1].title)
     }
   },
 

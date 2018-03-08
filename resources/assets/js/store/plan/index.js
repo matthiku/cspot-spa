@@ -456,7 +456,8 @@ export default {
 
     getScriptureRef({ state, commit }, payload) {
       let bRef = splitBref(payload)
-      if (bRef.version === undefined) return
+      // make sure the striong contains a valid bible ref
+      if (bRef.version === undefined || state.apiBibleBooks.indexOf(bRef.book) < 0 ) return
       axios
         .get(
           `/api/bible/passage/${bRef.version}/${bRef.book}/${bRef.chapter}/${

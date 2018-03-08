@@ -18,9 +18,8 @@ class SongController extends Controller
      */
     public function index()
     {
-        // get full table with related data // with('onsongs')->
-        // DEFECT: id # 141, 838,
-        $songs = Song::get();
+        // get full table with related data
+        $songs = Song::with('onsongs')->get();
         return response($songs->jsonSerialize(), Response::HTTP_OK);
     }
 

@@ -8,7 +8,7 @@
  */
 export default function startUpActions (store, router) {
 
-  // read server data
+  // read server data from the HTML document head
   let serverData
   try {
     serverData = JSON.parse(window.cspot2_server_data)

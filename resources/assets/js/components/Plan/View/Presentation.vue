@@ -1,5 +1,8 @@
 <template>
-  <v-container fluid v-if="plan instanceof Object && plan.hasOwnProperty('actionList')">
+  <v-container class="presentation-space"
+    v-if="plan instanceof Object && plan.hasOwnProperty('actionList')"
+    fluid 
+    >
 
     <div v-for="item in plan.actionList"
         :key="item.seqNo"
@@ -8,23 +11,12 @@
         @click.right.stop.prevent="showNext(-1)"
       >
       <!-- {{ showSeqNo }} = {{ item.seqNo }}? - {{ item.title }} -->
-      <!-- show only current item -->
-      <div v-show="item.seqNo===showSeqNo"
-        >
+      <!-- show the current item -->
+      <presentation-space
+          v-show="item.seqNo===showSeqNo"
+          :item="item"
+        ></presentation-space>
 
-        <!-- SONG -->
-        <span v-if="item.type==='song'">
-          <h3>{{ item.title }}</h3>
-          <pre>{{ item.lyrics }}</pre>
-        </span>
-
-        <!-- READING -->
-        <span v-if="item.type==='read'">
-          <h3>{{ item.title }}</h3>
-          <pre>{{ getScriptureRef(item.title) }}</pre>
-        </span>
-
-      </div>
     </div>
 
   </v-container>
@@ -34,17 +26,27 @@
 <style>
 .fullwindow {
   width: 100%;
+}
+.presentation-space {
+  width: 100%;
   height: 100%;
+  color: wheat;
+  background-color: darkslategrey;
 }
 </style>
 
 
 <script>
+import presentationSpace from './PresentationSpace.vue'
 import genericMixins from '../../../mixins/'
 import planMixins from '../mixins'
 
 export default {
   name: 'PlanPresentation',
+
+  components: {
+    presentationSpace
+  },
 
   mixins: [genericMixins, planMixins],
 
@@ -76,25 +78,19 @@ export default {
     // go to the first non-hidden activity
     this.showNext()
 
+    // use full heigt of window for the presentatino
+    let winHeight = window.innerHeight
+    let presentationSpace = document.getElementsByClassName('presentation-space')[0]
+    if (presentationSpace) {
+      presentationSpace.style.height = winHeight
+    }
+
     // remove the scrollbar on the right side
     let page = document.getElementsByTagName('html')[0]
     page.style.overflowY = 'hidden'
   },
 
   methods: {
-    getScriptureRef (str) {
-      // a scripture reference might have other text or have 
-      // multiple references - all separated by a semicolon
-      let text = ''
-      let arBref = str.split(';')
-      arBref.forEach(bRef => {
-        if (this.scriptureRefs.hasOwnProperty(bRef)) {
-          text += this.scriptureRefs[bRef] + '\r'
-        }
-      })
-      return text
-    },
-
     showNext(dir) {
       // default direction is forward, -1 for backwards
       if (dir === undefined) dir = 1
@@ -120,7 +116,7 @@ export default {
         // console.log(this.showSeqNo, 'skipping', this.plan.actionList[this.showSeqNo-1].title)
       }
       // console.log(this.showSeqNo, 'showing', this.plan.actionList[this.showSeqNo-1].title)
-    }
+    }    
   },
 
   destroyed () {

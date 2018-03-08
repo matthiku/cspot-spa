@@ -21,7 +21,7 @@ import Songs from '../components/Song/Songs'
 
 import Plan from '../components/Plan/Plan'
 import Plans from '../components/Plan/Plans'
-import Presentation from '../components/Plan/View/Presentation'
+import Presentation from '../components/Plan/Present/Presentation'
 import CreatePlan from '../components/Plan/CreatePlan'
 
 Vue.use(Router)

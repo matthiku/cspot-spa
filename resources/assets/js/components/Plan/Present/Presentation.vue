@@ -1,14 +1,20 @@
 <template>
   <v-container class="presentation-space"
-    v-if="plan instanceof Object && plan.hasOwnProperty('actionList')"
-    fluid 
+      v-if="plan instanceof Object && plan.hasOwnProperty('actionList')"
+      fluid
+      @click.left="showNext()"
+      @click.right.stop.prevent="showNext(-1)"
+      @click.middle.stop.prevent="goBack()"
     >
 
     <div v-for="item in plan.actionList"
         :key="item.seqNo"
-        class="fullwindow"
-        @click.left="showNext()"
-        @click.right.stop.prevent="showNext(-1)"
+        class="full-width"
+        tabindex="0"
+        @keyup.esc="goBack()"
+        @keyup.space="showNext()"
+        @keyup.right="showNext()"
+        @keyup.left="showNext(-1)"
       >
       <!-- {{ showSeqNo }} = {{ item.seqNo }}? - {{ item.title }} -->
       <!-- show the current item -->
@@ -24,7 +30,7 @@
 
 
 <style>
-.fullwindow {
+.full-width {
   width: 100%;
 }
 .presentation-space {
@@ -75,7 +81,7 @@ export default {
       return
     }
 
-    // go to the first non-hidden activity
+    // start the presentation by going to the first non-hidden activity
     this.showNext()
 
     // use full heigt of window for the presentatino
@@ -91,6 +97,11 @@ export default {
   },
 
   methods: {
+    goBack () {
+      this.showSeqNo = 0
+      this.$router.go(-1) // go back to previous page
+    },
+
     showNext(dir) {
       // default direction is forward, -1 for backwards
       if (dir === undefined) dir = 1

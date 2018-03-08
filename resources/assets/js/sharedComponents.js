@@ -30,7 +30,6 @@ import ShowActionsChips from './components/Plan/View/ActionsChips.vue'
 import ShowStaffChips from './components/Plan/View/StaffChips.vue'
 import ShowYoutubeModal from './components/Plan/View/YoutubeModal.vue'
 import ShowSimplePlanList from './components/Plan/View/SelectList.vue'
-import ShowPlanPresentation from './components/Plan/View/Presentation.vue'
 
 import EditSongField from './components/Song/Edit/EditSongField'
 import EditSongTextAreaField from './components/Song/Edit/EditSongTextAreaField'
@@ -64,7 +63,6 @@ export default function sharedComponents () {
   Vue.component('app-show-staff-chips', ShowStaffChips)
   Vue.component('app-show-action-chips', ShowActionsChips)
   Vue.component('app-show-simple-plan-list', ShowSimplePlanList)
-  Vue.component('app-show-plan-presentation', ShowPlanPresentation)
 
   Vue.component('app-edit-song-textarea-field', EditSongTextAreaField)
   Vue.component('app-edit-song-field', EditSongField)

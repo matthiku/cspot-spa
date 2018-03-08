@@ -1,10 +1,11 @@
 <template>
   <span>
+
     <!-- SONG -->
-    <span v-if="item.type==='song'">
-      <h3>{{ item.title }}</h3>
-      <pre>{{ item.lyrics }}</pre>
-    </span>
+    <present-lyrics
+        v-if="item.type==='song'"
+        :item="item"
+      ></present-lyrics>
 
     <!-- READING -->
     <span v-if="item.type==='read'">
@@ -17,11 +18,18 @@
 
 
 <script>
+import presentLyrics from './PresentLyrics.vue'
 import genericMixins from '../../../mixins/'
 import planMixins from '../mixins'
 
 export default {
+  name: 'PresentationSpace',
+
   mixins: [genericMixins, planMixins],
+
+  components: {
+    presentLyrics
+  },
 
   props: ['item'],
 

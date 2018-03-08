@@ -426,6 +426,7 @@ export default {
               obj.subtitle = songs[action.song_id].title_2
               obj.book_ref = songs[action.song_id].book_ref
               obj.lyrics = songs[action.song_id].lyrics
+              obj.onsongs = songs[action.song_id].onsongs
             }
           } else if (action.comment && isScriptureRef) {
             obj.type = 'read'

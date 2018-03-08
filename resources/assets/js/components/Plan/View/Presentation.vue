@@ -20,6 +20,7 @@
 
         <!-- READING -->
         <span v-if="item.type==='read'">
+          <h3>{{ item.title }}</h3>
           <pre>{{ getScriptureRef(item.title) }}</pre>
         </span>
 

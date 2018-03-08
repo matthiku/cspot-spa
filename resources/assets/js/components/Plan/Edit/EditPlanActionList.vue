@@ -388,9 +388,13 @@
       },
 
       getScriptureRefText (label) {
-        if (this.scriptureRefs.hasOwnProperty(label))
-          return this.scriptureRefs[label]
-        return 'loading...'
+        let lblArr = label.split(';')
+        let text = ''
+        lblArr.forEach(bRef => {
+          if (this.scriptureRefs.hasOwnProperty(bRef))
+            text += this.scriptureRefs[bRef]
+        })
+        return text || 'loading...'
       },
 
       addScriptureRefItem () {

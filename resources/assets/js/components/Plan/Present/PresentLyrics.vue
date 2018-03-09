@@ -3,7 +3,7 @@
 
       <h3 class="presentation-slide hidden">{{ item.title }}</h3>
 
-      <div v-for="(part, index) in songParts"
+      <div v-for="(part, index) in verse"
           :key="index"
           class="presentation-slide hidden"
         >
@@ -15,14 +15,19 @@
 
 
 <script>
+import genericMixins from '../../../mixins/'
+import planMixins from '../mixins'
+
 export default {
   name: 'PresentLyrics',
+
+  mixins: [genericMixins, planMixins],
 
   props: ['item'],
 
   data () {
     return {
-      songParts: []
+      verse: []
     }
   },
 
@@ -38,13 +43,13 @@ export default {
         if (line.trim() !== '' && line.indexOf('[') < 0) {
           slide += line + '\r\n'
         } else if (slide !== '') {
-          this.songParts.push(slide)
+          this.verse.push(slide)
           slide = ''
         }
       })
     }
     if (this.item && this.item.onsongs && this.item.onsongs.length) {
-      this.item.onsongs.forEach(part => this.songParts.push(part.text))
+      this.item.onsongs.forEach(part => this.verse.push(part.text))
     }
   }
 }

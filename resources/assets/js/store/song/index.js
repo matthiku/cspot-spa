@@ -5,6 +5,8 @@ import axios from 'axios'
 export default {
   state: {
     songs: 'loading',
+    songPartsArray: 'loading',
+    songParts: {},
     songsUpdatedAt: null
   },
 
@@ -18,6 +20,11 @@ export default {
       state.songsUpdatedAt = payload
       // also write data into localStorage
       localStorage.setItem('songsUpdatedAt', payload)
+    },
+    setSongParts (state, payload) {
+      state.songPartsArray = payload
+      // also create an object with the codes as identifier
+      payload.forEach(elem => state.songParts[elem.code] = elem)
     }
   },
 
@@ -124,6 +131,19 @@ export default {
           commit('setLoading', false)
         })
         .catch(error => dispatch('errorHandling', error))
+    },
+
+    loadSongParts ({commit}) {
+      axios
+      .get('/api/song_part')
+        .then(data => {
+          if (data.data.forEach) {
+            commit('setSongParts', data.data)
+          } else {
+            console.warn('loadSongParts: invalid response data', data)
+          }
+        })
+        .catch(error => console.warn(error))
     }
   },
 
@@ -152,6 +172,9 @@ export default {
         return dt
       }
       return state.songsUpdatedAt
+    },
+    songParts (state) {
+      return state.songParts
     }
   }
 }

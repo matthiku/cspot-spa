@@ -69,6 +69,7 @@ export default {
       dispatch('refreshPlans', 'init')
       // load basic bible structure (books, chapters, verses)
       dispatch('loadBibleStructure', 'init')
+      dispatch('loadSongParts')
       // repeat this later with conditions
       setTimeout(() => {
         console.log('checking all items....')

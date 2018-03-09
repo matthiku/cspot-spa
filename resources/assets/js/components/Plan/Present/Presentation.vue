@@ -1,25 +1,25 @@
 <template>
-  <v-container class="presentation-space"
+  <v-container fluid
       v-if="plan instanceof Object && plan.hasOwnProperty('actionList')"
-      fluid
+      class="presentation-space"
       @click.left="showNext()"
       @click.right.stop.prevent="showNext(-1)"
-      @click.middle.stop.prevent="goBack()"
+      @click.middle.stop.prevent="exitPresentation()"
     >
 
     <div v-for="item in plan.actionList"
+        v-if="item.type==='song' || item.type==='read'"
         :key="item.seqNo"
         class="full-width"
         tabindex="0"
-        @keyup.esc="goBack()"
+        @keyup.esc="exitPresentation()"
         @keyup.space="showNext()"
         @keyup.right="showNext()"
         @keyup.left="showNext(-1)"
       >
-      <!-- {{ showSeqNo }} = {{ item.seqNo }}? - {{ item.title }} -->
+
       <!-- show the current item -->
-      <presentation-space
-          v-show="item.seqNo===showSeqNo"
+      <presentation-space 
           :item="item"
         ></presentation-space>
 
@@ -30,6 +30,9 @@
 
 
 <style>
+.hidden {
+  display: none;
+}
 .full-width {
   width: 100%;
 }
@@ -58,12 +61,7 @@ export default {
 
   data () {
     return {
-      /* NOTE:
-        Each item in the array of activities (plan.actionList) has a sequence number.
-        The seq. number is always 1 higher than the array index number of that item.
-        This value, showSeqNo, determines which activity will be shown in the presentation.
-      */
-      showSeqNo: 0
+      showSlideNo: 1
     }
   },
 
@@ -81,9 +79,6 @@ export default {
       return
     }
 
-    // start the presentation by going to the first non-hidden activity
-    this.showNext()
-
     // use full heigt of window for the presentatino
     let winHeight = window.innerHeight
     let presentationSpace = document.getElementsByClassName('presentation-space')[0]
@@ -96,9 +91,14 @@ export default {
     page.style.overflowY = 'hidden'
   },
 
+  mounted () {
+    // start the presentation by going to the first activity
+    this.showNext(-1)
+  },
+
   methods: {
-    goBack () {
-      this.showSeqNo = 0
+    exitPresentation () {
+      this.showSlideNo = 0
       this.$router.go(-1) // go back to previous page
     },
 
@@ -106,32 +106,35 @@ export default {
       // default direction is forward, -1 for backwards
       if (dir === undefined) dir = 1
 
-      // look for the next non-hidden and non-text activity
-      // but make sure we do not iterate endlessly
-      for (let i = 0; i < this.plan.actionList.length; i++) {
-
-        // go to the next/previous activity
-        this.showSeqNo = this.showSeqNo + dir
-
-        // wrap around if end (or beginning) of action list is reached
-        if (dir > 0 && this.showSeqNo > this.plan.actionList.length) this.showSeqNo = 1
-        if (dir < 0 && this.showSeqNo < 1) this.showSeqNo = this.plan.actionList.length
-        // console.log(this.showSeqNo, 'testing', this.plan.actionList[this.showSeqNo-1].title)
-
-        // see if we have found the next showable activity
-        if (!(this.plan.actionList[this.showSeqNo-1].forLeadersEyesOnly ||
-          this.plan.actionList[this.showSeqNo-1].type === 'text')) {
-            // console.log('break!', this.plan.actionList[this.showSeqNo-1].forLeadersEyesOnly, this.plan.actionList[this.showSeqNo-1].type)
-            break
-          }
-        // console.log(this.showSeqNo, 'skipping', this.plan.actionList[this.showSeqNo-1].title)
+      // get all elements with the class 'presentation-slide'
+      let slides = document.getElementsByClassName('presentation-slide')
+      if (!slides.length) {
+        console.log('no showable slides found!')
+        // this.$store.commit('setError', 'Cannot present, this plan has no showable actions!')
+        // this.$router.go(-1) // go back to previous page
+        return
       }
-      // console.log(this.showSeqNo, 'showing', this.plan.actionList[this.showSeqNo-1].title)
+
+      // increase the visible-slide-indicator
+      // but make sure we do net get 'out-of-bounds'
+      this.showSlideNo = this.showSlideNo + dir
+      if (this.showSlideNo < 0) this.showSlideNo = slides.length -1
+      if (this.showSlideNo >= slides.length) this.showSlideNo = 0
+
+      // look for the next slide to be shown and hide all others
+      for (let index = 0; index < slides.length; index++) {
+        const element = slides[index]
+        if (index === this.showSlideNo) {
+          element.classList.toggle('hidden')
+        } else {
+          element.classList.add('hidden')
+        }
+      }
     }    
   },
 
   destroyed () {
-    // enable the scrollbar again
+    // enable the scrollbar again - TODO: only remove the 'overflow' attribute!
     let page = document.getElementsByTagName('html')[0]
     page.removeAttribute('style')
   }

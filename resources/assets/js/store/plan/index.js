@@ -91,7 +91,12 @@ export default {
           let updateDate = data.data.date
           let oldDate = state.plansUpdatedAt
           // if our current PLANS entity is still empty, the updateDate is irrelevant...
-          if (oldDate === updateDate && state.plans instanceof Object && !(state.plans instanceof Array)) return
+          if (
+            oldDate === updateDate &&
+            state.plans instanceof Object &&
+            !(state.plans instanceof Array)
+          )
+            return
           commit('setPlansUpdateDate', updateDate)
 
           if (
@@ -417,32 +422,32 @@ export default {
           }
           if (action.song_id) {
             obj.type = 'song'
+            obj.icon = 'record_voice_over'
             obj.value = action.song_id
             obj.color = state.activityColours.song
-            obj.icon = 'record_voice_over'
             obj.title = action.song_id
             if (songs[action.song_id]) {
               obj.title = songs[action.song_id].title
+              obj.lyrics = songs[action.song_id].lyrics
+              obj.onsongs = onsongsObject(songs[action.song_id].onsongs)
+              obj.sequence = songs[action.song_id].sequence
               obj.subtitle = songs[action.song_id].title_2
               obj.book_ref = songs[action.song_id].book_ref
-              obj.lyrics = songs[action.song_id].lyrics
-              obj.onsongs = songs[action.song_id].onsongs
             }
           } else if (action.comment && isScriptureRef) {
             obj.type = 'read'
-            obj.title = action.comment
-            obj.color = 'cyan lighten-3'
             obj.icon = 'local_library'
+            obj.color = 'cyan lighten-3'
+            obj.title = action.comment
             let arBref = action.comment.split(';')
             arBref.forEach(bRef => {
               dispatch('getScriptureRef', bRef)
             })
-            
           } else {
             obj.type = 'text'
-            obj.title = action.comment
-            obj.color = 'lime darken-2'
             obj.icon = 'label'
+            obj.color = 'lime darken-2'
+            obj.title = action.comment
           }
           actionList.push(obj)
         }
@@ -458,7 +463,11 @@ export default {
     getScriptureRef({ state, commit }, payload) {
       let bRef = splitBref(payload)
       // make sure the striong contains a valid bible ref
-      if (bRef.version === undefined || state.apiBibleBooks.indexOf(bRef.book) < 0 ) return
+      if (
+        bRef.version === undefined ||
+        state.apiBibleBooks.indexOf(bRef.book) < 0
+      )
+        return
       axios
         .get(
           `/api/bible/passage/${bRef.version}/${bRef.book}/${bRef.chapter}/${
@@ -492,7 +501,7 @@ export default {
       })
     },
 
-    filteredPlans (state) {
+    filteredPlans(state) {
       return state.filteredPlans
     },
 
@@ -555,6 +564,20 @@ export default {
 
 // HELPER functions
 
+/**
+ * create an object from the array of onsong parts
+ */
+function onsongsObject(arr) {
+  if (!arr || !arr.length) {
+    return
+  }
+  let obj = {}
+  arr.forEach(elem => {
+    obj[elem.song_part_id] = elem
+  })
+  return obj
+}
+
 /** 
   Split a bible reference string into an object
 
@@ -574,7 +597,9 @@ function splitBref(text) {
   }
 
   let ref = text.split(' ')
-  let obj = {}, nr = 0, book
+  let obj = {},
+    nr = 0,
+    book
   // check if book name starts with a number
   if (!isNaN(ref[0])) {
     book = ref[nr++] + ' ' + ref[nr++]

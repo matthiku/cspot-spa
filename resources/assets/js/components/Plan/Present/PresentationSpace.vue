@@ -7,11 +7,17 @@
         :item="item"
       ></present-lyrics>
 
+
     <!-- READING -->
     <span v-if="item.type==='read'">
-      <h3>{{ item.title }}</h3>
-      <pre>{{ getScriptureRef(item.title) }}</pre>
+
+      <h3 class="presentation-slide hidden">{{ item.title }}</h3>
+
+      <pre class="presentation-slide hidden">
+        {{ getScriptureRef(item.title) }}
+      </pre>
     </span>
+
 
   </span>  
 </template>

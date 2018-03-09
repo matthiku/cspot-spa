@@ -59,7 +59,7 @@ export default {
       if (!(plan instanceof Object) || !plan.teams) return false
 
       // check against the current user or against a specific user?
-      if (!user_id) {        
+      if (!user_id) {
         if (this.$store.getters.userIsAdmin) return true // admin is always owner
         user_id = this.$store.getters.user.id
       }
@@ -67,6 +67,13 @@ export default {
       let check = false
       check = plan.teams.find(rl => rl.user_id === user_id)
       return check ? true : false
+    },
+
+    getLyricsFromOnsong(onsong) {
+      // extrace the lyrics from lines of onsong code
+      // input: "Amazing [D]Grace, how [G]sweet the [D]sound"
+      // output: "Amazing Grace, how sweet the sound"
+      return onsong.replace(/\[[a-z|0-9|/|#]+\]/gi, '')
     }
   },
 

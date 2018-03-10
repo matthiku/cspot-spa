@@ -53,9 +53,9 @@ export default {
         // extract lyrics only from the OnSong data
         let lyrics = this.getLyricsFromOnsong(this.item.onsongs[partId].text)
         //TODO:
-        // 1. remove lines with musical instructions, e,g, "(no music)"
-        // 2. How to handle singing insctructions, e.g. 'men' / 'women'
-        // 3. blank lines must be treated as to start a new slide
+        // 1. How to handle singing insctructions, e.g. 'men' / 'women'
+        // 2. blank lines must be treated as to start a new slide
+        // 3. TWO REGIONS view
         this.verses.push(lyrics)
       })
     }

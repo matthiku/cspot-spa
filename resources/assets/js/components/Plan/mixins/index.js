@@ -73,7 +73,12 @@ export default {
       // extrace the lyrics from lines of onsong code
       // input: "Amazing [D]Grace, how [G]sweet the [D]sound"
       // output: "Amazing Grace, how sweet the sound"
-      return onsong.replace(/\[[a-z|0-9|/|#]+\]/gi, '')
+      onsong = onsong.replace(/\[[a-z|0-9|/|#]+\]/gi, '')
+      // replace excessive spaces
+      onsong = onsong.replace(/ +/g, ' ')
+      // 1. remove lines with musical instructions, e,g, "(no music)"
+      onsong = onsong.replace(/^\(.+\)$\n/mgi, '')
+      return onsong
     }
   },
 

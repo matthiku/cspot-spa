@@ -1,26 +1,25 @@
 <template>
   <v-container fluid
       v-if="plan instanceof Object && plan.hasOwnProperty('actionList')"
-      class="presentation-space"
+
+      class="presentation-space pa-0"
+
       @click.left="showNext()"
       @click.right.stop.prevent="showNext(-1)"
       @click.middle.stop.prevent="exitPresentation()"
     >
 
-    <div v-for="item in plan.actionList"
+    <div v-for="item in plan.actionList" :key="item.seqNo"
+
         v-if="item.type==='song' || item.type==='read'"
-        :key="item.seqNo"
-        class="full-width"
-        tabindex="0"
-        @keyup.esc="exitPresentation()"
-        @keyup.space="showNext()"
-        @keyup.right="showNext()"
-        @keyup.left="showNext(-1)"
+
+        class="full-width full-height"
       >
 
       <!-- show the current item -->
-      <presentation-space 
+      <presentation-space
           :item="item"
+          v-on:keyPressed="keyPressed"
         ></presentation-space>
 
     </div>
@@ -35,6 +34,9 @@
 }
 .full-width {
   width: 100%;
+}
+.full-height {
+  height: 100%;
 }
 .presentation-space {
   width: 100%;
@@ -80,11 +82,9 @@ export default {
     }
 
     // use full heigt of window for the presentatino
-    let winHeight = window.innerHeight
-    let presentationSpace = document.getElementsByClassName('presentation-space')[0]
-    if (presentationSpace) {
-      presentationSpace.style.height = winHeight
-    }
+    // let winHeight = window.innerHeight
+    // let presentationSpace = document.getElementsByClassName('presentation-space')[0]
+    // if (presentationSpace) presentationSpace.style.height = winHeight
 
     // remove the scrollbar on the right side
     let page = document.getElementsByTagName('html')[0]
@@ -97,6 +97,15 @@ export default {
   },
 
   methods: {
+    keyPressed (event) {
+      if (event.code === 'ArrowRight') this.showNext()
+      if (event.code === 'ArrowLeft') this.showNext(-1)
+      if (event.code === 'Space') this.showNext()
+      if (event.code === 'Backspace') this.showNext(-1)
+      if (event.code === 'Escape') this.exitPresentation()
+      //TODO: Home, End, PageUp, PageDown, ArrowUp, ArrowDown, NumpadAdd, NumpadSubtract, Minus
+      console.log(event)
+    },
     exitPresentation () {
       this.showSlideNo = 0
       this.$router.go(-1) // go back to previous page

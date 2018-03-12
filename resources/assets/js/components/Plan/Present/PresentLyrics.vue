@@ -13,6 +13,12 @@
   </span>  
 </template>
 
+<style>
+.presentation-slide {
+  height: 100%;
+}
+</style>
+
 
 <script>
 import genericMixins from '../../../mixins/'

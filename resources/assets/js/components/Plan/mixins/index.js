@@ -31,9 +31,6 @@ export default {
     plan() {
       return this.$store.state.plan.plan
     },
-    bibleBooks() {
-      return this.$store.state.plan.bibleBooks
-    },
     apiBibleBooks() {
       return this.$store.state.plan.apiBibleBooks
     },
@@ -42,9 +39,6 @@ export default {
     },
     apiBibleVerses() {
       return this.$store.state.plan.apiBibleVerses
-    },
-    bibleBooksList() {
-      return this.$store.getters.bibleBooksList
     },
     scriptureRefs() {
       return this.$store.state.plan.scriptureRefs
@@ -84,8 +78,8 @@ export default {
 
   created() {
     // make sure we load this at least once
-    if (this.bibleBooks === '') {
-      this.$store.dispatch('loadBiblebooks')
+    if (!Object.keys(this.songParts)) {
+      this.$store.dispatch('loadSongParts')
     }
   }
 }

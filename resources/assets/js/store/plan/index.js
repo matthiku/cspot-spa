@@ -565,7 +565,12 @@ export default {
 // HELPER functions
 
 /**
- * create an object from the array of onsong parts
+ * Create an object from the array of onsong parts
+ * 
+ * Note: the server only provides an array of objects. 
+ * Each onSong object contains an id indicating the type.
+ * This method simply creates a single object
+ * containing all onsong objects, with the type as index. 
  */
 function onsongsObject(arr) {
   if (!arr || !arr.length) {

@@ -1,5 +1,5 @@
 <template>
-  <span>
+  <span tabindex="1" v-on:keyup="keyPressed($event)">
 
     <!-- SONG -->
     <present-lyrics
@@ -13,8 +13,8 @@
 
       <h3 class="presentation-slide hidden">{{ item.title }}</h3>
 
-      <pre class="presentation-slide hidden">
-        {{ getScriptureRef(item.title) }}
+      <pre class="presentation-slide hidden">{{ 
+        getScriptureRef(item.title) }}
       </pre>
     </span>
 
@@ -40,6 +40,9 @@ export default {
   props: ['item'],
 
   methods: {
+    keyPressed (event) {
+      this.$emit('keyPressed', event)
+    },
     getScriptureRef (str) {
       // a scripture reference might have other text or have 
       // multiple references - all separated by a semicolon

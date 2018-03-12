@@ -1,5 +1,8 @@
 <template>
-  <span tabindex="1" v-on:keyup="keyPressed($event)">
+  <span :id="'seqno-' + item.seqNo"
+      tabindex="1" 
+      v-on:keyup="keyPressed($event)"
+    >
 
     <!-- SONG -->
     <present-lyrics
@@ -12,7 +15,7 @@
     <span v-if="item.type==='read'">
 
       <h3 class="presentation-slide"
-          :class="{hidden: presentation.slide===item.seqNo}"
+          :class="{hidden: presentation.slide!==item.seqNo}"
         >{{ item.title }}</h3>
 
       <pre class="presentation-slide hidden">{{ 

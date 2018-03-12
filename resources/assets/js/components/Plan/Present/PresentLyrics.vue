@@ -2,7 +2,7 @@
   <span>
 
       <h3 class="presentation-slide"
-          :class="{hidden: presentation.slide===item.seqNo}"
+          :class="{hidden: presentation.slide!==item.seqNo}"
         >{{ item.title }}</h3>
 
 

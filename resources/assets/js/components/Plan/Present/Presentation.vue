@@ -13,6 +13,8 @@
 
         v-if="item.type==='song' || item.type==='read'"
 
+        v-show="item.seqNo===presentation.slide"
+
         class="full-width full-height"
       >
 
@@ -83,7 +85,7 @@ export default {
       return
     }
 
-    // use full heigt of window for the presentatino
+    // use full heigt of window for the presentation
     // let winHeight = window.innerHeight
     // let presentationSpace = document.getElementsByClassName('presentation-space')[0]
     // if (presentationSpace) presentationSpace.style.height = winHeight
@@ -92,16 +94,20 @@ export default {
     let page = document.getElementsByTagName('html')[0]
     page.style.overflowY = 'hidden'
 
-    if (this.itemId !== undefined) {
-      // start with the seqNo provided in the URL param
-      this.$store.commit('setPresentationSlide', {slide: this.itemId})
-    }
+    // if (this.itemId !== undefined) {
+    // start with the seqNo provided in the URL param
+    console.log('created', this.itemId)
+    this.$store.commit('setPresentationSlide', {slide: this.itemId || 0})
+    // }
   },
 
   mounted () {
     // start the presentation by going to the first activity
-    if (!this.itemId)
-      this.showNext(-1)
+    // if (!this.itemId) {
+    // this.showNext(-1)
+    console.log('mounted', this.itemId)
+    this.$store.commit('setPresentationSlide', {slide: this.itemId || 0})
+    // }
   },
 
   methods: {

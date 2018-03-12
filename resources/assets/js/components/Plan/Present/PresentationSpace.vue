@@ -1,5 +1,5 @@
 <template>
-  <span :id="'seqno-' + item.seqNo"
+  <span
       tabindex="1" 
       v-on:keyup="keyPressed($event)"
     >
@@ -15,7 +15,7 @@
     <span v-if="item.type==='read'">
 
       <h3 class="presentation-slide"
-          :class="{hidden: presentation.slide!==item.seqNo}"
+          :class="{hidden: presentation.showSeqNo!==item.seqNo}"
         >{{ item.title }}</h3>
 
       <pre class="presentation-slide hidden">{{ 

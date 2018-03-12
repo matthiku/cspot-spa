@@ -30,7 +30,7 @@ export default {
       state.presentation = payload
     },
     setPresentationSlide(state, payload) {
-      state.presentation.slide = payload.slide
+      state.presentation.showSeqNo = payload.showSeqNo
     },
 
     addPlan(state, payload) {

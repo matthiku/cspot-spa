@@ -2,13 +2,14 @@
   <span>
 
       <h3 class="presentation-slide"
-          :class="{hidden: presentation.slide!==item.seqNo}"
+          :class="[firstSlide, slideClass]"
         >{{ item.title }}</h3>
 
 
       <div v-for="(part, index) in verses"
           :key="index"
           class="presentation-slide hidden"
+          :class="slideClass"
         >
         <pre>{{ part }}</pre>
       </div>
@@ -37,6 +38,15 @@ export default {
   data () {
     return {
       verses: []
+    }
+  },
+
+  computed: {
+    slideClass () {
+      return 'slides-seqno-' + this.item.seqNo
+    },
+    firstSlide () {
+      return this.presentation.showSeqNo === this.item.seqNo ? '' : 'hidden'
     }
   },
 

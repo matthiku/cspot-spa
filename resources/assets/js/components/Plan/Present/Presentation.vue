@@ -13,9 +13,9 @@
 
         v-if="item.type==='song' || item.type==='read'"
 
-        v-show="item.seqNo===presentation.slide"
+        :id="'item-seqno-' + item.seqNo"
 
-        class="full-width full-height"
+        class="plan-activity-item full-width full-height hidden"
       >
 
       <!-- show the current item -->
@@ -71,6 +71,12 @@ export default {
     }
   },
 
+  computed: {
+    firstVisibleItem () {
+      return this.plan.actionList.find(item => item.type !== 'text' && !item.forLeadersEyesOnly)
+    }
+  },
+
   created () {
     // make sure we have a plan
     if (!(this.plan instanceof Object)) {
@@ -78,36 +84,21 @@ export default {
       this.$router.push('/plans')
       return
     }
-    // ... and the plan contains actions!
+    // ... and the plan contains action items!
     if (this.plan && (!this.plan.hasOwnProperty('actionList') || !this.plan.actionList.length)) {
       this.$store.commit('setError', 'Cannot present, this plan has no actions!')
       this.$router.go(-1) // go back to previous page
       return
     }
 
-    // use full heigt of window for the presentation
-    // let winHeight = window.innerHeight
-    // let presentationSpace = document.getElementsByClassName('presentation-space')[0]
-    // if (presentationSpace) presentationSpace.style.height = winHeight
-
     // remove the scrollbar on the right side
     let page = document.getElementsByTagName('html')[0]
     page.style.overflowY = 'hidden'
-
-    // if (this.itemId !== undefined) {
-    // start with the seqNo provided in the URL param
-    console.log('created', this.itemId)
-    this.$store.commit('setPresentationSlide', {slide: this.itemId || 0})
-    // }
   },
 
   mounted () {
-    // start the presentation by going to the first activity
-    // if (!this.itemId) {
-    // this.showNext(-1)
-    console.log('mounted', this.itemId)
-    this.$store.commit('setPresentationSlide', {slide: this.itemId || 0})
-    // }
+    // start with the seqNo provided in the URL param or with the first visible item if omitted
+    this.setPresentationSlide(this.itemId || this.firstVisibleItem.seqNo)
   },
 
   methods: {
@@ -125,24 +116,70 @@ export default {
       this.$router.go(-1) // go back to previous page
     },
 
+    showCurrentItem () {
+      // remove 'hidden' class from element with seqNo === presentation SeqNo
+      let planItems = document.getElementsByClassName('plan-activity-item')
+      console.log('trying to show item with seqno', this.presentation.showSeqNo)
+      for (let index = 0; index < planItems.length; index++) {
+        const elem = planItems[index];
+        if (elem.id === 'item-seqno-' + this.presentation.showSeqNo) {
+          elem.classList.remove('hidden')
+        } else {
+          elem.classList.add('hidden')
+        }
+      }
+    },
+
+    getCurrentSlides(seqNo) {
+      return document.getElementsByClassName('slides-seqno-' + seqNo)
+    },
+    setPresentationSlide(seqNo) {
+      this.$store.commit('setPresentationSlide', {showSeqNo: seqNo})
+      this.showCurrentItem()
+    },
+
     showNext(dir) {
       // default direction is forward, -1 for backwards
       if (dir === undefined) dir = 1
 
-      // get all elements with the class 'presentation-slide'
-      let slides = document.getElementsByClassName('presentation-slide')
-      if (!slides.length) {
-        console.log('no showable slides found!')
-        this.$store.commit('setError', 'Cannot present, this plan has no showable actions!')
-        this.$router.go(-1) // go back to previous page
+      let activeSeqNo = this.presentation.showSeqNo
+      if (isNaN(activeSeqNo) || activeSeqNo > this.plan.actionList.length) {
+        //TODO: show warning and go one page back in router history
         return
       }
 
-      // increase the visible-slide-indicator
-      // but make sure we do net get 'out-of-bounds'
+      // get all slides of the currently shown sequence number (seqNo)
+      let slides = this.getCurrentSlides(activeSeqNo)
+      if (!slides.length) {
+        activeSeqNo += dir
+        this.setPresentationSlide(activeSeqNo)
+        console.log('item was empty', activeSeqNo)
+        //TODO: this.findNextVisibleItem()
+      }
+
+      // increase the visible-slide-indicator but make sure we do not reach 'out-of-bounds'
       this.showSlideNo = this.showSlideNo + dir
-      if (this.showSlideNo < 0) this.showSlideNo = slides.length -1
-      if (this.showSlideNo >= slides.length) this.showSlideNo = 0
+      console.log('going to next slide', this.showSlideNo)
+
+      // have we reached beyond the BEGINNING of the current item?
+      if (this.showSlideNo < 0) {
+        console.log('going to previous item')
+        // then we need to go to the PREVIOUS item
+        activeSeqNo -= 1
+        this.setPresentationSlide(activeSeqNo)
+        slides = this.getCurrentSlides(activeSeqNo)
+        this.showSlideNo = slides.length -1
+      }
+
+      // have we reached the END of the current item?
+      if (this.showSlideNo >= slides.length) {
+        console.log('going to next item')
+        // then we have to go to the NEXT item
+        activeSeqNo += 1
+        this.setPresentationSlide(activeSeqNo)
+        this.showSlideNo = 0
+        slides = this.getCurrentSlides(activeSeqNo)
+      }
 
       // look for the next slide to be shown and hide all others
       for (let index = 0; index < slides.length; index++) {

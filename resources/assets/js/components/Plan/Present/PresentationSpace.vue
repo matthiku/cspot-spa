@@ -11,7 +11,9 @@
     <!-- READING -->
     <span v-if="item.type==='read'">
 
-      <h3 class="presentation-slide hidden">{{ item.title }}</h3>
+      <h3 class="presentation-slide"
+          :class="{hidden: presentation.slide===item.seqNo}"
+        >{{ item.title }}</h3>
 
       <pre class="presentation-slide hidden">{{ 
         getScriptureRef(item.title) }}

@@ -1,7 +1,10 @@
 <template>
   <span>
 
-      <h3 class="presentation-slide hidden">{{ item.title }}</h3>
+      <h3 class="presentation-slide"
+          :class="{hidden: presentation.slide===item.seqNo}"
+        >{{ item.title }}</h3>
+
 
       <div v-for="(part, index) in verses"
           :key="index"

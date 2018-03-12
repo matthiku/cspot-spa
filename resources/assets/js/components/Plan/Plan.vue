@@ -350,6 +350,9 @@ export default {
   },
   beforeDestroy () {
     this.savePageStatus()
+  },
+  beforeRouteUpdate (to, from, next) {
+    console.log(to, from)
   }
 }
 </script>

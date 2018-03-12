@@ -8,6 +8,7 @@ export default {
     filteredPlans: [],
     plansUpdatedAt: null,
     planUpdatedAt: null,
+    presentation: {},
     apiBibleBooks: null,
     apiBibleChapters: null,
     apiBibleVerses: null,
@@ -23,6 +24,13 @@ export default {
   mutations: {
     setPlan(state, payload) {
       state.plan = payload
+    },
+
+    setPresentation(state, payload) {
+      state.presentation = payload
+    },
+    setPresentationSlide(state, payload) {
+      state.presentation.slide = payload.slide
     },
 
     addPlan(state, payload) {

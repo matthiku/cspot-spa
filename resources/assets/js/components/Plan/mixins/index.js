@@ -31,6 +31,9 @@ export default {
     plan() {
       return this.$store.state.plan.plan
     },
+    presentation() {
+      return this.$store.state.plan.presentation
+    },
     apiBibleBooks() {
       return this.$store.state.plan.apiBibleBooks
     },

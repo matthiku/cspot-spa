@@ -61,6 +61,8 @@ export default {
 
   mixins: [genericMixins, planMixins],
 
+  props: ['itemId'],
+
   data () {
     return {
       showSlideNo: 1
@@ -89,11 +91,17 @@ export default {
     // remove the scrollbar on the right side
     let page = document.getElementsByTagName('html')[0]
     page.style.overflowY = 'hidden'
+
+    if (this.itemId !== undefined) {
+      // start with the seqNo provided in the URL param
+      this.$store.commit('setPresentationSlide', {slide: this.itemId})
+    }
   },
 
   mounted () {
     // start the presentation by going to the first activity
-    this.showNext(-1)
+    if (!this.itemId)
+      this.showNext(-1)
   },
 
   methods: {
@@ -119,8 +127,8 @@ export default {
       let slides = document.getElementsByClassName('presentation-slide')
       if (!slides.length) {
         console.log('no showable slides found!')
-        // this.$store.commit('setError', 'Cannot present, this plan has no showable actions!')
-        // this.$router.go(-1) // go back to previous page
+        this.$store.commit('setError', 'Cannot present, this plan has no showable actions!')
+        this.$router.go(-1) // go back to previous page
         return
       }
 

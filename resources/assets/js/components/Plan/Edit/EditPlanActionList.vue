@@ -85,14 +85,17 @@
                 <app-show-youtube-modal :youtube-id="songs[item.value].youtube_id"></app-show-youtube-modal>
             </v-list-tile-action>
 
-            <v-list-tile-action v-if="!item.warning">
-              <v-tooltip bottom v-if="!item.forLeadersEyesOnly">
-                <v-btn icon ripple slot="activator"
+            <v-list-tile-action v-if="!item.warning && !item.forLeadersEyesOnly && item.type!=='text'">
+              <v-tooltip bottom>
+                <v-btn icon ripple slot="activator" @click="startPresentation(item.seqNo)"
                     ><v-icon>airplay</v-icon>
                 </v-btn>
-                <span>start presentation here (once implemented)</span>
+                <span>start presentation here</span>
               </v-tooltip>
-              <v-tooltip bottom v-else>
+            </v-list-tile-action>
+
+            <v-list-tile-action v-if="!item.warning && item.forLeadersEyesOnly">
+              <v-tooltip bottom>
                 <v-btn icon ripple slot="activator"
                     ><v-icon>remove_red_eye</v-icon></v-btn>
                 <span>for leader's eyes only</span>
@@ -110,7 +113,7 @@
             </v-list-tile-action>
 
             <v-list-tile-action v-if="!item.warning">
-              <!-- sample menu option -->
+              <!-- menu options -->
               <v-menu offset-x open-on-hover full-width>
                 <v-btn icon ripple slot="activator">
                   <v-icon>menu</v-icon>
@@ -203,6 +206,10 @@
     },
 
     methods: {
+      startPresentation (seqNo) {
+        this.$router.push({name: 'present', params: {itemId: seqNo}})
+      },
+
       // user selected an action on a listed plan activity (in the hamburger menu)
       mSelect (action, activity) {
         if (action.id === 'insAbove') {

@@ -1,25 +1,36 @@
 <template>
   <span>
 
+      <!-- slide with just the song title -->
       <h3 class="lyrics-slide"
           :class="[firstSlide, slideClass]"
         >{{ item.title }}</h3>
 
-
+      <!-- slides for each song particle -->
       <div v-for="(part, index) in verses"
           :key="index"
-          class="lyrics-slide hidden"
           :class="slideClass"
+          class="lyrics-slide hidden"
         >
         <div v-for="(line, index) in part"
-            class="lyrics-line"
             :key="index"
+            class="lyrics-line"
           >
-          <span v-if="hasInstructions(line)">
-            <span class="red--text">{{ hasInstructions(line)[0] }}</span>
-            {{ hasInstructions(line)[1] }}
+          <!-- check if we need to only draw a HR -->
+          <hr v-if="line === '<hr>'">
+
+          <!-- check if the line contains singing instructions -->
+          <span v-else-if="hasInstructions(line)">
+            <span class="red--text">{{ removeRegion2(hasInstructions(line)[0]) }}</span>
+            <span :class="{'yellow--text': lineIsRegionTwo(line)}">{{ hasInstructions(line)[1] }}</span>
           </span>
-          <span v-else>{{ line }}</span></div>
+
+          <!-- check if we are in region 2 -->
+          <span v-else
+              :class="{'yellow--text': lineIsRegionTwo(line)}"
+            >{{ removeRegion2(line) }}</span>
+
+        </div>
       </div>
 
   </span>  
@@ -48,21 +59,28 @@ export default {
 
   data () {
     return {
-      verses: [],
-      isRegion2: false
+      verses: []
     }
   },
 
   methods: {
-    isRegionTwo (line) {
-      // search for "REGION 2" in the text line
-      var patt = /\[region\s*2\]/i
+    removeRegion2 (line) {
+      return line.replace(/^\[region\s*2\]/i, '')
+    },
+    lineIsRegionTwo (line) {
+      // search for "REGION 2" in the text line (with or without the space character)
+      var patt = /^\[region\s*2\]/i
       if (patt.test(line)) {
-        this.isRegion2 = true
-      } else {
-        this.isRegion2 = false
+        return true
       }
-      return this.isRegion2
+      return false
+    },
+    isLyricsHeader (line) {
+      var patt = /\[region\s*2\]/i
+      if (patt.test(line)) return false
+      var patt = /^\[/
+      if (patt.test(line)) return true
+      return false
     },
     /**
      * Looks for singing instructions at the beginning of the line indicated by simple brackets (xyz) 
@@ -70,7 +88,7 @@ export default {
      * returns false if none found or an array with the actual instructions and the rest of the line
      */
     hasInstructions (text) {
-      var patt = /^\(.+\)/
+      var patt = /\(.+\)/
       if (!patt.test(text)) return false
       // if matching text is found, split the line at the closing bracket
       let strings = text.split(')')
@@ -80,25 +98,37 @@ export default {
     },
     /**
      * @description: Create single slides from a block of text (multiple lines) 
-     *               with emptly lines as separators
-     *
+     *               with emptly lines as separators     *
      * @argument block (string) with possibly mulitple lines of text, 
-     *                          possibly containing one or more empty lines
-     *
+     *                          possibly containing one or more empty lines     *
      * @returns: (array) slides, each containing an array of text lines
      */
     splitByEmptyLine (block) {
       let output = []
       let slide = []
       let lines = block.split('\n')
+      let isRegion2 = false
       lines.forEach(line => {
-        if (line.trim() !== '') {
+        if (line.trim() !== '' && !this.isLyricsHeader(line)) {
+          // ignore a leading dot (line is to be ignored in Chords view only)
+          if (line.indexOf('.') === 0) line = line.substr(1)
+          // check for Region 2 lines
+          if (!isRegion2) {
+            if (this.lineIsRegionTwo(line)) {
+              isRegion2 = true
+              line = '<hr>'
+            }
+          } else {
+            line = '[Region 2]' + line
+          }
           slide.push(line.trim())
         } else if (slide.length) {
           output.push(slide)
           slide = []
+          isRegion2 = false
         } else {
           slide = []
+          isRegion2 = false
         }
       })
       if (slide.length) output.push(slide)
@@ -119,8 +149,8 @@ export default {
     if (!this.item) return
     let parts
 
-    // if song has OnSong data, it needs to be prepared accordingly
-    if (this.item.onsongs && Object.keys(this.item.onsongs) && this.item.sequence) {
+    // if song has OnSong data, it needs to be prepared accordingly, provided we also have the helper data
+    if (this.item.onsongs && Object.keys(this.item.onsongs) && Object.keys(this.songParts) && this.item.sequence) {
       /*
         The sequence attribute of a song contains the codes for the individual onsong parts.
         It determines the order and repetition of the song parts in the lyrics presentation.
@@ -157,25 +187,11 @@ export default {
     else if (this.item.lyrics) {
       // divide the lyrics into single lines first to find 
       // content which indicates a new slide (e.g. verses numbers or blank lines)
-      let song = this.item.lyrics
-      // check which character(s) is/are used as line seperator
-      let lines = song.split('\n')
-      let slide = []
-      lines.forEach(line => {
-        if (line.trim() !== '' && line.indexOf('[') < 0) {
-          slide.push(line)
-        } else if (slide.length) {
-          this.verses.push(slide)
-          slide = []
-        } else {
-          slide = []
-        }
-      })
-      // needed if song contains only one line!
-      if (slide.length) this.verses.push(slide)
+      let slides = this.splitByEmptyLine(this.item.lyrics)
+      slides.forEach(slide => this.verses.push(slide))
     }
     if (!this.verses.length) {
-      this.verses.push('(no lyrics found for this song!)')
+      this.verses.push('- no lyrics found for this song! -')
     }
   }
 }

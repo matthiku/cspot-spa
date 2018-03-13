@@ -2,7 +2,7 @@
   <v-container fluid
       v-if="plan instanceof Object && plan.hasOwnProperty('actionList')"
 
-      class="presentation-space pa-0"
+      class="text-xs-center light-blue--text text--lighten-5 presentation-space pa-0"
 
       @click.left="showNext()"
       @click.right.stop.prevent="showNext(-1)"
@@ -43,7 +43,6 @@
 .presentation-space {
   width: 100%;
   height: 100%;
-  color: wheat;
   background-color: darkslategrey;
 }
 </style>

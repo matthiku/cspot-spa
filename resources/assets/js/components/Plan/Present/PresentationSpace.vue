@@ -8,19 +8,24 @@
     <present-lyrics
         v-if="item.type==='song'"
         :item="item"
+        tabindex="2"
+        v-on:keyup="keyPressed($event)"
       ></present-lyrics>
 
 
     <!-- READING -->
-    <span v-if="item.type==='read'">
+    <span v-if="item.type==='read'"
+        tabindex="2"
+        v-on:keyup="keyPressed($event)"
+      >
 
-      <h3 class="presentation-slide"
-          :class="{hidden: presentation.showSeqNo!==item.seqNo}"
+      <h3 :class="[firstSlide, slideClass]"
         >{{ item.title }}</h3>
 
-      <pre class="presentation-slide hidden">{{ 
-        getScriptureRef(item.title) }}
-      </pre>
+      <pre class="hidden"
+          :class="slideClass"
+        >{{ 
+        getScriptureRef(item.title) }}</pre>
     </span>
 
 
@@ -43,6 +48,15 @@ export default {
   },
 
   props: ['item'],
+
+  computed: {
+    slideClass () {
+      return 'slides-seqno-' + this.item.seqNo
+    },
+    firstSlide () {
+      return this.presentation.showSeqNo === this.item.seqNo ? '' : 'hidden'
+    }
+  },
 
   methods: {
     keyPressed (event) {

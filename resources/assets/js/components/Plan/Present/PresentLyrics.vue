@@ -1,14 +1,14 @@
 <template>
   <span>
 
-      <h3 class="presentation-slide"
+      <h3 class="lyrics-slide"
           :class="[firstSlide, slideClass]"
         >{{ item.title }}</h3>
 
 
       <div v-for="(part, index) in verses"
           :key="index"
-          class="presentation-slide hidden"
+          class="lyrics-slide hidden"
           :class="slideClass"
         >
         <pre>{{ part }}</pre>
@@ -18,7 +18,7 @@
 </template>
 
 <style>
-.presentation-slide {
+.lyrics-slide {
   height: 100%;
 }
 </style>
@@ -55,7 +55,7 @@ export default {
     let parts
 
     // if song has OnSong data, it needs to be prepared accordingly
-    if (this.item.onsongs && Object.keys(this.item.onsongs)) {
+    if (this.item.onsongs && Object.keys(this.item.onsongs) && this.item.sequence) {
       /*
         The sequence attribute of a song contains the codes for the individual onsong parts.
         It determines the order and repetition of the song parts in the lyrics presentation.
@@ -97,6 +97,9 @@ export default {
       })
       // needed if song contains only one line!
       if (slide) this.verses.push(slide)
+    }
+    else {
+      this.verses.push('(no lyrics found for this song!)')
     }
   }
 }

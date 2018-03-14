@@ -85,21 +85,14 @@ export default {
   },
 
   created () {
-    if (this.$route && this.$route.name === 'home') {
-      this.unfilteredPlans = this.$store.getters.futurePlans
-      this.$store.commit('setSearch', {
-        filter: {
-          type: '*',
-          user: this.userIsAdmin ? '*' : this.user.id  // for Admins, show all plans first
-        }
-      })
-    } else {
-      this.unfilteredPlans = this.plans
-    }
-    this.filteredPlans = this.unfilteredPlans
+    this.setListOfPlans()
   },
 
   watch: {
+    '$route' (to, from) {
+      this.setListOfPlans()
+    },
+
     search (val) {
       let type = parseInt(val.filter.type)
       let user = parseInt(val.filter.user)
@@ -120,6 +113,26 @@ export default {
   },
 
   methods: {
+    setListOfPlans () {
+      /* 
+        depending on the route, get the appropriate list of plans:
+        HOME: get only future plans
+        PLANS: get all available plans
+      */
+      if (this.$route && this.$route.name === 'home') {
+        this.unfilteredPlans = this.$store.getters.futurePlans
+        this.$store.commit('setSearch', {
+          filter: {
+            type: '*',
+            user: this.userIsAdmin ? '*' : this.user.id  // for Admins, show all plans first
+          }
+        })
+      } else {
+        this.unfilteredPlans = this.plans
+      }
+      this.filteredPlans = this.unfilteredPlans
+    },
+
     showSinglePlan (id) {
       // navigate to single plan form
       this.$router.push({name: 'plan', params: {planId: id}})

@@ -81,7 +81,7 @@ export default {
 
   created() {
     // make sure we load this at least once
-    if (!Object.keys(this.songParts) || this.songPartsArray === 'loading') {
+    if (!Object.keys(this.songParts).length || this.$store.state.song.songPartsArray === 'loading') {
       console.log('reloading songParts!')
       this.$store.dispatch('loadSongParts')
     }

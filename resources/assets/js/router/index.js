@@ -1,5 +1,6 @@
 /**
  * Register and configure all Vue frontend routes
+ * and their respective single component files
  *
  * (C) 2018 Matthias Kuhs
  */
@@ -27,6 +28,8 @@ import CreatePlan from '../components/Plan/CreatePlan'
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
+
   routes: [
     {
       path: '/login',
@@ -127,6 +130,5 @@ export default new Router({
       beforeEnter: AuthGuard,
       props: true
     }
-  ],
-  mode: 'history'
+  ]
 })

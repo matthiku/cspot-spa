@@ -172,14 +172,6 @@ export default {
         // check if lyrics contain a blank line, indicating a new slide
         let slides = this.splitByEmptyLine(lyrics)
         slides.forEach(slide => this.verses.push(slide))
-
-        /** TODO:
-         *
-         * 1. How to handle singing instructions, e.g. '(men)' / '(women)'
-         * 2. TWO REGIONS view, indicated by a line like "[region 2]"
-         * 
-         * => must all be handled in the view (template)
-         */
       })
     }
 
@@ -191,7 +183,7 @@ export default {
       slides.forEach(slide => this.verses.push(slide))
     }
     if (!this.verses.length) {
-      this.verses.push('- no lyrics found for this song! -')
+      this.verses.push(['- no lyrics found for this song! -'])
     }
   }
 }

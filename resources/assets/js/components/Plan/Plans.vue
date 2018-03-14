@@ -152,10 +152,6 @@ export default {
   },
 
   watch: {
-    '$route' (to, from) {
-      // console.log(from, 'route changed to', to)
-    },
-
     search (val) {
       if (val.dialog && val.dialog.hasOwnProperty('show')) {
         this.showFilter = val.dialog.show

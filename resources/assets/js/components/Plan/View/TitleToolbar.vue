@@ -38,9 +38,10 @@
 
       {{ pageTitle }}:
 
-      <v-chip large color="success" class="mr-0" elevation-4
-        :class="[ userIsAdmin ? 'cursor-pointer' : '' ]"
-        @click="openEditDialog('type')">
+      <v-chip large color="success" 
+          class="mr-0" elevation-4
+          :class="[ userIsAdmin ? 'cursor-pointer' : '' ]"
+        >
         {{ planType }}</v-chip>
 
       <app-edit-plan-type-dialog

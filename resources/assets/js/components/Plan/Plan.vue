@@ -24,7 +24,9 @@
                     <v-container fluid fill-height>
                       <v-layout row>
 
-                        <v-flex v-if="!plan" xs12>Plan missing or still loading...</v-flex>
+                        <v-flex v-if="!plan" xs12>
+                          <v-progress-circular indeterminate :width="3" color="red"></v-progress-circular>
+                          Plan loading...</v-flex>
 
                         <!-- show title, date and location -->
                         <v-flex v-else xs12 class="px-0 grey lighten-2">
@@ -306,6 +308,9 @@ export default {
   },
 
   watch: {
+    '$route' (to, from) {
+      this.loadCurrentPlan()
+    },
     plan (val) {
       // console.log('watching plan', val)
       // check which expansion panel is open

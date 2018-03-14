@@ -63,7 +63,6 @@
                       tag="a"
                       v-for="n in 4"
                       :key="n"
-                      @click=""
                     >
                     Sample Item {{ n }}
                   </v-list-tile>
@@ -126,6 +125,10 @@
       searchField (val) {
         if (!val) this.search.filter = ''
       }
+    },
+
+    mounted () {
+      this.$store.commit('setRouteChanging', false)
     }
   }
 </script>

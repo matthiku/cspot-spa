@@ -1,43 +1,45 @@
 export default {
-
   computed: {
-    user () {
+    user() {
       return this.$store.getters.user
     },
-    users () {
+    users() {
       return this.$store.getters.users
     },
-    error () {
+    error() {
       return this.$store.getters.error
     },
-    message () {
+    message() {
       return this.$store.getters.message
     },
-    dialog () {
+    routeChanging() {
+      return this.$store.getters.routeChanging
+    },
+    dialog() {
       return this.$store.getters.dialog
     },
-    dialogShow () {
+    dialogShow() {
       return this.$store.getters.dialogShow
     },
-    loading () {
+    loading() {
       return this.$store.getters.loading
     },
-    roles () {
+    roles() {
       return this.$store.getters.roles
     },
-    rolesByName () {
+    rolesByName() {
       return this.$store.getters.rolesByName
     },
-    userIsAdmin () {
+    userIsAdmin() {
       return this.$store.getters.userIsAdmin
     },
-    search () {
+    search() {
       return this.$store.getters.search
     }
   },
 
   methods: {
-    onDismissed (what) {
+    onDismissed(what) {
       this.$store.dispatch(what)
     }
   }

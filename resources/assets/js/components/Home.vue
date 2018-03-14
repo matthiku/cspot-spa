@@ -80,6 +80,10 @@ export default {
     upcomingPlans () {
       return this.$store.getters.futurePlans
     }
+  },
+
+  mounted () {
+    this.$store.commit('setRouteChanging', false)
   }
 }
 </script>

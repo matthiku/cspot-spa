@@ -395,6 +395,10 @@ export default {
       if (this.endTime && this.endTime > this.time) return
       this.endTime = this.time
     }
+  },
+
+  mounted () {
+    this.$store.commit('setRouteChanging', false)
   }
 }
 </script>

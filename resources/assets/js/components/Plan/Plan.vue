@@ -335,6 +335,8 @@ export default {
   },
   mounted () {
     // console.log((new Date()).getMilliseconds(), 'mounted')
+    this.$store.commit('setRouteChanging', false)
+    // console.log('plan mounted')
 
     // check if plan is already available, otherwise load it
     if (!this.plan) this.loadCurrentPlan()

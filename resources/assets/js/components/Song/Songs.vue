@@ -462,6 +462,10 @@
           this.$router.push({name: 'plan', params: { planId: this.dialog.selectedPlan }})
         }
       }
+    },
+
+    mounted () {
+      this.$store.commit('setRouteChanging', false)
     }
   }
 </script>

@@ -189,6 +189,10 @@ export default {
     switchCalendar () {
       this.showCalendar = !this.showCalendar
     }
+  },
+
+  mounted () {
+    this.$store.commit('setRouteChanging', false)
   }
 }
 </script>

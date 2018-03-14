@@ -227,6 +227,10 @@
         this.$store.dispatch('sendEmailVerification')
         this.$store.dispatch('setLoading', true)
       }
+    },
+
+    mounted () {
+      this.$store.commit('setRouteChanging', false)
     }
   }
 </script>

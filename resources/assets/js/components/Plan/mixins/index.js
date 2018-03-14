@@ -74,14 +74,17 @@ export default {
       // replace excessive spaces
       onsong = onsong.replace(/ +/g, ' ')
       // 1. remove lines with musical instructions, e,g, "(no music)"
-      onsong = onsong.replace(/^\(.+\)$\n/mgi, '')
+      onsong = onsong.replace(/^\(.+\)$\n/gim, '')
       return onsong
     }
   },
 
   created() {
     // make sure we load this at least once
-    if (!Object.keys(this.songParts).length || this.$store.state.song.songPartsArray === 'loading') {
+    if (
+      !Object.keys(this.songParts).length ||
+      this.$store.state.song.songPartsArray === 'loading'
+    ) {
       console.log('reloading songParts!')
       this.$store.dispatch('loadSongParts')
     }

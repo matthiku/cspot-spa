@@ -9,6 +9,15 @@
 
     <v-content v-else>
 
+      <!-- page (route) changing indicator -->
+      <v-progress-circular
+          v-show="routeChanging"
+          class="route-changing-indicator"
+          indeterminate
+          :width="3"
+        ></v-progress-circular>
+
+
       <v-flex xs12 v-if="loading">
         <v-progress-linear 
             class="ma-0 pa-0"
@@ -57,6 +66,12 @@
   }
   .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
     opacity: 0;
+  }
+  .route-changing-indicator {
+    position: fixed;
+    left: 50%;
+    top: 35%;
+    z-index: 1000;
   }
 </style>
 

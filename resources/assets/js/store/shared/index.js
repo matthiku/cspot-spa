@@ -4,6 +4,7 @@ export default {
   state: {
     appName: 'c-SPOT-SPA',
     loading: false,
+    routeChanging: false,
     message: '',
     error: '',
     search: { filter: '' },
@@ -15,46 +16,49 @@ export default {
   },
 
   mutations: {
-    setLoading (state, payload) {
+    setLoading(state, payload) {
       state.loading = payload
     },
-    setError (state, payload) {
+    setRouteChanging(state, payload) {
+      state.routeChanging = payload
+    },
+    setError(state, payload) {
       state.error = payload
     },
-    setMessage (state, payload) {
+    setMessage(state, payload) {
       setTimeout(() => {
         state.message = ''
       }, 9000)
       state.message = payload
     },
-    appendMessage (state, payload) {
+    appendMessage(state, payload) {
       setTimeout(() => {
         state.message = ''
       }, 9000)
       state.message = (state.message ? state.message + ' - ' : '') + payload
     },
-    setDialog (state, payload) {
+    setDialog(state, payload) {
       state.dialog = payload
     },
-    setSearch (state, payload) {
+    setSearch(state, payload) {
       state.search = payload
     },
-    hideDialog (state) {
+    hideDialog(state) {
       state.dialogShow = false
     },
-    showDialog (state) {
+    showDialog(state) {
       state.dialogShow = true
     },
-    clearError (state) {
+    clearError(state) {
       state.error = ''
     },
-    clearMessage (state) {
+    clearMessage(state) {
       state.message = ''
     }
   },
 
   actions: {
-    loadAllItems ({rootState, dispatch}) {
+    loadAllItems({ rootState, dispatch }) {
       if (!rootState.user.user) {
         console.log('(loadAllItems) user not signed in!', rootState.user)
         return
@@ -77,11 +81,14 @@ export default {
       }, 3000)
     },
 
-    refreshAllItems ({rootState, dispatch}) {
+    refreshAllItems({ rootState, dispatch }) {
       if (!rootState.user.user) {
-        console.log('(refreshAllItems) user not signed in!', rootState.user.user)
+        console.log(
+          '(refreshAllItems) user not signed in!',
+          rootState.user.user
+        )
         return
-      }            
+      }
       dispatch('refreshRoles')
       dispatch('refreshTypes')
       dispatch('refreshUsers')
@@ -94,10 +101,10 @@ export default {
         // check if the initial loading of data (see below) had already been successful
         console.log('re-checking all items....')
         dispatch('refreshAllItems')
-      }, 60000)      
+      }, 60000)
     },
 
-    clearAllItems ({commit}) {
+    clearAllItems({ commit }) {
       commit('setUsers', [])
       commit('setUser', null)
       commit('setPlan', null)
@@ -107,39 +114,39 @@ export default {
       commit('setRoles', [])
     },
 
-    clearError ({ commit }) {
+    clearError({ commit }) {
       commit('clearError')
     },
 
-    clearMessage ({ commit }) {
+    clearMessage({ commit }) {
       commit('clearMessage')
     },
 
-    setLoading ({ commit }, payload) {
+    setLoading({ commit }, payload) {
       commit('setLoading', payload)
     },
 
-    setMessage ({ commit }, payload) {
+    setMessage({ commit }, payload) {
       commit('setMessage', payload)
     },
 
-    appendMessage ({ commit }, payload) {
+    appendMessage({ commit }, payload) {
       commit('appendMessage', payload)
     },
 
-    setDialog ({ commit }, payload) {
+    setDialog({ commit }, payload) {
       commit('setDialog', payload)
     },
 
-    hideDialog ({ commit }) {
+    hideDialog({ commit }) {
       commit('hideDialog')
     },
 
-    showDialog ({ commit }) {
+    showDialog({ commit }) {
       commit('showDialog')
     },
 
-    errorHandling ({ commit }, payload) {
+    errorHandling({ commit }, payload) {
       let text = payload
       // show typical attributes of error messages if available
       if (text.errors) text = text.errors
@@ -152,31 +159,34 @@ export default {
   },
 
   getters: {
-    error (state) {
+    error(state) {
       return state.error
     },
-    message (state) {
+    message(state) {
       return state.message
     },
-    loading (state) {
+    loading(state) {
       return state.loading
     },
-    search (state) {
+    routeChanging(state) {
+      return state.routeChanging
+    },
+    search(state) {
       return state.search
     },
-    appName (state) {
+    appName(state) {
       return state.appName
     },
-    dialog (state) {
+    dialog(state) {
       return state.dialog
     },
-    dialogShow (state) {
+    dialogShow(state) {
       return state.dialogShow
     },
-    admin (state) {
+    admin(state) {
       return state.admin
     },
-    pageStatus (state) {
+    pageStatus(state) {
       return state.pageStatus
     }
   }

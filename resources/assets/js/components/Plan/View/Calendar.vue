@@ -19,6 +19,9 @@
 .week {
   min-height: 10vh !important;
 }
+.event {
+  cursor: pointer;
+}
 </style>
 
 

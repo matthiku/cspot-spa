@@ -8,7 +8,9 @@ export default {
     filteredPlans: [],
     plansUpdatedAt: null,
     planUpdatedAt: null,
-    presentation: {},
+    presentation: {
+      versesPerSlide: 5
+    },
     apiBibleBooks: null,
     apiBibleChapters: null,
     apiBibleVerses: null,
@@ -499,6 +501,13 @@ export default {
   getters: {
     newPlanId(state) {
       return state.newPlanId
+    },
+
+    presentation (state) {
+      if (localStorage.getItem('versesPerSlide')) {
+        state.presentation.versesPerSlide = localStorage.getItem('versesPerSlide')
+      }
+      return state.presentation
     },
 
     plans(state) {

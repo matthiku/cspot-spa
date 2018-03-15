@@ -2,7 +2,7 @@
   <span>
 
       <!-- slide with just the song title -->
-      <h3 class="lyrics-slide"
+      <h3 class="presentation-slide"
           :class="[firstSlide, slideClass]"
         >{{ item.title }}</h3>
 
@@ -10,13 +10,13 @@
       <div v-for="(part, index) in verses"
           :key="index"
           :class="slideClass"
-          class="lyrics-slide hidden"
+          class="presentation-slide hidden"
         >
         <div v-for="(line, index) in part"
             :key="index"
             class="lyrics-line"
           >
-          <!-- check if we need to only draw a HR -->
+          <!-- check if we need to only draw a horiz. line -->
           <hr v-if="line === '<hr>'">
 
           <!-- check if the line contains singing instructions -->
@@ -37,9 +37,6 @@
 </template>
 
 <style>
-.lyrics-slide {
-  height: 100%;
-}
 .lyrics-line {
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
@@ -60,6 +57,15 @@ export default {
   data () {
     return {
       verses: []
+    }
+  },
+
+  computed: {
+    slideClass () {
+      return 'slides-seqno-' + this.item.seqNo
+    },
+    firstSlide () {
+      return this.presentation.showSeqNo === this.item.seqNo ? '' : 'hidden'
     }
   },
 
@@ -133,15 +139,6 @@ export default {
       })
       if (slide.length) output.push(slide)
       return output
-    }
-  },
-
-  computed: {
-    slideClass () {
-      return 'slides-seqno-' + this.item.seqNo
-    },
-    firstSlide () {
-      return this.presentation.showSeqNo === this.item.seqNo ? '' : 'hidden'
     }
   },
 

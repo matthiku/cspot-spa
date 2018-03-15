@@ -14,19 +14,12 @@
 
 
     <!-- READING -->
-    <span v-if="item.type==='read'"
+    <present-scripture 
+        v-if="item.type==='read'"
+        :item="item"
         tabindex="2"
         v-on:keyup="keyPressed($event)"
-      >
-
-      <h3 :class="[firstSlide, slideClass]"
-        >{{ item.title }}</h3>
-
-      <pre class="hidden"
-          :class="slideClass"
-        >{{ 
-        getScriptureRef(item.title) }}</pre>
-    </span>
+      ></present-scripture>
 
 
   </span>  
@@ -35,6 +28,7 @@
 
 <script>
 import presentLyrics from './PresentLyrics.vue'
+import presentScripture from './PresentScripture.vue'
 import genericMixins from '../../../mixins/'
 import planMixins from '../mixins'
 
@@ -44,6 +38,7 @@ export default {
   mixins: [genericMixins, planMixins],
 
   components: {
+    presentScripture,
     presentLyrics
   },
 
@@ -61,19 +56,7 @@ export default {
   methods: {
     keyPressed (event) {
       this.$emit('keyPressed', event)
-    },
-    getScriptureRef (str) {
-      // a scripture reference might have other text or have 
-      // multiple references - all separated by a semicolon
-      let text = ''
-      let arBref = str.split(';')
-      arBref.forEach(bRef => {
-        if (this.scriptureRefs.hasOwnProperty(bRef)) {
-          text += this.scriptureRefs[bRef] + '\r'
-        }
-      })
-      return text
-    },
+    }
   }
 }
 </script>

@@ -15,8 +15,8 @@ class TypeController extends Controller
      */
     public function index()
     {
-        //
-        return response(Type::all()->jsonSerialize(), Response::HTTP_OK);
+        // get list of types with Plans count
+        return response(Type::withCount('plans')->get()->jsonSerialize(), Response::HTTP_OK);
     }
 
 

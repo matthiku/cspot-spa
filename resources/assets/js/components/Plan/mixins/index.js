@@ -85,7 +85,7 @@ export default {
       !Object.keys(this.songParts).length ||
       this.$store.state.song.songPartsArray === 'loading'
     ) {
-      console.log('reloading songParts!')
+      console.log('reloading songParts!', this.songParts)
       this.$store.dispatch('loadSongParts')
     }
   }

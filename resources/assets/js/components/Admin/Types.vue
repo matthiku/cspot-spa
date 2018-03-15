@@ -41,10 +41,16 @@
               @click="editField('end', props.item, 'time')">
               {{ props.item.end | time }}</td>
 
+            <td class="text-xs-right cursor-pointer">
+              {{ props.item.plans_count }}</td>
+
             <td class="text-xs-right">
-              <v-btn @click="removeType(props.item)"
-                class="ma-0"
-                v-if="!props.item.users" color="error" fab small dark>
+              <v-btn 
+                  v-if="!props.item.plans_count"
+                  @click="removeType(props.item)"
+                  class="ma-0"
+                  color="error"
+                  fab small dark>
                 <v-icon>delete</v-icon>
               </v-btn>
             </td>
@@ -81,7 +87,8 @@
           { text: 'Weekday', value: 'weekday' },
           { text: 'Repeat', value: 'repeat' },
           { text: 'Start', value: 'start' },
-          { text: 'End', value: 'end' }
+          { text: 'End', value: 'end' },
+          { text: '#Plans', value: 'plans_count' }
         ]
       }
     },

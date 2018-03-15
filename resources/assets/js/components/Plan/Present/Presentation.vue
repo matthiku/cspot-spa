@@ -26,6 +26,12 @@
 
     </div>
 
+    <presentation-footer
+        :currentSlide="showSlideNo"
+        :currentItem="presentation.showSeqNo"
+        v-on:keyPressed="keyPressed"
+      ></presentation-footer>
+
   </v-container>
 </template>
 
@@ -53,6 +59,8 @@
 
 <script>
 import presentationSpace from './PresentationSpace.vue'
+import presentationFooter from './Footer'
+
 import genericMixins from '../../../mixins/'
 import planMixins from '../mixins'
 
@@ -60,7 +68,8 @@ export default {
   name: 'PlanPresentation',
 
   components: {
-    presentationSpace
+    presentationSpace,
+    presentationFooter
   },
 
   mixins: [genericMixins, planMixins],

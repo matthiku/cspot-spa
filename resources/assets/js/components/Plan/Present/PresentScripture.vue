@@ -58,7 +58,6 @@ export default {
           }
         }
         if (bucket > 1) {
-          console.log(bucket, slide)
           block.push(slide)
         }
       }

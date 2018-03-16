@@ -8,12 +8,16 @@
 
       <span v-if="currentItemSeqNo">
         {{ currentItem.title }}
-        <small 
-            v-if="nextItem"
-            @click="goNext"
-            class="grey--text cursor-pointer"
-          >NEXT:&nbsp;{{ nextItem.title }}
-        </small>
+        <v-tooltip top>
+          <small 
+              v-if="nextItem"
+              @click="goNext"
+              slot="activator"
+              class="grey--text cursor-pointer"
+            >NEXT:&nbsp;{{ nextItem.title }}
+          </small>
+          <span>click to go to this item</span>
+        </v-tooltip>
       </span>
 
       <v-spacer></v-spacer>

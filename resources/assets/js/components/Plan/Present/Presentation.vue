@@ -3,10 +3,6 @@
       v-if="plan instanceof Object && plan.hasOwnProperty('actionList')"
 
       class="text-xs-center light-blue--text text--lighten-5 presentation-space pa-0"
-
-      @click.left="showNext()"
-      @click.right.stop.prevent="showNext(-1)"
-      @click.middle.stop.prevent="exitPresentation()"
     >
 
     <div v-for="item in plan.actionList" :key="item.seqNo"
@@ -14,6 +10,10 @@
         v-if="item.type==='song' || item.type==='read'"
 
         :id="'item-seqno-' + item.seqNo"
+
+        @click.left="showNext()"
+        @click.right.stop.prevent="showNext(-1)"
+        @click.middle.stop.prevent="exitPresentation()"
 
         class="plan-action-item full-width full-height hidden"
       >
@@ -27,8 +27,8 @@
     </div>
 
     <presentation-footer
-        :currentSlide="showSlideNo"
-        :currentItem="presentation.showSeqNo"
+        :currentSlideNo="showSlideNo"
+        :currentItemSeqNo="presentation.showSeqNo"
         v-on:keyPressed="keyPressed"
       ></presentation-footer>
 
@@ -139,18 +139,23 @@ export default {
         return
       }
       if (event.code === 'PageUp' || event.code === 'ArrowUp') { // go to next slide
-        this.setPresentationSlide(this.presentation.showSeqNo + 1)
-        this.showSlideNo = -1
-        this.showNext()
+        this.gotoThisSlide(this.presentation.showSeqNo + 1)
         return
       }
       if (event.code === 'PageDown' || event.code === 'ArrowDown') { // go to previous slide
-        this.setPresentationSlide(this.presentation.showSeqNo - 1)
-        this.showSlideNo = -1
-        this.showNext(-1)
+        this.gotoThisSlide(this.presentation.showSeqNo - 1, -1)
         return
       }
+      if (event.code === 'go') {
+        if (event.where === 'back') this.exitPresentation()
+        if (!isNaN(event.where)) this.gotoThisSlide(event.where)
+      }
       //TODO: NumpadAdd/NumpadSubtract -> increase/decrease font size, Minus, ...
+    },
+    gotoThisSlide (seqNo, dir) {
+      this.setPresentationSlide(seqNo)
+      this.showSlideNo = -1
+      this.showNext(dir || 1)      
     },
     exitPresentation () {
       this.showSlideNo = 0

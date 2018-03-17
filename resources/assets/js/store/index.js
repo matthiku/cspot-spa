@@ -12,24 +12,24 @@ axios.defaults.headers.common = {
   'X-CSRF-TOKEN': window.csrf_token
 };
 
-import present from './present'
 import shared from './shared'
 import user from './user'
 import plan from './plan'
 import song from './song'
 import type from './type'
 import role from './role'
+import present from './present'
 
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
   modules: {
-    present,
     shared,
     user,
     plan,
     song,
     type,
-    role
+    role,
+    present
   }
 })

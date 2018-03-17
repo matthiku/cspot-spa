@@ -72,14 +72,14 @@ export default {
     lyricsStyle () {
       return {
         fontSize: this.presentation.lyricsFont.size + 'px',
-        fontStyle: this.presentation.lyricsFont.italics,
+        fontStyle: this.presentation.lyricsFont.italic,
         fontWeight: this.presentation.lyricsFont.bold
       }
     },
     lyricsTitleStyle () {
       return {
         fontSize: this.presentation.lyricsFont.titleSize + 'px',
-        fontStyle: this.presentation.lyricsFont.titleItalics,
+        fontStyle: this.presentation.lyricsFont.titleItalic,
         fontWeight: this.presentation.lyricsFont.titleBold
       }
     }

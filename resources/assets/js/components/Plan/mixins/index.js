@@ -85,8 +85,15 @@ export default {
       !Object.keys(this.songParts).length ||
       this.$store.state.song.songPartsArray === 'loading'
     ) {
-      console.log('reloading songParts!', this.songParts)
-      this.$store.dispatch('loadSongParts')
+      setTimeout(() => {
+        if (
+          !Object.keys(this.songParts).length ||
+          this.$store.state.song.songPartsArray === 'loading'
+        ) {
+          console.log('reloading songParts!', Object.keys(this.songParts))
+          this.$store.dispatch('loadSongParts')
+        }
+      }, 500);
     }
   }
 }

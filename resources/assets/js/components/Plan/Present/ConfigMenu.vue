@@ -42,8 +42,8 @@
                   <v-slider class="ma-0 pa-0" v-model="lyricsTitleFontSize" min="15" max="70"></v-slider>
 
                   <v-switch
-                    :label="`Italics: ${switch1.toString()}`"
-                    v-model="lyricsTitleItalics"
+                    :label="`Italic: ${switch1.toString()}`"
+                    v-model="lyricsTitleItalic"
                   ></v-switch>
 
                   <v-switch
@@ -70,8 +70,8 @@
                   <v-slider class="ma-0 pa-0" v-model="lyricsFontSize" min="15" max="70"></v-slider>
 
                   <v-switch
-                    :label="`Italics: ${switch1.toString()}`"
-                    v-model="lyricsItalics"
+                    :label="`Italic: ${switch1.toString()}`"
+                    v-model="lyricsItalic"
                   ></v-switch>
 
                   <v-switch
@@ -156,10 +156,10 @@
         checkbox: true,
         lyricsFontSize: 35,
         lyricsTitleFontSize: 50,
-        lyricsTitleItalics: true,
-        lyricsTitleBold: true,
-        lyricsItalics: true,
-        lyricsBold: true,
+        lyricsTitleItalic: null,
+        lyricsTitleBold: null,
+        lyricsItalic: null,
+        lyricsBold: null,
       }
     },
 
@@ -174,8 +174,8 @@
       this.lyricsTitleFontSize = this.presentation.lyricsFont.titleSize
       this.lyricsBold = this.presentation.lyricsFont.bold === 'bold'
       this.lyricsTitleBold = this.presentation.lyricsFont.titleBold === 'bold'
-      this.lyricsItalics = (this.presentation.lyricsFont.italics === 'italics')
-      this.lyricsTitleItalics = (this.presentation.lyricsFont.titleItalics === 'italics')
+      this.lyricsItalic = (this.presentation.lyricsFont.italic === 'italic')
+      this.lyricsTitleItalic = (this.presentation.lyricsFont.titleItalic === 'italic')
     },
 
     watch: {
@@ -186,16 +186,16 @@
         this.$store.commit('setLyricsFont', {lyricsTitleFontSize: val})
       },
       lyricsBold (val) {
-        this.$store.commit('setLyricsFont', {lyricsBold: val})
+        this.$store.commit('setLyricsFont', {lyricsBold: val ? 'bold' : 'normal'})
       },
       lyricsTitleBold (val) {
-        this.$store.commit('setLyricsFont', {lyricsTitleBold: val})
+        this.$store.commit('setLyricsFont', {lyricsTitleBold: val ? 'bold' : 'normal'})
       },
-      lyricsItalics (val) {
-        this.$store.commit('setLyricsFont', {lyricsItalics: val ? 'italics' : 'normal'})
+      lyricsItalic (val) {
+        this.$store.commit('setLyricsFont', {lyricsItalic: val ? 'italic' : 'normal'})
       },
-      lyricsTitleItalics (val) {
-        this.$store.commit('setLyricsFont', {lyricsTitleItalics: val ? 'italics' : 'normal'})
+      lyricsTitleItalic (val) {
+        this.$store.commit('setLyricsFont', {lyricsTitleItalic: val ? 'italic' : 'normal'})
       },
     }
   }

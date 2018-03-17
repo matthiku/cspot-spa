@@ -125,7 +125,7 @@ export default {
 
   methods: {
     keyPressed (event) {
-      console.log(event)
+      // console.log(event)
       if (event.code === 'Escape') this.exitPresentation()
       if (event.code === 'ArrowRight') this.showNext()
       if (event.code === 'ArrowLeft') this.showNext(-1)

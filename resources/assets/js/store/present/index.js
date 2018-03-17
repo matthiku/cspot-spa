@@ -4,11 +4,11 @@ export default {
       versesPerSlide: 5,
       lyricsFont: {
         size: 35,
-        bold: 'bold',
-        italics: 'italics',
+        bold: 'normal',
+        italic: 'normal',
         titleSize: 50,
-        titleBold: 'bold',
-        titleItalics: 'italics',
+        titleBold: 'normal',
+        titleItalic: 'italic',
       }
     }    
   },
@@ -31,10 +31,10 @@ export default {
         state.presentation.lyricsFont.bold = payload.lyricsBold
       if (payload.lyricsTitleBold)
         state.presentation.lyricsFont.titleBold = payload.lyricsTitleBold
-      if (payload.lyricsItalics)
-        state.presentation.lyricsFont.italics = payload.lyricsItalics
-      if (payload.lyricsTitleItalics)
-        state.presentation.lyricsFont.titleItalics = payload.lyricsTitleItalics
+      if (payload.lyricsItalic)
+        state.presentation.lyricsFont.italic = payload.lyricsItalic
+      if (payload.lyricsTitleItalic)
+        state.presentation.lyricsFont.titleItalic = payload.lyricsTitleItalic
       localStorage.setItem('lyricsFont', JSON.stringify(state.presentation.lyricsFont))
     }
   },

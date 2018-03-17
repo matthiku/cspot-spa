@@ -3,12 +3,17 @@ export default {
     presentation: {
       versesPerSlide: 5,
       lyricsFont: {
-        size: 35,
+        size: 40,
         bold: 'normal',
         italic: 'normal',
-        titleSize: 50,
+        titleSize: 60,
         titleBold: 'normal',
-        titleItalic: 'italic',
+        titleItalic: 'italic'
+      },
+      scriptureFont: {
+        size: 35,
+        bold: 'normal',
+        italic: 'normal'
       }
     }    
   },
@@ -36,6 +41,15 @@ export default {
       if (payload.lyricsTitleItalic)
         state.presentation.lyricsFont.titleItalic = payload.lyricsTitleItalic
       localStorage.setItem('lyricsFont', JSON.stringify(state.presentation.lyricsFont))
+    },
+    setScriptureFont (state, payload) {
+      if (payload.scriptureFontSize)
+        state.presentation.scriptureFont.size = payload.scriptureFontSize
+      if (payload.scriptureBold)
+        state.presentation.scriptureFont.bold = payload.scriptureBold
+      if (payload.scriptureItalic)
+        state.presentation.scriptureFont.italic = payload.scriptureItalic
+      localStorage.setItem('scriptureFont', JSON.stringify(state.presentation.scriptureFont))
     }
   },
 
@@ -48,6 +62,9 @@ export default {
       }
       if (localStorage.getItem('lyricsFont')) {
         state.presentation.lyricsFont = JSON.parse(localStorage.getItem('lyricsFont'))
+      }
+      if (localStorage.getItem('scriptureFont')) {
+        state.presentation.scriptureFont = JSON.parse(localStorage.getItem('scriptureFont'))
       }
       return state.presentation
     }

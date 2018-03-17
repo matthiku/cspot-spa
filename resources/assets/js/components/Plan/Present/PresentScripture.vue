@@ -6,6 +6,7 @@
         <div v-for="(verseBlock, index) in ref" :key="index"
             class="presentation-slide hidden"
             :class="slideClass"
+            :style="scriptureStyle"
             v-html="verseBlock"
           ></div>
       </span>
@@ -32,6 +33,22 @@ export default {
     return {
       verses: []
     }
+  },
+
+  computed: {
+    slideClass () {
+      return 'slides-seqno-' + this.item.seqNo
+    },
+    firstSlide () {
+      return this.presentation.showSeqNo === this.item.seqNo ? '' : 'hidden'
+    },
+    scriptureStyle () {
+      return {
+        fontSize: this.presentation.scriptureFont.size + 'px',
+        fontStyle: this.presentation.scriptureFont.italic,
+        fontWeight: this.presentation.scriptureFont.bold
+      }
+    }   
   },
 
   mounted () {
@@ -64,18 +81,7 @@ export default {
       this.verses.push(block)
     })
     
-  },
-
-  methods: {
-  },
-
-  computed: {
-    slideClass () {
-      return 'slides-seqno-' + this.item.seqNo
-    },
-    firstSlide () {
-      return this.presentation.showSeqNo === this.item.seqNo ? '' : 'hidden'
-    }
   }
+
 }
 </script>

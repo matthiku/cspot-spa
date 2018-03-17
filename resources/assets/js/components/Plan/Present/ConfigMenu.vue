@@ -21,12 +21,11 @@
             show-arrows
           >
           <v-tab ripple>Lyrics Title</v-tab>
+          <v-tab ripple>Lyrics Text</v-tab>
 
-          <v-tab ripple>Lyrics</v-tab>
+          <v-tab ripple>Scripture Text</v-tab>
 
-          <v-tab ripple>Scripture</v-tab>
-
-          <v-tab ripple>Generic</v-tab>
+          <v-tab ripple>Colours</v-tab>
         </v-tabs>
 
 
@@ -60,8 +59,7 @@
             </v-card>
           </v-tab-item>
 
-
-          <!-- LYRICS configuration -->
+          <!-- LYRICS TEXT configuration -->
           <v-tab-item>
             <v-card flat>
               <v-card-text>
@@ -88,30 +86,34 @@
             </v-card>
           </v-tab-item>
 
+
+          <!-- SCRIPTURE TEXT configuration -->
           <v-tab-item>
             <v-card flat>
               <v-card-text>
                 <v-container fluid px-0>
-                  <v-checkbox
-                    :label="`Checkbox 1: ${checkbox.toString()}`"
-                    v-model="checkbox"
-                  ></v-checkbox>
-                  <v-radio-group v-model="radioGroup">
-                    <v-radio
-                      v-for="n in 3"
-                      :key="n"
-                      :label="`Radio ${n}`"
-                      :value="n"
-                    ></v-radio>
-                  </v-radio-group>
+                  Size: <v-chip outline>{{ scriptureFontSize }}</v-chip>
+                  <v-slider class="ma-0 pa-0" v-model="scriptureFontSize" min="15" max="70"></v-slider>
+
                   <v-switch
-                    :label="`Switch 1: ${switch1.toString()}`"
-                    v-model="switch1"
+                    :label="`Italic: ${switch1.toString()}`"
+                    v-model="scriptureItalic"
+                  ></v-switch>
+
+                  <v-switch
+                    :label="`Bold: ${switch1.toString()}`"
+                    v-model="scriptureBold"
                   ></v-switch>
                 </v-container>
               </v-card-text>
+
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn small @click="menu = false">OK</v-btn>
+              </v-card-actions>
             </v-card>
           </v-tab-item>
+
 
           <v-tab-item>
             <v-card flat>
@@ -154,12 +156,17 @@
         radioGroup: 1,
         switch1: true,
         checkbox: true,
+
         lyricsFontSize: 35,
         lyricsTitleFontSize: 50,
         lyricsTitleItalic: null,
         lyricsTitleBold: null,
         lyricsItalic: null,
         lyricsBold: null,
+
+        scriptureFontSize: 35,
+        scriptureItalic: null,
+        scriptureBold: null,
       }
     },
 
@@ -170,6 +177,10 @@
     },
 
     mounted () {
+      this.scriptureFontSize = this.presentation.scriptureFont.size
+      this.scriptureBold = this.presentation.scriptureFont.bold === 'bold'
+      this.scriptureItalic = (this.presentation.scriptureFont.italic === 'italic')
+
       this.lyricsFontSize = this.presentation.lyricsFont.size
       this.lyricsTitleFontSize = this.presentation.lyricsFont.titleSize
       this.lyricsBold = this.presentation.lyricsFont.bold === 'bold'
@@ -197,6 +208,16 @@
       lyricsTitleItalic (val) {
         this.$store.commit('setLyricsFont', {lyricsTitleItalic: val ? 'italic' : 'normal'})
       },
+
+      scriptureFontSize (val) {
+        this.$store.commit('setScriptureFont', {scriptureFontSize: val})
+      },
+      scriptureBold (val) {
+        this.$store.commit('setScriptureFont', {scriptureBold: val ? 'bold' : 'normal'})
+      },
+      scriptureItalic (val) {
+        this.$store.commit('setScriptureFont', {scriptureItalic: val ? 'italic' : 'normal'})
+      }
     }
   }
 </script>

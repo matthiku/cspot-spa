@@ -3,7 +3,7 @@
 
       <!-- slide with just the song title -->
       <h3 class="presentation-slide"
-          v-bind:style="lyricsTitleStyle"
+          :style="lyricsTitleStyle"
           :class="[firstSlide, slideClass]"
         >{{ item.title }}</h3>
 

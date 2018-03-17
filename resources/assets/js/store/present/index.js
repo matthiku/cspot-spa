@@ -3,12 +3,12 @@ export default {
     presentation: {
       versesPerSlide: 5,
       lyricsFont: {
-        size: 25,
-        bold: false,
-        italics: false,
+        size: 35,
+        bold: 'bold',
+        italics: 'italics',
         titleSize: 50,
-        titleBold: false,
-        titleItalics: false,
+        titleBold: 'bold',
+        titleItalics: 'italics',
       }
     }    
   },
@@ -23,7 +23,18 @@ export default {
       state.presentation.showSeqNo = payload.showSeqNo
     },
     setLyricsFont (state, payload) {
-      state.presentation.lyricsFont.size = payload.lyricsFontSize
+      if (payload.lyricsFontSize)
+        state.presentation.lyricsFont.size = payload.lyricsFontSize
+      if (payload.lyricsTitleFontSize)
+        state.presentation.lyricsFont.titleSize = payload.lyricsTitleFontSize
+      if (payload.lyricsBold)
+        state.presentation.lyricsFont.bold = payload.lyricsBold
+      if (payload.lyricsTitleBold)
+        state.presentation.lyricsFont.titleBold = payload.lyricsTitleBold
+      if (payload.lyricsItalics)
+        state.presentation.lyricsFont.italics = payload.lyricsItalics
+      if (payload.lyricsTitleItalics)
+        state.presentation.lyricsFont.titleItalics = payload.lyricsTitleItalics
       localStorage.setItem('lyricsFont', JSON.stringify(state.presentation.lyricsFont))
     }
   },

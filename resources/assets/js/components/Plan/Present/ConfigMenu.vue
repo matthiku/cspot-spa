@@ -8,42 +8,47 @@
       <v-btn icon dark slot="activator">
         <v-tooltip top>
           <v-icon slot="activator">text_format</v-icon>
-          <span>configuration menu</span>
+          <span>configuration</span>
         </v-tooltip>
       </v-btn>
 
       <v-card dark>
 
         <v-tabs
+            v-model="active"
             dark color="black"
             slider-color="yellow"
             show-arrows
           >
+          <v-tab ripple>Lyrics Title</v-tab>
+
           <v-tab ripple>Lyrics</v-tab>
 
           <v-tab ripple>Scripture</v-tab>
 
           <v-tab ripple>Generic</v-tab>
+        </v-tabs>
 
 
-          <!-- LYRICS configuration -->
+        <v-tabs-items
+            v-model="active">
+
+          <!-- LYRICS TITLE configuration -->
           <v-tab-item>
             <v-card flat>
               <v-card-text>
                 <v-container fluid px-0>
-                  <h4 class="mt-0 pt-0">Lyrics font configuration</h4>
-
-                  Size: <v-chip outline>{{ lyricsFontSize }}</v-chip>
-                  <v-slider class="ma-0 pa-0" v-model="lyricsFontSize" min="15" max="70"></v-slider>
+                  Size: <v-chip outline>{{ lyricsTitleFontSize }}</v-chip>
+                  <v-slider class="ma-0 pa-0" v-model="lyricsTitleFontSize" min="15" max="70"></v-slider>
 
                   <v-switch
                     :label="`Italics: ${switch1.toString()}`"
-                    v-model="switch1"
+                    v-model="lyricsTitleItalics"
                   ></v-switch>
 
                   <v-switch
                     :label="`Bold: ${switch1.toString()}`"
-                    v-model="switch1"
+                    v-model="lyricsTitleBold"
                   ></v-switch>
                 </v-container>
               </v-card-text>
@@ -56,6 +61,33 @@
           </v-tab-item>
 
 
+          <!-- LYRICS configuration -->
+          <v-tab-item>
+            <v-card flat>
+              <v-card-text>
+                <v-container fluid px-0>
+                  Size: <v-chip outline>{{ lyricsFontSize }}</v-chip>
+                  <v-slider class="ma-0 pa-0" v-model="lyricsFontSize" min="15" max="70"></v-slider>
+
+                  <v-switch
+                    :label="`Italics: ${switch1.toString()}`"
+                    v-model="lyricsItalics"
+                  ></v-switch>
+
+                  <v-switch
+                    :label="`Bold: ${switch1.toString()}`"
+                    v-model="lyricsBold"
+                  ></v-switch>
+                </v-container>
+              </v-card-text>
+
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn small @click="menu = false">OK</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-tab-item>
+
           <v-tab-item>
             <v-card flat>
               <v-card-text>
@@ -105,7 +137,8 @@
               </v-card-text>
             </v-card>
           </v-tab-item>
-        </v-tabs>
+
+        </v-tabs-items>
 
       </v-card>
     </v-menu>
@@ -138,12 +171,32 @@
 
     mounted () {
       this.lyricsFontSize = this.presentation.lyricsFont.size
+      this.lyricsTitleFontSize = this.presentation.lyricsFont.titleSize
+      this.lyricsBold = this.presentation.lyricsFont.bold === 'bold'
+      this.lyricsTitleBold = this.presentation.lyricsFont.titleBold === 'bold'
+      this.lyricsItalics = (this.presentation.lyricsFont.italics === 'italics')
+      this.lyricsTitleItalics = (this.presentation.lyricsFont.titleItalics === 'italics')
     },
 
     watch: {
       lyricsFontSize (val) {
         this.$store.commit('setLyricsFont', {lyricsFontSize: val})
-      }
+      },
+      lyricsTitleFontSize (val) {
+        this.$store.commit('setLyricsFont', {lyricsTitleFontSize: val})
+      },
+      lyricsBold (val) {
+        this.$store.commit('setLyricsFont', {lyricsBold: val})
+      },
+      lyricsTitleBold (val) {
+        this.$store.commit('setLyricsFont', {lyricsTitleBold: val})
+      },
+      lyricsItalics (val) {
+        this.$store.commit('setLyricsFont', {lyricsItalics: val ? 'italics' : 'normal'})
+      },
+      lyricsTitleItalics (val) {
+        this.$store.commit('setLyricsFont', {lyricsTitleItalics: val ? 'italics' : 'normal'})
+      },
     }
   }
 </script>

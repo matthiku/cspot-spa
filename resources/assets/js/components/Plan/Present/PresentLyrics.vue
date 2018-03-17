@@ -3,7 +3,7 @@
 
       <!-- slide with just the song title -->
       <h3 class="presentation-slide"
-          v-bind:style="{fontSize: presentation.lyricsFont.size + 'px'}"
+          v-bind:style="lyricsTitleStyle"
           :class="[firstSlide, slideClass]"
         >{{ item.title }}</h3>
 
@@ -16,7 +16,7 @@
         <div v-for="(line, index) in part"
             :key="index"
             class="lyrics-line"
-            v-bind:style="{fontSize: presentation.lyricsFont.size + 'px'}"
+            :style="lyricsStyle"
           >
           <!-- check if we need to only draw a horiz. line -->
           <hr v-if="line === '<hr>'">
@@ -68,6 +68,20 @@ export default {
     },
     firstSlide () {
       return this.presentation.showSeqNo === this.item.seqNo ? '' : 'hidden'
+    },
+    lyricsStyle () {
+      return {
+        fontSize: this.presentation.lyricsFont.size + 'px',
+        fontStyle: this.presentation.lyricsFont.italics,
+        fontWeight: this.presentation.lyricsFont.bold
+      }
+    },
+    lyricsTitleStyle () {
+      return {
+        fontSize: this.presentation.lyricsFont.titleSize + 'px',
+        fontStyle: this.presentation.lyricsFont.titleItalics,
+        fontWeight: this.presentation.lyricsFont.titleBold
+      }
     }
   },
 

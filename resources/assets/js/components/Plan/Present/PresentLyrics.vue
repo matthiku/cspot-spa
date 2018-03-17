@@ -3,6 +3,7 @@
 
       <!-- slide with just the song title -->
       <h3 class="presentation-slide"
+          v-bind:style="{fontSize: presentation.lyricsFont.size + 'px'}"
           :class="[firstSlide, slideClass]"
         >{{ item.title }}</h3>
 
@@ -15,6 +16,7 @@
         <div v-for="(line, index) in part"
             :key="index"
             class="lyrics-line"
+            v-bind:style="{fontSize: presentation.lyricsFont.size + 'px'}"
           >
           <!-- check if we need to only draw a horiz. line -->
           <hr v-if="line === '<hr>'">
@@ -70,9 +72,11 @@ export default {
   },
 
   methods: {
+
     removeRegion2 (line) {
       return line.replace(/^\[region\s*2\]/i, '')
     },
+
     lineIsRegionTwo (line) {
       // search for "REGION 2" in the text line (with or without the space character)
       var patt = /^\[region\s*2\]/i
@@ -81,6 +85,7 @@ export default {
       }
       return false
     },
+
     isLyricsHeader (line) {
       var patt = /\[region\s*2\]/i
       if (patt.test(line)) return false
@@ -88,6 +93,7 @@ export default {
       if (patt.test(line)) return true
       return false
     },
+
     /**
      * Looks for singing instructions at the beginning of the line indicated by simple brackets (xyz) 
      * 
@@ -102,6 +108,7 @@ export default {
       strings[0] = strings[0] + ')'
       return strings
     },
+
     /**
      * @description: Create single slides from a block of text (multiple lines) 
      *               with emptly lines as separators     *
@@ -144,8 +151,8 @@ export default {
 
   mounted () {
     if (!this.item) return
-    let parts
 
+    let parts
     // if song has OnSong data, it needs to be prepared accordingly, provided we also have the helper data
     if (this.item.onsongs && Object.keys(this.item.onsongs) && Object.keys(this.songParts) && this.item.sequence) {
       /*

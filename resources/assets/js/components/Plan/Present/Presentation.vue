@@ -98,16 +98,21 @@ export default {
     // ... and the plan contains action items!
     if (this.plan && (!this.plan.hasOwnProperty('actionList') || !this.plan.actionList.length)) {
       this.$store.commit('setError', 'Cannot present, this plan has no actions!')
-      this.$router.go(-1) // go back to previous page
+      this.exitPresentation()
       return
     }
-
     // remove the scrollbar on the right side
     let page = document.getElementsByTagName('html')[0]
     page.style.overflowY = 'hidden'
   },
 
   mounted () {
+    // plan has items, but none of them are 'showable'
+    if (!this.itemId && !this.firstVisibleItem) {
+      console.warn('no showable items found in this plan')
+      return
+    }
+
     // start with the seqNo provided in the URL param or with the first showable item if omitted
     this.setPresentationSlide(this.itemId || this.firstVisibleItem.seqNo)
 

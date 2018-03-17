@@ -1,14 +1,17 @@
 <template>
     <v-footer dark fixed>
 
-      {{ time }}
+      <v-chip outline color="primary">{{ time }}</v-chip>
+
       <config-menu></config-menu>
+      after left
 
       <v-spacer></v-spacer>
 
+      before center
       <span v-if="currentItemSeqNo">
         {{ currentItem.title }}
-        <v-tooltip top>
+        <v-tooltip right>
           <small 
               v-if="nextItem"
               @click="goNext"
@@ -19,10 +22,11 @@
           <span>click to go to this item</span>
         </v-tooltip>
       </span>
+      after center
 
       <v-spacer></v-spacer>
 
-      besides right
+      before right
 
       <jump-menu
           :plan="plan"

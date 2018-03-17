@@ -8,9 +8,6 @@ export default {
     filteredPlans: [],
     plansUpdatedAt: null,
     planUpdatedAt: null,
-    presentation: {
-      versesPerSlide: 5
-    },
     apiBibleBooks: null,
     apiBibleChapters: null,
     apiBibleVerses: null,
@@ -26,13 +23,6 @@ export default {
   mutations: {
     setPlan(state, payload) {
       state.plan = payload
-    },
-
-    setPresentation(state, payload) {
-      state.presentation = payload
-    },
-    setPresentationSlide(state, payload) {
-      state.presentation.showSeqNo = payload.showSeqNo
     },
 
     addPlan(state, payload) {
@@ -501,13 +491,6 @@ export default {
   getters: {
     newPlanId(state) {
       return state.newPlanId
-    },
-
-    presentation (state) {
-      if (localStorage.getItem('versesPerSlide')) {
-        state.presentation.versesPerSlide = localStorage.getItem('versesPerSlide')
-      }
-      return state.presentation
     },
 
     plans(state) {

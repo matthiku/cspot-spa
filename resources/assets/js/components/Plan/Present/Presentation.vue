@@ -5,7 +5,7 @@
       class="text-xs-center light-blue--text text--lighten-5 presentation-space pa-0"
     >
 
-    <div v-for="item in plan.actionList" :key="item.seqNo"
+    <div v-for="item in actionList" :key="item.seqNo"
 
         v-if="item.type==='song' || item.type==='read'"
 

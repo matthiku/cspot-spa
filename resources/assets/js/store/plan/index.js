@@ -134,23 +134,29 @@ export default {
       /*
         first check if data was meanwhile updated on the backend
       */
-      axios.get(`/api/plan/${payload.planId}/latest`).then(data => {
-        let updateDate = data.data.date
-        let oldDate = state.planUpdatedAt
-        commit('setPlanUpdateDate', updateDate)
-        /* 
-          only request a new copy from the backend if the data has changed
-        */
-        if (oldDate !== updateDate || !(state.plan instanceof Object)) {
-          axios
-            .get(`/api/plan/${payload.planId}`)
-            .then(data => {
-              // first 'empty' the plan in the store to make sure we do have just the updated plan!
-              commit('setPlan', {})
-              dispatch('setSinglePlan', data.data)
-            })
-            .catch(error => console.warn(error))
-        }
+      return new Promise((resolve, reject) => {
+        axios.get(`/api/plan/${payload.planId}/latest`).then(data => {
+          let updateDate = data.data.date
+          let oldDate = state.planUpdatedAt
+          commit('setPlanUpdateDate', updateDate)
+          /* 
+            only request a new copy from the backend if the data has changed
+          */
+          if (oldDate !== updateDate || !(state.plan instanceof Object)) {
+            axios
+              .get(`/api/plan/${payload.planId}`)
+              .then(data => {
+                // first 'empty' the plan in the store to make sure we do have just the updated plan!
+                commit('setPlan', {})
+                dispatch('setSinglePlan', data.data)
+                resolve()
+              })
+              .catch(error => {
+                console.warn(error)
+                reject()
+              })
+          }
+        })
       })
     },
 
@@ -293,11 +299,13 @@ export default {
         axios
           .post(`/api/plan/${payload.planId}/item`, newObj)
           .then(data => {
-            dispatch('reloadPlan', payload)
             commit('appendMessage', '"' + payload.type + '" added to this plan')
             dispatch('refreshPlans', 'init') // make sure the plans list will be updated also
-            commit('setLoading', false)
-            resolve()
+            dispatch('reloadPlan', payload)
+              .then(() => {
+                commit('setLoading', false)
+                resolve()  // only resolve once the plan has been reloaded from the backend
+              })
           })
           .catch(error => {
             dispatch('errorHandling', error)

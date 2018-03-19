@@ -5,13 +5,15 @@
       <v-chip outline color="primary">{{ time }}</v-chip>
 
       <config-menu></config-menu>
+
+      {{ actionList.length }}
+
+      <v-spacer></v-spacer>
       
       <v-icon
           @click="goPrevItem"
           class="cursor-pointer"
         >fast_rewind</v-icon>
-
-      <v-spacer></v-spacer>
 
       <v-icon
           @click="goPrevSlide"
@@ -20,7 +22,7 @@
 
 
       <!-- show current item title -->
-      <span v-if="currentItemSeqNo" class="text-xs-right">
+      <span v-if="currentItemSeqNo">
         {{ currentItem.title }}
         <v-icon
             @click="goNextSlide"
@@ -28,20 +30,22 @@
           >keyboard_arrow_right</v-icon>
       </span>
 
+      <v-icon
+          @click="goNextItem"
+          class="cursor-pointer"
+        >fast_forward</v-icon>
+
 
       <v-spacer></v-spacer>
 
       <!-- show title of next item -->
-      <v-tooltip right v-if="currentItemSeqNo">
-        <small 
-            v-if="nextItem"
-            @click="goNextItem"
-            slot="activator"
-            class="grey--text cursor-pointer"
-          >NEXT:&nbsp;{{ nextItem.title }}
-        </small>
-        <span>click to go to this item</span>
-      </v-tooltip>
+      <small 
+          v-if="nextItem"
+          @click="goNextItem"
+          slot="activator"
+          class="grey--text cursor-pointer"
+        >NEXT:&nbsp;{{ nextItem.title }}
+      </small>
 
 
       <!-- add plan activity items -->
@@ -64,12 +68,6 @@
           :currentItemSeqNo="currentItemSeqNo"
           v-on:keyPressed="keyPressed"
         ></jump-menu>
-
-
-      <v-icon
-          @click="goNextItem"
-          class="cursor-pointer"
-        >fast_forward</v-icon>
 
     </v-footer>  
 
@@ -112,11 +110,12 @@ export default {
         this.$store.dispatch('addActionItemToPlan', {
           planId: this.plan.id,
           type: 'read',
-          seqNo: this.currentItemSeqNo + 0.5,
+          seqNo: this.currentItemSeqNo,
           value: val.value
         })
         .then(result => {
-          console.log(result)
+          console.log('scripture item added', this.actionList)
+          this.goNextItem()
         })
       }
     }
@@ -130,11 +129,11 @@ export default {
 
     currentItem () {
       // get the item for the plan action list with the current seq. number
-      return this.plan.actionList.find(item => item.seqNo === this.currentItemSeqNo)
+      return this.actionList.find(item => item.seqNo === this.currentItemSeqNo)
     },
 
     nextItem () {
-      return this.plan.actionList.find(
+      return this.actionList.find(
         item => item.seqNo > this.currentItemSeqNo && item.type !== 'text' && !item.forLeadersEyesOnly
       )
     }
@@ -149,7 +148,6 @@ export default {
     keyPressed (where) {
       this.$emit('keyPressed', where)
     },
-
     goNextItem () {
       this.keyPressed({code: 'go', where: this.currentItemSeqNo + 1})
     },

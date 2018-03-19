@@ -31,6 +31,9 @@ export default {
     plan() {
       return this.$store.state.plan.plan
     },
+    actionList() {
+      return this.plan.actionList || []
+    },
     presentation() {
       return this.$store.getters.presentation
     },
@@ -93,7 +96,7 @@ export default {
           console.log('reloading songParts!', Object.keys(this.songParts))
           this.$store.dispatch('loadSongParts')
         }
-      }, 500);
+      }, 500)
     }
   }
 }

@@ -47,7 +47,7 @@
                       }"
                     class="strong white-space-normal py-1 pr-1"
                   >
-                  <!-- ({{ item.seqNo }}) -->
+                  ({{ item.seqNo }})
                   <v-tooltip bottom lazy offset-overflow v-if="item.type!=='text'">
                     <span slot="activator">{{ item.title }}</span>
                     <pre v-if="item.type==='song'">{{ item.lyrics }}</pre>
@@ -183,9 +183,6 @@
       activitiesCount () {
         if (!this.plan || !this.plan.actionList) return 0
         return this.plan.actionList.length
-      },
-      actionList () {
-        return this.plan.actionList || []
       }
     },
 
@@ -291,7 +288,7 @@
           // change the seqNo of the dragged Activity so that it comes AFTER the target Activity
           this.changeSeqNo(end, 1 * parseFloat(end) + 0.5)
           this.changeSeqNo(start, parseFloat(end) - 0.1)
-          this.correctAllSeqNos()
+          // this.correctAllSeqNos()
         }
       },
       // modify the target id (seqNo) when the dragging goes over an Plan Activity
@@ -360,39 +357,6 @@
           }
         })
       },
-      correctAllSeqNos () {
-        // first, sort the array again with the new, intermediate seqNos
-        this.sortActionList()
-        // now change the seqNo into integers again
-        this.$store.commit('setLoading', true)
-        let idx = 1
-        this.actionList.forEach((elem) => {
-          let oldSeqNo = elem.seqNo
-          // correct the seqNo
-          elem.seqNo = idx++
-          // report the change back to the backend DB
-          if (oldSeqNo !== elem.seqNo) {
-            // console.log('seqNo has changed', oldSeqNo, elem.seqNo)
-            let obj = {
-              planId: this.plan.id,
-              actionId: elem.key,
-              field: 'seq_no',
-              newValue: elem.seqNo
-            }
-            this.$store.dispatch('updateActionItem', obj)
-              .then(() => {
-                // after the last action, make sure we update the local data
-                if (idx >= this.actionList.length) {
-                  this.$store.commit('setMessage', 'Plan Activities sequence updated.')
-                  this.$store.commit('setLoading', false)
-                }
-              })
-          }
-          if (idx >= this.actionList.length) {
-            this.$store.commit('setLoading', false)
-          }
-        })
-      },
 
       getScriptureRefText (label) {
         let lblArr = label.split(';')
@@ -426,11 +390,7 @@
           value: id
         })
         this.$store.commit('showDialog')
-      },
-
-      sortActionList () {
-        this.plan.actionList = this.actionList.sort((elemA, elemB) => elemA.seqNo - elemB.seqNo)
-      },
+      }
     },
 
     created () {
@@ -465,7 +425,7 @@
             this.insertBefore += 1
             this.needToMove = true // trigger the move of the indicator after the re-render
           }
-          this.correctAllSeqNos()
+          // this.correctAllSeqNos() // will be done in the backend
           this.oldActionListCount = this.activitiesCount
         }
       }

@@ -52,12 +52,19 @@ export default {
     }
   },
 
+  watch: {
+    plan () {
+      this.createMenu() // re-create the menu when plan is changed
+    }
+  },
+
   mounted () {
     this.createMenu() // create the presentation navigation menu
   },
 
   methods: {
     createMenu () {
+      this.menuItems = []
       this.plan.actionList.forEach(item => {
         if (item.type !== 'text' && !item.forLeadersEyesOnly)
           this.menuItems.push({ 

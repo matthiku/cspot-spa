@@ -1,6 +1,9 @@
 <template>
   <v-layout row justify-center>
-    <v-dialog v-model="scriptureDialog" max-width="700">
+    <v-dialog 
+        v-model="scriptureDialog"
+        ref="addScriptureDialog"
+        max-width="700">
 
       <v-card :dark="dark" v-if="apiBibleBooks instanceof Array">
 

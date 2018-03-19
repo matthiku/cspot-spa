@@ -6,8 +6,6 @@
 
       <config-menu></config-menu>
 
-      {{ actionList.length }}
-
       <v-spacer></v-spacer>
       
       <v-icon
@@ -49,17 +47,7 @@
 
 
       <!-- add plan activity items -->
-      <v-menu dark bottom offset-y>
-        <v-btn fab small slot="activator"><v-icon>add_circle</v-icon></v-btn>
-        <v-list>
-          <v-list-tile @click="addScripture">
-            <v-list-tile-title>Scripture Ref.</v-list-tile-title>
-          </v-list-tile>
-          <v-list-tile @click="addSong">
-            <v-list-tile-title>Song</v-list-tile-title>
-          </v-list-tile>
-        </v-list>
-      </v-menu>
+      <add-action-items></add-action-items>
 
       
       <!-- show menu to jump to other plan activity items -->
@@ -80,6 +68,7 @@
 <script>
 import jumpMenu from './JumpMenu'
 import configMenu from './ConfigMenu'
+import addActionItems from './AddActionItems'
 
 import genericMixins from '../../../mixins/'
 import planMixins from '../mixins'
@@ -87,7 +76,7 @@ import planMixins from '../mixins'
 export default {
   mixins: [genericMixins, planMixins],
 
-  components: { configMenu, jumpMenu },
+  components: { configMenu, jumpMenu, addActionItems },
 
   props: ['currentItemSeqNo', 'currentSlideNo'],
 
@@ -164,6 +153,13 @@ export default {
     addScripture () {
       // show dialog to select scripture
       this.$store.commit('setDialog', {field: 'scriptureDlg', dark: true})
+      let dlg = this.$refs.addScriptureDialog || this.$refs.dialog
+      console.log(this.$refs)
+      if (dlg) {
+        console.log(dlg)
+        dlg.style.position = 'absolute'
+        dlg.style.top = window.innerHeight - dlg.offsetHeight
+      }
       this.$store.commit('showDialog')
     },
     addSong () {

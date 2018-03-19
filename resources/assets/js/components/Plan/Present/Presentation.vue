@@ -153,6 +153,8 @@ export default {
       }
       if (event.code === 'go') {
         if (event.where === 'back') this.exitPresentation()
+        if (event.where === 'nextSlide') this.showNext()
+        if (event.where === 'prevSlide') this.showNext(-1)
         if (!isNaN(event.where)) this.gotoThisSlide(event.where)
       }
       //TODO: NumpadAdd/NumpadSubtract -> increase/decrease font size, Minus, ...

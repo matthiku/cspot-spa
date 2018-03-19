@@ -1,42 +1,81 @@
 <template>
+  <span>
     <v-footer dark fixed>
 
       <v-chip outline color="primary">{{ time }}</v-chip>
 
       <config-menu></config-menu>
-      after left
+      
+      <v-icon
+          @click="goPrevItem"
+          class="cursor-pointer"
+        >fast_rewind</v-icon>
 
       <v-spacer></v-spacer>
 
-      before center
-      <span v-if="currentItemSeqNo">
+      <v-icon
+          @click="goPrevSlide"
+          class="cursor-pointer"
+        >keyboard_arrow_left</v-icon>
+
+
+      <!-- show current item title -->
+      <span v-if="currentItemSeqNo" class="text-xs-right">
         {{ currentItem.title }}
-        <v-tooltip right>
-          <small 
-              v-if="nextItem"
-              @click="goNext"
-              slot="activator"
-              class="grey--text cursor-pointer"
-            >NEXT:&nbsp;{{ nextItem.title }}
-          </small>
-          <span>click to go to this item</span>
-        </v-tooltip>
+        <v-icon
+            @click="goNextSlide"
+            class="cursor-pointer"
+          >keyboard_arrow_right</v-icon>
       </span>
-      after center
+
 
       <v-spacer></v-spacer>
 
-      before right
+      <!-- show title of next item -->
+      <v-tooltip right v-if="currentItemSeqNo">
+        <small 
+            v-if="nextItem"
+            @click="goNextItem"
+            slot="activator"
+            class="grey--text cursor-pointer"
+          >NEXT:&nbsp;{{ nextItem.title }}
+        </small>
+        <span>click to go to this item</span>
+      </v-tooltip>
 
+
+      <!-- add plan activity items -->
+      <v-menu dark bottom offset-y>
+        <v-btn fab small slot="activator"><v-icon>add_circle</v-icon></v-btn>
+        <v-list>
+          <v-list-tile @click="addScripture">
+            <v-list-tile-title>Scripture Ref.</v-list-tile-title>
+          </v-list-tile>
+          <v-list-tile @click="addSong">
+            <v-list-tile-title>Song</v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
+
+      
+      <!-- show menu to jump to other plan activity items -->
       <jump-menu
           :plan="plan"
           :currentItemSeqNo="currentItemSeqNo"
           v-on:keyPressed="keyPressed"
         ></jump-menu>
 
-      right
+
+      <v-icon
+          @click="goNextItem"
+          class="cursor-pointer"
+        >fast_forward</v-icon>
 
     </v-footer>  
+
+    <app-edit-plan-action-scripture-dialog></app-edit-plan-action-scripture-dialog>
+
+  </span>
 </template>
 
 
@@ -66,14 +105,34 @@ export default {
     },
     currentItemSeqNo (val) {
       // console.log('currentItem', val)
+    },
+    dialog (val) {
+      // watch if user added a new scripture ref via the dialog
+      if (val.field === 'scriptureRef' && val.value) {
+        this.$store.dispatch('addActionItemToPlan', {
+          planId: this.plan.id,
+          type: 'read',
+          seqNo: this.currentItemSeqNo + 0.5,
+          value: val.value
+        })
+        .then(result => {
+          console.log(result)
+        })
+      }
     }
   },
 
   computed: {
+    userOwnsThisPlan () {
+      if (this.userIsAdmin) return true
+      return this.userOwnsPlan(this.plan)
+    },
+
     currentItem () {
       // get the item for the plan action list with the current seq. number
       return this.plan.actionList.find(item => item.seqNo === this.currentItemSeqNo)
     },
+
     nextItem () {
       return this.plan.actionList.find(
         item => item.seqNo > this.currentItemSeqNo && item.type !== 'text' && !item.forLeadersEyesOnly
@@ -91,8 +150,26 @@ export default {
       this.$emit('keyPressed', where)
     },
 
-    goNext () {
+    goNextItem () {
       this.keyPressed({code: 'go', where: this.currentItemSeqNo + 1})
+    },
+    goPrevItem () {
+      this.keyPressed({code: 'go', where: this.currentItemSeqNo - 1})
+    },
+    goNextSlide () {
+      this.keyPressed({code: 'go', where: 'nextSlide'})
+    },
+    goPrevSlide () {
+      this.keyPressed({code: 'go', where: 'prevSlide'})
+    },
+
+    addScripture () {
+      // show dialog to select scripture
+      this.$store.commit('setDialog', {field: 'scriptureDlg', dark: true})
+      this.$store.commit('showDialog')
+    },
+    addSong () {
+      // show dialog to select a song
     },
 
     updateTimer () {

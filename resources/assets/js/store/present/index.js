@@ -24,9 +24,11 @@ export default {
     setPresentation (state, payload) {
       state.presentation = payload
     },
+
     setPresentationSlide (state, payload) {
       state.presentation.showSeqNo = payload.showSeqNo
     },
+
     setLyricsFont (state, payload) {
       if (payload.lyricsFontSize)
         state.presentation.lyricsFont.size = payload.lyricsFontSize
@@ -42,6 +44,7 @@ export default {
         state.presentation.lyricsFont.titleItalic = payload.lyricsTitleItalic
       localStorage.setItem('lyricsFont', JSON.stringify(state.presentation.lyricsFont))
     },
+
     setScriptureFont (state, payload) {
       if (payload.scriptureFontSize)
         state.presentation.scriptureFont.size = payload.scriptureFontSize

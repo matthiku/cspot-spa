@@ -2,7 +2,7 @@
   <v-layout row justify-center>
     <v-dialog v-model="scriptureDialog" max-width="700">
 
-      <v-card v-if="apiBibleBooks instanceof Array">
+      <v-card :dark="dark" v-if="apiBibleBooks instanceof Array">
 
         <v-card-title class="headline">
           Select a Scripture Reference: &nbsp;
@@ -16,7 +16,8 @@
               <v-flex xs8 sm6 md4>
                 <v-select label="Book" ref="book"
                     v-model="book" 
-                    :items="apiBibleBooks" 
+                    :items="apiBibleBooks"
+                    :dark="dark"
                     hint="Select the book"
                     autofocus
                     autocomplete
@@ -30,6 +31,7 @@
                     v-model="chapter"
                     :disabled="!book"
                     :items="dialogValues.chapters"
+                    :dark="dark"
                     autocomplete
                     hint="Select the chapter"
                     required></v-select>
@@ -40,6 +42,7 @@
                     v-model="verse_from"
                     :disabled="!chapter"
                     :items="dialogValues.verses"
+                    :dark="dark"
                     autocomplete
                     hint="Select the Start Verse"></v-select>
               </v-flex>
@@ -49,6 +52,7 @@
                     v-model="verse_to"
                     :disabled="!chapter"
                     :items="dialogValues.verses_to"
+                    :dark="dark"
                     autocomplete
                     hint="Select the End Verse"></v-select>
               </v-flex>
@@ -58,6 +62,7 @@
                     v-model="version"
                     :disabled="!chapter"
                     :items="dialogValues.versions"
+                    :dark="dark"
                     autocomplete
                     @keyup.enter="submit"
                     hint="Select the Bible Version"></v-select>
@@ -88,6 +93,7 @@ export default {
   data () {
     return {
       scriptureDialog: false,
+      dark: false,
       focus: false,
       book: '',
       chapter: 0,
@@ -167,6 +173,7 @@ export default {
     },
     dialogShow () {
       if (this.dialog.field === 'scriptureDlg') {
+        if (this.dialog.dark) this.dark = true
         this.book = ''
         this.scriptureDialog = true
         this.$store.dispatch('setDialog', {field: ''})

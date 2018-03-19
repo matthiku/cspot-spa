@@ -283,21 +283,27 @@ export default {
         )
         return
       }
-      commit('setLoading', true)
-      const newObj = {
-        value: payload.value,
-        type: payload.type,
-        seqNo: payload.seqNo
-      }
-      axios
-        .post(`/api/plan/${payload.planId}/item`, newObj)
-        .then(data => {
-          dispatch('reloadPlan', payload)
-          commit('appendMessage', '"' + payload.type + '" added to this plan')
-          dispatch('refreshPlans', 'init') // make sure the plans list will be updated also
-          commit('setLoading', false)
-        })
-        .catch(error => dispatch('errorHandling', error))
+      return new Promise((resolve, reject) => {
+        commit('setLoading', true)
+        const newObj = {
+          value: payload.value,
+          type: payload.type,
+          seqNo: payload.seqNo
+        }
+        axios
+          .post(`/api/plan/${payload.planId}/item`, newObj)
+          .then(data => {
+            dispatch('reloadPlan', payload)
+            commit('appendMessage', '"' + payload.type + '" added to this plan')
+            dispatch('refreshPlans', 'init') // make sure the plans list will be updated also
+            commit('setLoading', false)
+            resolve()
+          })
+          .catch(error => {
+            dispatch('errorHandling', error)
+            reject()
+          })
+      })
     },
 
     updateActionItem({ rootState, commit, dispatch }, payload) {

@@ -157,7 +157,7 @@ export default {
           console.log('SONGS: populating Vuex state from localStorage')
           state.songs = songs
         }
-        return songs
+        if (songs.length) return songs
       }
       return state.songs
     },

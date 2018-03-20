@@ -14,8 +14,9 @@ export default {
         size: 35,
         bold: 'normal',
         italic: 'normal'
-      }
-    }    
+      },
+      showFooter: true
+    }
   },
 
   // M U T A T I O N S  (commits)

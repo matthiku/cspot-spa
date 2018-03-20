@@ -1,6 +1,9 @@
 <template>
   <span>
-    <v-footer dark fixed>
+    <v-footer v-if="presentation.showFooter"    
+        dark fixed>
+
+      <v-btn icon  @click="presentation.showFooter = false">X</v-btn>
 
       <v-chip outline color="primary">{{ time }}</v-chip>
 
@@ -77,7 +80,11 @@
           v-on:keyPressed="keyPressed"
         ></jump-menu>
 
-    </v-footer>  
+    </v-footer>
+
+    <v-footer v-else>
+      <v-btn icon @click="presentation.showFooter = true">X</v-btn>
+    </v-footer>
 
   </span>
 </template>

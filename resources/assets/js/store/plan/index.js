@@ -145,7 +145,7 @@ export default {
         axios.get(`/api/plan/${payload.planId}/latest`).then(data => {
           let updateDate = data.data.date
           let oldDate = state.planUpdatedAt
-          console.log('reloadPlan:', oldDate, updateDate)
+          // console.log('reloadPlan:', oldDate, updateDate)
           commit('setPlanUpdateDate', updateDate)
           /* 
             only request a new copy from the backend if the data has changed
@@ -347,7 +347,7 @@ export default {
       axios
         .delete(`/api/plan/${payload.planId}/item/${payload.actionId}`)
         .then(data => {
-          console.log('removing action from plan', payload)
+          // console.log('removing action from plan', payload)
           dispatch('reloadPlan', payload)
           commit('appendMessage', 'Action removed from this plan')
           dispatch('refreshPlans', 'init') // make sure the plans list will be updated also

@@ -200,11 +200,11 @@ export default {
 
       // find the next (resp. previous) non-empty item but make sure we do not run this endlessly on an empty plan
       let slides
-      for (let index = 0; index < this.plan.actionList.length; index++) {
+      for (let index = 0; index <= this.plan.actionList.length; index++) {
         slides = document.getElementsByClassName('slides-seqno-' + seqNo)
         if (slides.length) break // next valid item found
         // debugger
-        console.log('SeqNo', seqNo, '- empty!', slides)
+        console.log('SeqNo', seqNo, '- empty! Actions count:', this.plan.actionList.length, this.actionList.length)
         seqNo += dir
         if (seqNo < 0) seqNo = this.plan.actionList.length -1
         if (seqNo > this.plan.actionList.length) seqNo = 0
@@ -233,8 +233,8 @@ export default {
 
       // get all slides of the currently shown sequence number (seqNo)
       let slides = this.getCurrentSlides(activeSeqNo, dir)
-      // console.log('SeqNo:', activeSeqNo, '- un-hide slide number', this.showSlideNo)
-      if (!slides.length) return
+      console.log('SeqNo:', activeSeqNo, '- un-hide slide number', this.showSlideNo)
+      if (!slides || !slides.length) return
 
       // have we reached beyond the BEGINNING of the current item?
       if (this.showSlideNo < 0) {
@@ -243,7 +243,7 @@ export default {
         this.setPresentationSlide(activeSeqNo)
         slides = this.getCurrentSlides(activeSeqNo, dir)
         this.showSlideNo = slides.length -1
-        // console.log('SeqNo:', activeSeqNo, '- showing PREVIOUS item, Slide number', this.showSlideNo)
+        console.log('SeqNo:', activeSeqNo, '- showing PREVIOUS item, Slide number', this.showSlideNo)
       }
 
       // have we reached the END of the current item?
@@ -253,14 +253,14 @@ export default {
         this.setPresentationSlide(activeSeqNo)
         slides = this.getCurrentSlides(activeSeqNo, dir)
         this.showSlideNo = 0
-        // console.log('SeqNo:', activeSeqNo, '- showing NEXT item, Slide number:', this.showSlideNo)
+        console.log('SeqNo:', activeSeqNo, '- showing NEXT item, Slide number:', this.showSlideNo)
       }
 
       // look for the next slide to be shown and hide all others
       for (let index = 0; index < slides.length; index++) {
         const element = slides[index]
         if (index === this.showSlideNo) {
-          // console.log('showing element', element)
+          console.log('showing element', element)
           element.classList.remove('hidden')
         } else {
           element.classList.add('hidden')

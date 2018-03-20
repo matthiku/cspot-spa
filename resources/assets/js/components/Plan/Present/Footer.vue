@@ -36,23 +36,23 @@
 
       <v-spacer></v-spacer>
 
-      <!-- show title of next item -->
+      <!-- show title of NEXT item -->
       <small 
-          v-if="nextItem"
+          data-v-if="nextItem"
           @click="goNextItem"
           slot="activator"
           class="grey--text cursor-pointer"
-        >NEXT:&nbsp;{{ nextItem.title }}
+        >NEXT:&nbsp;{{ nextItem ? nextItem.title : 'n/f' }}
       </small>
 
 
-      <!-- add plan activity items -->
+      <!-- ADD plan activity items -->
       <add-action-items
           v-if="userOwnsThisPlan"
         ></add-action-items>
 
       
-      <!-- show menu to jump to other plan activity items -->
+      <!-- show menu to JUMP to other plan activity items -->
       <jump-menu
           :plan="plan"
           :currentItemSeqNo="currentItemSeqNo"
@@ -88,7 +88,7 @@ export default {
 
   watch: {
     dialog (val) {
-      console.log('dialog', val)
+      // console.log('dialog', val)
       // watch if user added a new scripture ref via the dialog
       if ((val.field === 'scriptureRef' || val.field === 'songSelected') && val.value) {
         this.$store.dispatch('addActionItemToPlan', {

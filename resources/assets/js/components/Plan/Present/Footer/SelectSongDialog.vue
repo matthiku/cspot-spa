@@ -76,8 +76,8 @@
 </template>
 
 <script>
-import genericMixins from '../../../mixins'
-import planMixins from '../mixins'
+import genericMixins from '../../../../mixins'
+import planMixins from '../../mixins'
 
 export default {
   mixins: [genericMixins, planMixins],

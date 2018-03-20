@@ -74,8 +74,8 @@ import jumpMenu from './JumpMenu'
 import configMenu from './ConfigMenu'
 import addActionItems from './AddActionItems'
 
-import genericMixins from '../../../mixins/'
-import planMixins from '../mixins'
+import genericMixins from '../../../../mixins/'
+import planMixins from '../../mixins'
 
 export default {
   mixins: [genericMixins, planMixins],

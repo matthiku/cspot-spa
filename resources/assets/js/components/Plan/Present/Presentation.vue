@@ -60,7 +60,7 @@
 
 <script>
 import presentationSpace from './PresentationSpace.vue'
-import presentationFooter from './Footer'
+import presentationFooter from './Footer/Footer'
 
 import genericMixins from '../../../mixins/'
 import planMixins from '../mixins'

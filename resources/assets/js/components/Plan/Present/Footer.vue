@@ -9,11 +9,13 @@
       <v-spacer></v-spacer>
       
       <v-icon
+          v-if="currentItem"
           @click="goPrevItem"
           class="cursor-pointer"
         >fast_rewind</v-icon>
 
       <v-icon
+          v-if="currentItem"
           @click="goPrevSlide"
           class="cursor-pointer"
         >keyboard_arrow_left</v-icon>
@@ -29,6 +31,7 @@
       </span>
 
       <v-icon
+          v-if="nextItem"
           @click="goNextItem"
           class="cursor-pointer"
         >fast_forward</v-icon>
@@ -38,7 +41,7 @@
 
       <!-- show title of NEXT item -->
       <small 
-          data-v-if="nextItem"
+          data-vif="nextItem"
           @click="goNextItem"
           slot="activator"
           class="grey--text cursor-pointer"
@@ -49,6 +52,7 @@
       <!-- ADD plan activity items -->
       <add-action-items
           v-if="userOwnsThisPlan"
+          :firstVisibleItem="firstVisibleItem"
         ></add-action-items>
 
       
@@ -78,7 +82,7 @@ export default {
 
   components: { configMenu, jumpMenu, addActionItems },
 
-  props: ['currentItemSeqNo', 'currentSlideNo'],
+  props: ['currentItemSeqNo', 'currentSlideNo', 'firstVisibleItem'],
 
   data () {
     return {
@@ -87,18 +91,21 @@ export default {
   },
 
   watch: {
+    // watch dialog to see if we need to save a newly selected song or reading
     dialog (val) {
       // console.log('dialog', val)
       // watch if user added a new scripture ref via the dialog
       if ((val.field === 'scriptureRef' || val.field === 'songSelected') && val.value) {
-        this.$store.dispatch('addActionItemToPlan', {
+        let obj = {
           planId: this.plan.id,
           type: val.field === 'scriptureRef' ? 'read' : 'song',
-          seqNo: this.currentItemSeqNo,
+          seqNo: this.currentItemSeqNo || this.actionList.length + 1,
           value: val.value
-        })
-        .then(result => {
-          this.goNextItem()
+        }
+        this.$store.dispatch('addActionItemToPlan', obj)
+        .then((data) => {
+          console.log(data.data, obj)
+          this.keyPressed({code: 'go', where: data.data.seqNo})
         })
       }
     }

@@ -3,12 +3,12 @@
     <v-menu
         bottom
         v-model="menu"
-        nudge-left="250"
+        nudge-left="200"
         nudge-top="50"
         :close-on-content-click="false"
       >
       <v-btn icon dark slot="activator">
-        <v-icon>playlist_add</v-icon>
+        <v-icon :color="firstVisibleItem ? '' : 'red'">playlist_add</v-icon>
       </v-btn>
 
       <app-edit-plan-action-scripture-dialog
@@ -35,6 +35,8 @@ import selectSongDialog from './SelectSongDialog'
 
 export default {
   components: { selectSongDialog },
+
+  props: ['firstVisibleItem'],
 
   data () {
     return {

@@ -308,7 +308,7 @@ export default {
           dispatch('refreshPlans', 'init') // make sure the plans list will be updated also
           dispatch('reloadPlan', payload).then(() => {
             commit('setLoading', false)
-            resolve() // only resolve once the plan has been reloaded from the backend
+            resolve(data) // only resolve once the plan has been reloaded from the backend
           })
         })
       })

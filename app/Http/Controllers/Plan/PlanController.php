@@ -54,15 +54,32 @@ class PlanController extends Controller
 
     /**
      * Get date of latest change in the PLANS table
+     * 
+     * @param \Illuminate\Http\Request $request Request payload
+     * 
+     * @return \Illuminate\Http\Response
      */
-    public function latest()
+    public function latest(Request $request)
     {
         $latest = Plan::latest('updated_at')->first()->updated_at;
+
+        // the the date reported from the frontend is older,
+        // we already return the full list of plans instead of a date!
+        if ($request->has('latest')) {
+            if (Carbon::parse($request->latest).ne($latest)) {
+                return $this->index();
+            }
+        }
+
         return response($latest, Response::HTTP_OK);
     }
     /** 
      * Get date of latest update to a single plan (including child relations)
-     */ 
+     * 
+     * @param \App\Models\Plan $plan plan entity
+     * 
+     * @return \Illuminate\Http\Response
+     */
     public function planLatest(Plan $plan)
     {
         $plan_date = $plan->updated_at;
@@ -90,7 +107,7 @@ class PlanController extends Controller
      * StorePlan handles the validation logic
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Plan  $plan
+     * @param  \App\Models\Plan          $plan
      * @return \Illuminate\Http\Response
      */
     public function show(Plan $plan)

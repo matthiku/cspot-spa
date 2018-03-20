@@ -50,7 +50,10 @@ export default {
       return this.$store.state.plan.scriptureRefs
     },
     activityColours() {
-      return this.$store.state.plan.activityColours
+      return this.$store.state.plan.activity.colours
+    },
+    activityIcons() {
+      return this.$store.state.plan.activity.icons
     }
   },
 

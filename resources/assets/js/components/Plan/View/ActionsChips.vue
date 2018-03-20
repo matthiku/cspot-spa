@@ -7,7 +7,7 @@
         class="plan-actions-title ma-0"
       ><v-tooltip bottom lazy>
         <span slot="activator">
-          <v-icon color="primary">record_voice_over</v-icon>
+          <v-icon color="primary">{{ activityIcons.song }}</v-icon>
           {{ songsCount }}
           song{{ songsCount > 1 ? 's' : ''}}
         </span>
@@ -21,7 +21,7 @@
         class="plan-actions-title ma-0"
       ><v-tooltip bottom lazy>
         <span slot="activator">      
-          <v-icon color="primary">menu</v-icon>
+          <v-icon color="primary">{{ activityIcons.text }}</v-icon>
           {{ othersCounts }} gen.item{{ othersCounts > 1 ? 's' : ''}}
         </span>
         <span>generic items</span>
@@ -35,7 +35,7 @@
         class="plan-actions-title ma-0"
       ><v-tooltip bottom lazy>
         <span slot="activator">
-          <v-icon color="primary">local_library</v-icon>
+          <v-icon color="primary">{{ activityIcons.read }}</v-icon>
           {{ scripturesCount }} reading{{ scripturesCount > 1 ? 's' : ''}}
         </span>
         <span>number of scripture readings</span>
@@ -60,6 +60,9 @@ export default {
     },
     scripturesCount () {
       return this.getCounter(this.plan.actionList, 'read')
+    },
+    activityIcons() {
+      return this.$store.state.plan.activity.icons
     },
     othersCounts () {
       return this.getCounter(this.plan.actionList, 'text')

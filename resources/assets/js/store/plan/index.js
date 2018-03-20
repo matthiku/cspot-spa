@@ -12,10 +12,17 @@ export default {
     apiBibleChapters: null,
     apiBibleVerses: null,
     scriptureRefs: {},
-    activityColours: {
-      song: 'indigo lighten-3',
-      read: 'cyan lighten-3',
-      text: 'lime darken-2'
+    activity: {
+      colours: {
+        song: 'indigo lighten-3',
+        read: 'cyan lighten-3',
+        text: 'lime darken-2'
+      },
+      icons: {
+        song: 'record_voice_over',
+        read: 'local_library',
+        text: 'label',
+      }
     }
   },
 
@@ -436,9 +443,7 @@ export default {
           }
           if (action.song_id) {
             obj.type = 'song'
-            obj.icon = 'record_voice_over'
             obj.value = action.song_id
-            obj.color = state.activityColours.song
             obj.title = action.song_id
             if (songs[action.song_id]) {
               obj.title = songs[action.song_id].title
@@ -450,8 +455,6 @@ export default {
             }
           } else if (action.comment && isScriptureRef) {
             obj.type = 'read'
-            obj.icon = 'local_library'
-            obj.color = 'cyan lighten-3'
             obj.title = action.comment
             let arBref = action.comment.split(';')
             arBref.forEach(bRef => {
@@ -459,10 +462,13 @@ export default {
             })
           } else {
             obj.type = 'text'
-            obj.icon = 'label'
-            obj.color = 'lime darken-2'
             obj.title = action.comment
           }
+          // assign the proper icon and colour depending on type
+          obj.color = state.activity.colours[obj.type]
+          obj.icon = state.activity.icons[obj.type]
+          
+          // add the finished object to the array
           actionList.push(obj)
         }
       }

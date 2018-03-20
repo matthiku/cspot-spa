@@ -20,7 +20,7 @@
 
 
       <!-- show current item title -->
-      <span v-if="currentItemSeqNo">
+      <span v-if="currentItemSeqNo && currentItem">
         {{ currentItem.title }}
         <v-icon
             @click="goNextSlide"
@@ -47,7 +47,9 @@
 
 
       <!-- add plan activity items -->
-      <add-action-items></add-action-items>
+      <add-action-items
+          v-if="userOwnsThisPlan"
+        ></add-action-items>
 
       
       <!-- show menu to jump to other plan activity items -->
@@ -58,8 +60,6 @@
         ></jump-menu>
 
     </v-footer>  
-
-    <app-edit-plan-action-scripture-dialog></app-edit-plan-action-scripture-dialog>
 
   </span>
 </template>
@@ -87,23 +87,17 @@ export default {
   },
 
   watch: {
-    currentSlideNo (val) {
-      // console.log('currentSlide', val)
-    },
-    currentItemSeqNo (val) {
-      // console.log('currentItem', val)
-    },
     dialog (val) {
+      console.log('dialog', val)
       // watch if user added a new scripture ref via the dialog
-      if (val.field === 'scriptureRef' && val.value) {
+      if ((val.field === 'scriptureRef' || val.field === 'songSelected') && val.value) {
         this.$store.dispatch('addActionItemToPlan', {
           planId: this.plan.id,
-          type: 'read',
+          type: val.field === 'scriptureRef' ? 'read' : 'song',
           seqNo: this.currentItemSeqNo,
           value: val.value
         })
         .then(result => {
-          console.log('scripture item added', this.actionList)
           this.goNextItem()
         })
       }
@@ -150,22 +144,6 @@ export default {
       this.keyPressed({code: 'go', where: 'prevSlide'})
     },
 
-    addScripture () {
-      // show dialog to select scripture
-      this.$store.commit('setDialog', {field: 'scriptureDlg', dark: true})
-      let dlg = this.$refs.addScriptureDialog || this.$refs.dialog
-      console.log(this.$refs)
-      if (dlg) {
-        console.log(dlg)
-        dlg.style.position = 'absolute'
-        dlg.style.top = window.innerHeight - dlg.offsetHeight
-      }
-      this.$store.commit('showDialog')
-    },
-    addSong () {
-      // show dialog to select a song
-    },
-
     updateTimer () {
       this.time = this.$moment().format('H:mm')
       setTimeout(() => {
@@ -175,7 +153,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-</style>

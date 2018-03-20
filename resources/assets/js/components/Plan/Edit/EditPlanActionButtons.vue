@@ -9,23 +9,23 @@
           <span class="title">Add:</span>
           <v-tooltip bottom lazy>
             <v-btn slot="activator" :color="activityColours.song" small class="white--text" @click="addSong">
-              <v-icon>record_voice_over</v-icon>
+              <v-icon>{{ activityIcons.song }}</v-icon>
               &nbsp;Song</v-btn>
             <span>Navigates to the song list.<br>There, select a song to be added to this plan.</span>
           </v-tooltip>
 
           <v-tooltip bottom lazy>
             <v-btn slot="activator" :color="activityColours.read" small class="white--text" @click="addScriptureRefDlg">
-              <v-icon>local_library</v-icon>
+              <v-icon>{{ activityIcons.read }}</v-icon>
               &nbsp; Scripture</v-btn>
-            <span>Opens a dialog to add a Scripture Reference to this plan.</span>
+            <span>Open dialog to add a Scripture Reference to this plan.</span>
           </v-tooltip>
 
           <v-tooltip bottom lazy>
             <v-btn slot="activator" :color="activityColours.text" small class="white--text" @click="editGenericItem=true">
-              <v-icon>label</v-icon>
+              <v-icon>{{ activityIcons.text }}</v-icon>
               &nbsp; Gen. Item</v-btn>
-            <span>Opens a dialog to add a generic Text Item to this plan.</span>
+            <span>Open dialog to add a generic Text Item to this plan.</span>
           </v-tooltip>
         </span>
 

@@ -21,7 +21,7 @@ export default {
       icons: {
         song: 'record_voice_over',
         read: 'local_library',
-        text: 'label',
+        text: 'label'
       }
     }
   },
@@ -145,6 +145,7 @@ export default {
         axios.get(`/api/plan/${payload.planId}/latest`).then(data => {
           let updateDate = data.data.date
           let oldDate = state.planUpdatedAt
+          console.log('reloadPlan:', oldDate, updateDate)
           commit('setPlanUpdateDate', updateDate)
           /* 
             only request a new copy from the backend if the data has changed
@@ -297,32 +298,24 @@ export default {
         return
       }
       return new Promise((resolve, reject) => {
-        commit('setLoading', true)
         const newObj = {
           value: payload.value,
           type: payload.type,
           seqNo: payload.seqNo
         }
-        axios
-          .post(`/api/plan/${payload.planId}/item`, newObj)
-          .then(data => {
-            commit('appendMessage', '"' + payload.type + '" added to this plan')
-            dispatch('refreshPlans', 'init') // make sure the plans list will be updated also
-            dispatch('reloadPlan', payload)
-              .then(() => {
-                commit('setLoading', false)
-                resolve()  // only resolve once the plan has been reloaded from the backend
-              })
+        axios.post(`/api/plan/${payload.planId}/item`, newObj).then(data => {
+          commit('appendMessage', '"' + payload.type + '" added to this plan')
+          dispatch('refreshPlans', 'init') // make sure the plans list will be updated also
+          dispatch('reloadPlan', payload).then(() => {
+            commit('setLoading', false)
+            resolve() // only resolve once the plan has been reloaded from the backend
           })
-          .catch(error => {
-            dispatch('errorHandling', error)
-            reject()
-          })
+        })
       })
     },
 
     updateActionItem({ rootState, commit, dispatch }, payload) {
-      // payload must contain planId, itemId, field name and new value
+      // payload must contain planId, actionId, field name and newValue
       //
       let loadHandling = 'local'
       if (!rootState.shared.loading) {
@@ -344,6 +337,7 @@ export default {
         })
         .catch(error => dispatch('errorHandling', error))
     },
+
 
     // remove an action from a plan
     // - - payload must contain plan id and action id
@@ -467,7 +461,7 @@ export default {
           // assign the proper icon and colour depending on type
           obj.color = state.activity.colours[obj.type]
           obj.icon = state.activity.icons[obj.type]
-          
+
           // add the finished object to the array
           actionList.push(obj)
         }
@@ -586,11 +580,11 @@ export default {
 
 /**
  * Create an object from the array of onsong parts
- * 
- * Note: the server only provides an array of objects. 
+ *
+ * Note: the server only provides an array of objects.
  * Each onSong object contains an id indicating the type.
  * This method simply creates a single object
- * containing all onsong objects, with the type as index. 
+ * containing all onsong objects, with the type as index.
  */
 function onsongsObject(arr) {
   if (!arr || !arr.length) {

@@ -10,7 +10,7 @@
         <template v-for="(item, index) in plan.actionList">
 
           <v-list-tile
-              :id="'activity-item-' + item.seqNo"
+              :id="'activity-item-' + item.seqNo + '-id-' + item.key"
               :draggable="userOwnsThisPlan" 
               :key="index"
               @dragstart="drag"
@@ -280,15 +280,22 @@
         event.target.style.opacity = '1'
         event.preventDefault()
         // get the seqNo of the Activity that was dragged
-        let start = this.findIdNum(event.dataTransfer.getData('text'))
+        let start = this.findSeqNo(event.dataTransfer.getData('text'))
         // get the seqNo of the target Activity
-        let end = this.findIdNum(this.targetId)
+        let end = this.findSeqNo(this.targetId)
         // if all went well we should have 2 different sequence numbers
         if (!isNaN(start) && !isNaN(end) && start !== end) {
           // change the seqNo of the dragged Activity so that it comes AFTER the target Activity
           this.changeSeqNo(end, 1 * parseFloat(end) + 0.5)
           this.changeSeqNo(start, parseFloat(end) - 0.1)
-          // this.correctAllSeqNos()
+          // payload must contain planId, actionId, field name and newValue
+          let obj = {
+            planId: this.plan.id,
+            actionId: this.findItemId(event.dataTransfer.getData('text')),
+            field: 'seq_no',
+            newValue: end - 0.1
+          }
+          this.$store.dispatch('updateActionItem', obj)
         }
       },
       // modify the target id (seqNo) when the dragging goes over an Plan Activity
@@ -342,12 +349,14 @@
         // console.log('FOUND', found.id)
         return found
       },
-      // the target html element contains an ID in the format xxx-xxx-id
-      findIdNum (id) {
-        if (!id) return false
+      // the target html element contains an ID in the format xxx-xxx-seqNo-xx-itemId
+      findSeqNo (id) {
         let parts = id.split('-')
-        if (!parts.length === 3) return false
         return parseInt(parts[2])
+      },
+      findItemId (id) {
+        let parts = id.split('-')
+        return parseInt(parts[4])
       },
       // find the Activity where seqNo is <from> and change it to <to>
       changeSeqNo (from, to) {

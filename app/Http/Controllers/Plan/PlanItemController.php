@@ -34,17 +34,13 @@ class PlanItemController extends Controller
         // need to verify the all the sequence numbers are correct
         $this->updateSeqNos($request, $plan);
 
-        // make sure the update gets reported to the 'parent' record as well
-        $plan->updated_at = Carbon::now();
-        $plan->save();
-
         return response($item->jsonSerialize(), Response::HTTP_OK);
     }
 
     public function updateSeqNos(Request $request, Plan $plan)
     {
         // get all the items for this plan, ordered by their seq_no
-        $items      = $plan->items()->orderBy('seq_no')->get();
+        $items = $plan->items()->orderBy('seq_no')->get();
         // We are going to number all the items of this plan, starting with 1.0
         $counter = 1.0;
 
@@ -62,6 +58,11 @@ class PlanItemController extends Controller
             // increase the counter to reflect the current seq_no
             $counter += 1.0;
         }
+
+        // make sure the update gets reported to the 'parent' record as well
+        $plan->updated_at = Carbon::now();
+        $plan->save();
+
     }
 
     /**
@@ -80,10 +81,6 @@ class PlanItemController extends Controller
 
         // need to verify the all the sequence numbers are correct
         $this->updateSeqNos($request, $plan);
-
-        // make sure the update gets reported to the 'parent' record as well
-        $plan->updated_at = Carbon::now();
-        $plan->save();
 
         return response($item->jsonSerialize(), Response::HTTP_OK);
     }
@@ -104,9 +101,6 @@ class PlanItemController extends Controller
         // need to verify the all the sequence numbers are correct
         $this->updateSeqNos($request, $plan);
 
-        // make sure the update gets reported to the 'parent' record as well
-        $plan->updated_at = Carbon::now();
-        $plan->save();
         return response($item->jsonSerialize(), Response::HTTP_OK);
     }
 

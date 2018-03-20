@@ -34,7 +34,7 @@ class PlanController extends Controller
      */
     public function index()
     {
-        // for performance reasons, get the last 100 plans only
+        // for performance reasons, get the 100 newest plans only
         $plans = Plan
             ::with(
                 [

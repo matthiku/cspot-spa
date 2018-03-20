@@ -29,7 +29,6 @@ Route::middleware('auth:api')->group(
 
         Route::get('/plan/latest', 'Plan\PlanController@latest');
         Route::get('/plan/{plan}/latest', 'Plan\PlanController@planLatest');
-        Route::post('/plan/{plan}/item/updatesn', 'Plan\PlanItemController@updateSeqNos');
 
 
         // provide the  CRUD  resources

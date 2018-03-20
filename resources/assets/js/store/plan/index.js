@@ -40,10 +40,12 @@ export default {
     },
 
     setPlans(state, payload) {
+      localStorage.setItem('plans', JSON.stringify(payload))
       state.plans = payload
     },
 
     setPlansUpdateDate(state, payload) {
+      localStorage.setItem('plansUpdatedAt', payload)
       state.plansUpdatedAt = payload
     },
 
@@ -90,38 +92,40 @@ export default {
       }
     },
 
-    refreshPlans({ state, commit, dispatch }, payload) {
+    refreshPlans({ state, commit, dispatch, getters }, payload) {
       // first get date of latest update to PLANS table
       axios
         .get('/api/plan/latest')
         .then(data => {
-          let updateDate = data.data.date
-          let oldDate = state.plansUpdatedAt
-          // if our current PLANS entity is still empty, the updateDate is irrelevant...
+          let backendUpdateDate = data.data.date
+          let frontendUpdateDate = getters.plansUpdatedAt
+          console.log('refreshPlans:', backendUpdateDate, frontendUpdateDate)
+          // if our current PLANS entity is still empty, the backendUpdateDate is irrelevant...
           if (
-            oldDate === updateDate &&
+            payload !== 'init' &&
+            frontendUpdateDate === backendUpdateDate &&
             state.plans instanceof Object &&
             !(state.plans instanceof Array)
-          )
-            return
-          commit('setPlansUpdateDate', updateDate)
+          ) { return }
+
+          commit('setPlansUpdateDate', backendUpdateDate)
 
           if (
             (payload === 'init' ||
               !(state.plans instanceof Object) ||
               (state.plans && !state.plans.length)) &&
-            updateDate !== undefined
+            backendUpdateDate !== undefined
           ) {
             let reason =
               payload === 'init'
                 ? payload
-                : oldDate !== updateDate ? 'out-of-date' : 'object empty'
+                : frontendUpdateDate !== backendUpdateDate ? 'out-of-date' : 'object empty'
             console.log(
               'updating local list of PLANS from Server, reason:',
               reason
             )
             if (reason === 'out-of-date') {
-              console.log('PLANS: old', oldDate, '- new', updateDate)
+              console.log('PLANS: old', frontendUpdateDate, '- new', backendUpdateDate)
             }
             axios
               .get('/api/plan')
@@ -129,7 +133,7 @@ export default {
                 commit('setPlans', data.data)
               })
               .catch(error => console.warn(error))
-          } else if (updateDate === undefined) {
+          } else if (backendUpdateDate === undefined) {
             console.warn('could not get latest PLANS update date!')
           }
         })
@@ -338,7 +342,6 @@ export default {
         .catch(error => dispatch('errorHandling', error))
     },
 
-
     // remove an action from a plan
     // - - payload must contain plan id and action id
     removeActionFromPlan({ state, commit, dispatch }, payload) {
@@ -508,11 +511,34 @@ export default {
     },
 
     plans(state) {
+      if (localStorage.getItem('plans')) {
+        let plans = JSON.parse(localStorage.getItem('plans'))
+        if (plans.length) {
+          console.log('supplying PLANS list from localStorage!')
+          state.plans = plans
+        }
+      }
       if (state.plans === 'loading') return 'loading'
       // return all plans ordered by date, descending
       return state.plans.sort((planA, planB) => {
         return moment(planB.date).unix() - moment(planA.date).unix()
       })
+    },
+
+    plansUpdatedAt(state) {
+      if (
+        localStorage.getItem('plansUpdatedAt') &&
+        localStorage.getItem('plans')
+      ) {
+        let dt = localStorage.getItem('plansUpdatedAt')
+        // when the application is loaded, the Vuex store still empty
+        // but now we can populate it from localStorage
+        if (state.plansUpdatedAt === null) {
+          state.plansUpdatedAt = dt
+        }
+        return dt
+      }
+      return state.plansUpdatedAt
     },
 
     filteredPlans(state) {

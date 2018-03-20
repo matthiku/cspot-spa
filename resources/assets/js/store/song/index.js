@@ -162,7 +162,7 @@ export default {
       return state.songs
     },
     songsUpdatedAt (state) {
-      if (localStorage.getItem('songsUpdatedAt')) {
+      if (localStorage.getItem('songsUpdatedAt') && localStorage.getItem('songs')) {
         let dt = localStorage.getItem('songsUpdatedAt')
         // when the application is loaded, the Vuex store still empty
         // but now we can populate it from localStorage

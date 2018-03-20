@@ -1,11 +1,9 @@
 <template>
   <v-menu bottom left lazy dark nudge-left="55" transition="scale-transition">
 
-    <v-btn icon slot="activator" dark>
-      <v-tooltip top>
-        <v-icon slot="activator">more_vert</v-icon>
-        <span>jump to other items menu</span>
-      </v-tooltip>
+    <v-btn icon slot="activator" dark
+        title="jump to other items menu"
+      ><v-icon>more_vert</v-icon>
     </v-btn>
 
     <v-list dense>

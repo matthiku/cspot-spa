@@ -7,7 +7,9 @@
         nudge-top="50"
         :close-on-content-click="false"
       >
-      <v-btn icon dark slot="activator">
+      <v-btn icon dark slot="activator"
+          title="add songs, reading etc"
+        >
         <v-icon :color="firstVisibleItem ? '' : 'red'">playlist_add</v-icon>
       </v-btn>
 

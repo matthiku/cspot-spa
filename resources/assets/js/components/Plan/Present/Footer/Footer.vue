@@ -6,26 +6,41 @@
 
       <config-menu></config-menu>
 
+
       <v-spacer></v-spacer>
+
+
+      <!-- show title of PREVIOUS item -->
+      <small 
+          v-if="prevItem"
+          @click="goPrevItem"
+          class="grey--text cursor-pointer mr-2"
+        >{{ prevItem ? prevItem.title.substr(0,25) : 'n/f' }}
+      </small>
       
       <v-icon
-          v-if="currentItem"
+          v-if="prevItem"
           @click="goPrevItem"
           class="cursor-pointer"
+          :title="prevItem.title"
         >fast_rewind</v-icon>
 
       <v-icon
           v-if="currentItem"
           @click="goPrevSlide"
+          title="show previous slide"
           class="cursor-pointer"
         >keyboard_arrow_left</v-icon>
 
 
       <!-- show current item title -->
-      <span v-if="currentItemSeqNo && currentItem">
-        {{ currentItem.title }}
+      <span v-if="currentItemSeqNo && currentItem"
+          :title="currentItem.title"
+        >
+        {{ currentItem.title.substr(0,25) }}
         <v-icon
             @click="goNextSlide"
+            title="show next slide"
             class="cursor-pointer"
           >keyboard_arrow_right</v-icon>
       </span>
@@ -34,20 +49,19 @@
           v-if="nextItem"
           @click="goNextItem"
           class="cursor-pointer"
+          :title="nextItem.title"
         >fast_forward</v-icon>
-
-
-      <v-spacer></v-spacer>
 
       <!-- show title of NEXT item -->
       <small 
-          data-vif="nextItem"
+          v-if="nextItem"
           @click="goNextItem"
-          slot="activator"
-          class="grey--text cursor-pointer"
-        >NEXT:&nbsp;{{ nextItem ? nextItem.title : 'n/f' }}
+          class="grey--text cursor-pointer ml-2"
+        >{{ nextItem ? nextItem.title.substr(0,25) : 'n/f' }}
       </small>
 
+
+      <v-spacer></v-spacer>
 
       <!-- ADD plan activity items -->
       <add-action-items
@@ -104,7 +118,7 @@ export default {
         }
         this.$store.dispatch('addActionItemToPlan', obj)
         .then((data) => {
-          // console.log(data.data, obj)
+          console.log(data.data, obj)
           this.keyPressed({code: 'go', where: data.data.seq_no})
         })
       }
@@ -125,6 +139,12 @@ export default {
     nextItem () {
       return this.actionList.find(
         item => item.seqNo > this.currentItemSeqNo && item.type !== 'text' && !item.forLeadersEyesOnly
+      )
+    },
+
+    prevItem () {
+      return this.actionList.reverse().find(
+        item => item.seqNo < this.currentItemSeqNo -1 && item.type !== 'text' && !item.forLeadersEyesOnly
       )
     }
   },

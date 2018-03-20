@@ -99,13 +99,13 @@ export default {
         let obj = {
           planId: this.plan.id,
           type: val.field === 'scriptureRef' ? 'read' : 'song',
-          seqNo: this.currentItemSeqNo || this.actionList.length + 1,
+          seqNo: (this.currentItemSeqNo || this.actionList.length) + 1,
           value: val.value
         }
         this.$store.dispatch('addActionItemToPlan', obj)
         .then((data) => {
-          console.log(data.data, obj)
-          this.keyPressed({code: 'go', where: data.data.seqNo})
+          // console.log(data.data, obj)
+          this.keyPressed({code: 'go', where: data.data.seq_no})
         })
       }
     }

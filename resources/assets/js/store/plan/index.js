@@ -93,51 +93,29 @@ export default {
     },
 
     refreshPlans({ state, commit, dispatch, getters }, payload) {
-      // first get date of latest update to PLANS table
+      // Get the date of the latest update to the PLANS table
+      // but send the local update date so that the backend can already send
+      // all the date if we are outdated on the frontend...
+      let frontendUpdateDate = getters.plansUpdatedAt
       axios
-        .get('/api/plan/latest')
+        .get('/api/plan/latest' + (frontendUpdateDate ? '?latest='+frontendUpdateDate : ''))
         .then(data => {
           let backendUpdateDate = data.data.date
-          let frontendUpdateDate = getters.plansUpdatedAt
           console.log('refreshPlans:', backendUpdateDate, frontendUpdateDate)
-          // if our current PLANS entity is still empty, the backendUpdateDate is irrelevant...
-          if (
-            payload !== 'init' &&
-            frontendUpdateDate === backendUpdateDate &&
-            state.plans instanceof Object &&
-            !(state.plans instanceof Array)
-          ) { return }
-
-          commit('setPlansUpdateDate', backendUpdateDate)
-
-          if (
-            (payload === 'init' ||
-              !(state.plans instanceof Object) ||
-              (state.plans && !state.plans.length)) &&
-            backendUpdateDate !== undefined
-          ) {
-            let reason =
-              payload === 'init'
-                ? payload
-                : frontendUpdateDate !== backendUpdateDate ? 'out-of-date' : 'object empty'
-            console.log(
-              'updating local list of PLANS from Server, reason:',
-              reason
-            )
-            if (reason === 'out-of-date') {
-              console.log('PLANS: old', frontendUpdateDate, '- new', backendUpdateDate)
-            }
-            axios
-              .get('/api/plan')
-              .then(data => {
-                commit('setPlans', data.data)
-              })
-              .catch(error => console.warn(error))
-          } else if (backendUpdateDate === undefined) {
-            console.warn('could not get latest PLANS update date!')
+          if (!backendUpdateDate) {
+            commit('setPlans', data.data)
+            console.log('PLANS updated from backend')
+            // now also get the latest PLANS updated date
+            axios.get('/api/plan/latest')
+            .then((data) => {
+              commit('setPlansUpdateDate', data.data.date)              
+            })
+            .catch(error => console.warn(error))
+          } else {
+            commit('setPlansUpdateDate', backendUpdateDate)
+            console.log('PLANS still up-to-date')
           }
         })
-        .catch(error => console.warn(error))
     },
 
     // get complete data of a single plan

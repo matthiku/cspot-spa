@@ -52,6 +52,9 @@ class PlanController extends Controller
         return response($plans->jsonSerialize(), Response::HTTP_OK);
     }
 
+
+
+
     /**
      * Get date of latest change in the PLANS table
      * 
@@ -66,13 +69,16 @@ class PlanController extends Controller
         // the the date reported from the frontend is older,
         // we already return the full list of plans instead of a date!
         if ($request->has('latest')) {
-            if (Carbon::parse($request->latest).ne($latest)) {
+            if ($request->latest === 'init' || Carbon::parse($request->latest)->ne($latest)) {
                 return $this->index();
             }
         }
-
         return response($latest, Response::HTTP_OK);
     }
+
+
+
+
     /** 
      * Get date of latest update to a single plan (including child relations)
      * 

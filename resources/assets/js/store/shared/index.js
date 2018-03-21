@@ -69,10 +69,10 @@ export default {
       dispatch('refreshUsers', 'init')
       dispatch('refreshRoles', 'init')
       dispatch('refreshTypes', 'init')
-      dispatch('refreshSongs', 'init')
-      dispatch('refreshPlans', 'init')
+      dispatch('refreshSongs')
+      dispatch('refreshPlans')
       // load basic bible structure (books, chapters, verses)
-      dispatch('loadBibleStructure', 'init')
+      dispatch('loadBibleStructure')
       dispatch('loadSongParts')
       // repeat this later with conditions
       setTimeout(() => {

@@ -21,67 +21,40 @@ export default {
       // also write data into localStorage
       localStorage.setItem('songsUpdatedAt', payload)
     },
-    setSongParts (state, payload) {
+    setSongParts(state, payload) {
       state.songPartsArray = payload
       // also create an object with the codes as identifier
-      payload.forEach(elem => state.songParts[elem.code] = elem)
+      payload.forEach(elem => (state.songParts[elem.code] = elem))
     }
   },
 
   actions: {
-    refreshSongs({ state, commit, dispatch, getters }, payload) {
-      // first get date of latest update to SONGS table
+    refreshSongs({ state, commit, dispatch, getters }) {
+      // Get the date of the latest update to the PLANS table
+      // but send the local update date so that the backend can already send
+      // all the date if we are outdated on the frontend...
+      let frontendUpdateDate = getters.songsUpdatedAt
       axios
-        .get('/api/song/latest')
+        .get(
+          '/api/song/latest?latest=' +
+            (frontendUpdateDate ? frontendUpdateDate : 'init')
+        )
         .then(data => {
           let backendUpdateDate = data.data.date
-          let frontendUpdateDate = getters.songsUpdatedAt
-          // console.log('refreshSongs', backendUpdateDate, frontendUpdateDate)
-          if (frontendUpdateDate === backendUpdateDate && getters.songs instanceof Object) return
-          if (backendUpdateDate !== undefined) {            
-            commit('setSongsUpdateDate', backendUpdateDate)
-          }
-          /*
-            load SONGS from back end and write into LocalStorage and local Vuex store
-          */
-          if (
-            (payload === 'init' ||
-              !(state.songs instanceof Object) ||
-              state.songs instanceof Array) &&
-            backendUpdateDate !== undefined
-          ) {
-            let reason =
-              payload === 'init'
-                ? payload
-                : frontendUpdateDate !== backendUpdateDate ? 'out-of-date' : 'object empty'
-            console.log(
-              'updating local list of SONGS from Server, reason:',
-              reason
-            )
-            if (reason === 'out-of-date') {
-              console.log(reason, frontendUpdateDate, backendUpdateDate)
-            }
-            if (reason === 'object empty') {
-              console.log(reason, state.songs)
-            }
+          console.log('refreshSongs:', backendUpdateDate, frontendUpdateDate)
+          if (!backendUpdateDate) {
+            commit('setSongs', data.data)
+            console.log('SONGS updated from backend')
+            // now also get the latest SONGS updated date
             axios
-              .get('/api/song')
+              .get('/api/song/latest')
               .then(data => {
-                if (data.data.forEach) {
-                  let songs = {}
-                  // turn array into an object
-                  data.data.forEach(elem => {
-                    let obj = elem
-                    songs[obj.id] = elem
-                  })
-                  commit('setSongs', songs)
-                } else {
-                  console.warn('refreshSongs: Invalid response', data)
-                }
+                commit('setSongsUpdateDate', data.data.date)
               })
               .catch(error => console.warn(error))
-          } else if (backendUpdateDate === undefined) {
-            console.warn('refreshSongs: could not get SONGS last update date!')
+          } else {
+            commit('setSongsUpdateDate', backendUpdateDate)
+            console.log('SONGS still up-to-date')
           }
         })
         .catch(error => console.warn(error))
@@ -133,9 +106,9 @@ export default {
         .catch(error => dispatch('errorHandling', error))
     },
 
-    loadSongParts ({commit}) {
+    loadSongParts({ commit }) {
       axios
-      .get('/api/song_part')
+        .get('/api/song_part')
         .then(data => {
           if (data.data.forEach) {
             commit('setSongParts', data.data)
@@ -148,7 +121,7 @@ export default {
   },
 
   getters: {
-    songs (state) {
+    songs(state) {
       if (localStorage.getItem('songs')) {
         let songs = JSON.parse(localStorage.getItem('songs'))
         // when the application is loaded, the Vuex store still empty
@@ -161,8 +134,11 @@ export default {
       }
       return state.songs
     },
-    songsUpdatedAt (state) {
-      if (localStorage.getItem('songsUpdatedAt') && localStorage.getItem('songs')) {
+    songsUpdatedAt(state) {
+      if (
+        localStorage.getItem('songsUpdatedAt') &&
+        localStorage.getItem('songs')
+      ) {
         let dt = localStorage.getItem('songsUpdatedAt')
         // when the application is loaded, the Vuex store still empty
         // but now we can populate it from localStorage
@@ -173,7 +149,7 @@ export default {
       }
       return state.songsUpdatedAt
     },
-    songParts (state) {
+    songParts(state) {
       return state.songParts
     }
   }

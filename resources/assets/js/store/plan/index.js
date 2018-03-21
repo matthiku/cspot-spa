@@ -59,12 +59,15 @@ export default {
 
     setBibleBooks(state, payload) {
       state.apiBibleBooks = payload
+      localStorage.setItem('apiBibleBooks', JSON.stringify(payload))
     },
     setBibleChapters(state, payload) {
       state.apiBibleChapters = payload
+      localStorage.setItem('apiBibleChapters', JSON.stringify(payload))
     },
     setBibleVerses(state, payload) {
       state.apiBibleVerses = payload
+      localStorage.setItem('apiBibleVerses', JSON.stringify(payload))
     },
 
     addScriptureRef(state, payload) {
@@ -74,31 +77,34 @@ export default {
 
   // A C T I O N S  (dispatches)
   actions: {
-    loadBibleStructure({ state, commit }, payload) {
-      if (!(state.apiBibleBooks instanceof Array) || payload === 'init') {
+    loadBibleStructure({ state, commit, getters }) {
+      if (!(getters.apiBibleBooks instanceof Array)) {
         axios.get('/api/bible/books').then(data => {
           commit('setBibleBooks', data.data)
         })
       }
-      if (!(state.apiBibleChapters instanceof Object) || payload === 'init') {
+      if (!(getters.apiBibleChapters instanceof Object)) {
         axios.get('/api/bible/books/all/chapters').then(data => {
           commit('setBibleChapters', data.data)
         })
       }
-      if (!(state.apiBibleVerses instanceof Object) || payload === 'init') {
+      if (!(getters.apiBibleVerses instanceof Object)) {
         axios.get('/api/bible/books/all/verses').then(data => {
           commit('setBibleVerses', data.data)
         })
       }
     },
 
-    refreshPlans({ state, commit, dispatch, getters }, payload) {
+    refreshPlans({ state, commit, dispatch, getters }) {
       // Get the date of the latest update to the PLANS table
       // but send the local update date so that the backend can already send
       // all the date if we are outdated on the frontend...
       let frontendUpdateDate = getters.plansUpdatedAt
       axios
-        .get('/api/plan/latest' + (frontendUpdateDate ? '?latest='+frontendUpdateDate : ''))
+        .get(
+          '/api/plan/latest?latest=' +
+            (frontendUpdateDate ? frontendUpdateDate : 'init')
+        )
         .then(data => {
           let backendUpdateDate = data.data.date
           console.log('refreshPlans:', backendUpdateDate, frontendUpdateDate)
@@ -106,16 +112,18 @@ export default {
             commit('setPlans', data.data)
             console.log('PLANS updated from backend')
             // now also get the latest PLANS updated date
-            axios.get('/api/plan/latest')
-            .then((data) => {
-              commit('setPlansUpdateDate', data.data.date)              
-            })
-            .catch(error => console.warn(error))
+            axios
+              .get('/api/plan/latest')
+              .then(data => {
+                commit('setPlansUpdateDate', data.data.date)
+              })
+              .catch(error => console.warn(error))
           } else {
             commit('setPlansUpdateDate', backendUpdateDate)
             console.log('PLANS still up-to-date')
           }
         })
+        .catch(error => console.warn(error))
     },
 
     // get complete data of a single plan
@@ -576,6 +584,28 @@ export default {
           return plan.id === planId
         })
       }
+    },
+
+    apiBibleBooks(state) {
+      let ls = localStorage.getItem('apiBibleBooks')
+      if (ls) {
+        state.apiBibleBooks = JSON.parse(ls)
+      }
+      return state.apiBibleBooks
+    },
+    apiBibleChapters(state) {
+      let ls = localStorage.getItem('apiBibleChapters')
+      if (ls) {
+        state.apiBibleChapters = JSON.parse(ls)
+      }
+      return state.apiBibleChapters
+    },
+    apiBibleVerses(state) {
+      let ls = localStorage.getItem('apiBibleVerses')
+      if (ls) {
+        state.apiBibleVerses = JSON.parse(ls)
+      }
+      return state.apiBibleVerses
     }
   }
 }

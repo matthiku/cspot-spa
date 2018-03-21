@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Song;
 
 use DB;
+use Carbon\Carbon;
 use App\Models\Song;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -26,9 +27,17 @@ class SongController extends Controller
 
 
     // get date of latest change in this table:
-    public function latest()
+    public function latest(Request $request)
     {        
         $latest = Song::latest('updated_at')->first()->updated_at;
+
+        // If the updated-date reported from the frontend is older,
+        // we already return the full list of songs instead of a just a date!
+        if ($request->has('latest')) {
+            if ($request->latest === 'init' || Carbon::parse($request->latest)->ne($latest)) {
+                return $this->index();
+            }
+        }
         return response($latest, Response::HTTP_OK);
     }
 

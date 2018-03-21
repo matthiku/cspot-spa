@@ -6,16 +6,18 @@
         <v-list>
           <v-list-tile-content class="ml-4">
 
-            <v-list-tile-title>Application {{ overAllHealth < 100 ? 'loading:' : 'ready!' }}</v-list-tile-title>
+            <div class="health-status">
+              Data {{ overAllHealth < 100 ? 'loading:' : 'ready!' }}
+              <v-progress-circular
+                  :size="90"
+                  :width="15"
+                  :rotate="360"
+                  :value="overAllHealth"
+                  :color="overAllHealthColour"
+                >{{ overAllHealth }}%
+              </v-progress-circular>
+            </div>
 
-            <v-progress-circular
-                :size="80"
-                :width="10"
-                :rotate="360"
-                :value="overAllHealth"
-                :color="overAllHealthColour"
-              >{{ overAllHealth }}
-            </v-progress-circular>
           </v-list-tile-content>
         </v-list>
       </v-toolbar>
@@ -161,6 +163,14 @@
   </v-card>
 </template>
 
+<style lang="stylus" scoped>
+  .health-status
+    text-align: center
+  .progress-circular 
+    vertical-align: top
+</style>
+
+
 <script>
 import genericMixins from '../../mixins/'
 import planMixins from '../Plan/mixins'
@@ -218,7 +228,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-</style>

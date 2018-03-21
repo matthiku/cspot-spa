@@ -6,7 +6,8 @@ export default {
     oldRoute: null,
     users: 'loading',
     usersUpdatedAt: null,
-    user: null
+    user: null,
+    adminSuspended: false
   },
 
   mutations: {
@@ -27,6 +28,9 @@ export default {
     },
     setUsersUpdateDate(state, payload) {
       state.usersUpdatedAt = payload
+    },
+    toggleAdmin(state) {
+      state.adminSuspended = !state.adminSuspended
     }
   },
 
@@ -39,7 +43,12 @@ export default {
           let updateDate = data.data.date
           let oldDate = state.usersUpdatedAt
           // console.log('setUsersUpdateDate', updateDate)
-          if (oldDate === updateDate && state.users instanceof Object && (!state.users instanceof Array)) return
+          if (
+            oldDate === updateDate &&
+            state.users instanceof Object &&
+            !state.users instanceof Array
+          )
+            return
           commit('setUsersUpdateDate', updateDate)
 
           if (
@@ -89,7 +98,7 @@ export default {
       console.log('updateUser', payload)
       axios
         .patch(`/api/user/${payload.id}`, payload)
-        .then((data) => {
+        .then(data => {
           // update the user in the local Users List object
           state.users[payload.id] = data.data
           commit('setLoading', false)
@@ -358,7 +367,10 @@ export default {
       return state.users
     },
     userIsAdmin(state) {
-      if (!state.user instanceof Object) {
+      if (state.adminSuspended) {
+        return false
+      }
+      if (!(state.user instanceof Object)) {
         return false
       }
       if (state.user && state.user.roles) {

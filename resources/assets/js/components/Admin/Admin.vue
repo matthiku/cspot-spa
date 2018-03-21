@@ -61,12 +61,8 @@
                 <v-icon>arrow_drop_down</v-icon>
               </v-tab>
               <v-list class="grey lighten-3">
-                <v-list-tile
-                    tag="a"
-                    v-for="n in 4"
-                    :key="n"
-                  >
-                  Sample Item {{ n }}
+                <v-list-tile @click="toggleAdmin">
+                  {{ userIsAdmin ? 'Suspend' : 'Regain' }}Admin Mode
                 </v-list-tile>
               </v-list>
             </v-menu>

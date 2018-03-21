@@ -41,6 +41,9 @@ export default {
   methods: {
     onDismissed(what) {
       this.$store.dispatch(what)
+    },
+    toggleAdmin () {
+      this.$store.commit('toggleAdmin')
     }
   }
 }

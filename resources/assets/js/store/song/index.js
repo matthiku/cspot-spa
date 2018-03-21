@@ -42,7 +42,7 @@ export default {
         .then(data => {
           let backendUpdateDate = data.data.date
           console.log('refreshSongs:', backendUpdateDate, frontendUpdateDate)
-          if (!backendUpdateDate) {
+          if (!backendUpdateDate && (data.data instanceof Object)) {
             commit('setSongs', data.data)
             console.log('SONGS updated from backend')
             // now also get the latest SONGS updated date
@@ -52,9 +52,13 @@ export default {
                 commit('setSongsUpdateDate', data.data.date)
               })
               .catch(error => console.warn(error))
-          } else {
+          } else if (backendUpdateDate && (state.songs instanceof Object) && Object.keys(state.songs).length) {
             commit('setSongsUpdateDate', backendUpdateDate)
             console.log('SONGS still up-to-date')
+          } else {
+            commit('setSongsUpdateDate', '')            
+            console.log('not getting valid SONGS data from backend!', data);
+            
           }
         })
         .catch(error => console.warn(error))
@@ -130,7 +134,7 @@ export default {
           console.log('SONGS: populating Vuex state from localStorage')
           state.songs = songs
         }
-        if (songs.length) return songs
+        if ((songs instanceof Object) && songs.length) return songs
       }
       return state.songs
     },
@@ -151,6 +155,9 @@ export default {
     },
     songParts(state) {
       return state.songParts
+    },
+    songPartsArray(state) {
+      return state.songPartsArray
     }
   }
 }

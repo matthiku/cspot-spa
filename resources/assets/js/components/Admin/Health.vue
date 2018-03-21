@@ -6,7 +6,7 @@
         <v-list>
           <v-list-tile-content class="ml-4">
 
-            <v-list-tile-title>Application Health</v-list-tile-title>
+            <v-list-tile-title>Application {{ overAllHealth < 100 ? 'loading:' : 'ready!' }}</v-list-tile-title>
 
             <v-progress-circular
                 :size="80"
@@ -116,6 +116,16 @@
 
         <v-list-tile avatar>
           <v-list-tile-action>
+            <v-icon :color="songPartsArrayOK ? 'green' : 'red'">{{ songPartsArrayOK ? 'check_box' : 'check_box_outline_blank'}}</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Song Parts Array</v-list-tile-title>
+            <v-list-tile-sub-title>Song parts as array</v-list-tile-sub-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
+        <v-list-tile avatar>
+          <v-list-tile-action>
             <v-icon :color="bibleBooksOK ? 'green' : 'red'">{{ bibleBooksOK ? 'check_box' : 'check_box_outline_blank'}}</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
@@ -163,13 +173,14 @@ export default {
 
   computed: {
     eventsCount () { return (this.plans instanceof Array) && this.plans && this.plans.length },
-    songsCount () { return (this.plans instanceof Object) && Object.keys(this.songs).length },
-    usersCount () { return (this.plans instanceof Object) && Object.keys(this.users).length },
+    songsCount () { return (this.songs instanceof Object) && Object.keys(this.songs).length },
+    usersCount () { return (this.users instanceof Object) && Object.keys(this.users).length },
     rolesOK () { return this.roles instanceof Object },
     rolesByNameOK () { return this.rolesByName instanceof Object },
     typesOK () { return this.types instanceof Object },
     typesArrayOK () { return this.typesArray.length && this.typesArray instanceof Array },
     songPartsOK () { return this.songParts instanceof Object },
+    songPartsArrayOK () { return (this.songPartsArray instanceof Array) && this.songPartsArray.length },
     bibleBooksOK () { return this.bibleBooks instanceof Object },
     bibleChaptersOK () { return this.bibleChapters instanceof Object },
     bibleVersesOK () { return this.bibleVerses instanceof Object },
@@ -184,13 +195,16 @@ export default {
       if (this.typesOK) health += 1
       if (this.typesArrayOK) health += 1
       if (this.songPartsOK) health += 1
+      if (this.songPartsArrayOK) health += 1
       if (this.bibleBooksOK) health += 1
       if (this.bibleChaptersOK) health += 1
       if (this.bibleVersesOK) health += 1
-      return parseInt(health * 100 / 11)
+
+      return parseInt(health * 100 / 12)
     },
+
     overAllHealthColour () {
-      return this.overAllHealth < 75 ? 'red' : this.overAllHealth === 100 ? 'green' : 'yellow'
+      return this.overAllHealth < 75 ? 'red' : this.overAllHealth === 100 ? 'green' : 'amber'
     },
     plansUpdatedAt () {
       return this.$store.getters.plansUpdatedAt

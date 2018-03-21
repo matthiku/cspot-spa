@@ -25,6 +25,9 @@ export default {
     songParts() {
       return this.$store.getters.songParts
     },
+    songPartsArray() {
+      return this.$store.getters.songPartsArray
+    },
     plans() {
       return this.$store.getters.plans
     },

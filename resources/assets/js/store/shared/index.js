@@ -96,12 +96,12 @@ export default {
       dispatch('refreshPlans')
       dispatch('loadBibleStructure')
 
-      // repeat this every min
+      // repeat this every 30 secs
       setTimeout(() => {
         // check if the initial loading of data (see below) had already been successful
         console.log('re-checking all items....')
         dispatch('refreshAllItems')
-      }, 60000)
+      }, 30000)
     },
 
     clearAllItems({ commit }) {

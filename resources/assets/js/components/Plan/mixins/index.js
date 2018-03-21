@@ -37,14 +37,14 @@ export default {
     presentation() {
       return this.$store.getters.presentation
     },
-    apiBibleBooks() {
-      return this.$store.state.plan.apiBibleBooks
+    bibleBooks() {
+      return this.$store.state.plan.bibleBooks
     },
-    apiBibleChapters() {
-      return this.$store.state.plan.apiBibleChapters
+    bibleChapters() {
+      return this.$store.state.plan.bibleChapters
     },
-    apiBibleVerses() {
-      return this.$store.state.plan.apiBibleVerses
+    bibleVerses() {
+      return this.$store.state.plan.bibleVerses
     },
     scriptureRefs() {
       return this.$store.state.plan.scriptureRefs

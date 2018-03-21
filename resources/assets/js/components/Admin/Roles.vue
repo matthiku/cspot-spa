@@ -40,7 +40,7 @@
                 </v-chip>
               </span>
 
-              <v-btn v-if="!props.item.users.length"
+              <v-btn v-if="!props.item.users || !props.item.users.length"
                 color="error" fab small dark
                 @click="removeRole(props.item)"
                 class="ma-0">

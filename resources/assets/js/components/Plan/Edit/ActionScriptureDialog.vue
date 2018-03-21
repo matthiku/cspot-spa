@@ -4,7 +4,7 @@
         v-model="scriptureDialog"
         max-width="700">
 
-      <v-card :dark="dark" v-if="apiBibleBooks instanceof Array">
+      <v-card :dark="dark" v-if="bibleBooks instanceof Array">
 
         <v-card-title class="headline">
           Select a Scripture Reference: &nbsp;
@@ -18,7 +18,7 @@
               <v-flex xs8 sm6 md4>
                 <v-select label="Book" ref="book"
                     v-model="book" 
-                    :items="apiBibleBooks"
+                    :items="bibleBooks"
                     :dark="dark"
                     hint="Select the book"
                     autofocus
@@ -116,7 +116,7 @@ export default {
     selectedBook () {
       if (this.book) {
         let bk = {}
-        bk.chapters = this.apiBibleVerses[this.book]
+        bk.chapters = this.bibleVerses[this.book]
         bk.name = this.book
         return bk
       }
@@ -161,7 +161,7 @@ export default {
       if (val) {
         this.scriptureRef = val
         // create an array with chapter numbers
-        let ch = this.apiBibleVerses[val]
+        let ch = this.bibleVerses[val]
         this.dialogValues.chapters = this.createNumArray(1, Object.keys(ch).length)
         this.chapter = 0
         this.verse_from = 0

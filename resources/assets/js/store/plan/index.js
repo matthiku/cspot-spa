@@ -8,9 +8,9 @@ export default {
     filteredPlans: [],
     plansUpdatedAt: null,
     planUpdatedAt: null,
-    apiBibleBooks: null,
-    apiBibleChapters: null,
-    apiBibleVerses: null,
+    bibleBooks: null,
+    bibleChapters: null,
+    bibleVerses: null,
     scriptureRefs: {},
     activity: {
       colours: {
@@ -58,16 +58,16 @@ export default {
     },
 
     setBibleBooks(state, payload) {
-      state.apiBibleBooks = payload
-      localStorage.setItem('apiBibleBooks', JSON.stringify(payload))
+      state.bibleBooks = payload
+      localStorage.setItem('bibleBooks', JSON.stringify(payload))
     },
     setBibleChapters(state, payload) {
-      state.apiBibleChapters = payload
-      localStorage.setItem('apiBibleChapters', JSON.stringify(payload))
+      state.bibleChapters = payload
+      localStorage.setItem('bibleChapters', JSON.stringify(payload))
     },
     setBibleVerses(state, payload) {
-      state.apiBibleVerses = payload
-      localStorage.setItem('apiBibleVerses', JSON.stringify(payload))
+      state.bibleVerses = payload
+      localStorage.setItem('bibleVerses', JSON.stringify(payload))
     },
 
     addScriptureRef(state, payload) {
@@ -78,17 +78,18 @@ export default {
   // A C T I O N S  (dispatches)
   actions: {
     loadBibleStructure({ state, commit, getters }) {
-      if (!(getters.apiBibleBooks instanceof Array)) {
+      // these are static tables, so no need to check for updates...
+      if (!(getters.bibleBooks instanceof Array)) {
         axios.get('/api/bible/books').then(data => {
           commit('setBibleBooks', data.data)
         })
       }
-      if (!(getters.apiBibleChapters instanceof Object)) {
+      if (!(getters.bibleChapters instanceof Object)) {
         axios.get('/api/bible/books/all/chapters').then(data => {
           commit('setBibleChapters', data.data)
         })
       }
-      if (!(getters.apiBibleVerses instanceof Object)) {
+      if (!(getters.bibleVerses instanceof Object)) {
         axios.get('/api/bible/books/all/verses').then(data => {
           commit('setBibleVerses', data.data)
         })
@@ -410,8 +411,8 @@ export default {
           let action = planItems[key]
           // check if comment contains a bible ref
           let isScriptureRef = false
-          if (state.apiBibleBooks && state.apiBibleBooks.forEach) {
-            state.apiBibleBooks.forEach(book => {
+          if (state.bibleBooks && state.bibleBooks.forEach) {
+            state.bibleBooks.forEach(book => {
               if (action.comment && action.comment.indexOf(book) >= 0) {
                 isScriptureRef = true
               }
@@ -468,7 +469,7 @@ export default {
       // make sure the striong contains a valid bible ref
       if (
         bRef.version === undefined ||
-        state.apiBibleBooks.indexOf(bRef.book) < 0
+        state.bibleBooks.indexOf(bRef.book) < 0
       )
         return
       axios
@@ -586,26 +587,26 @@ export default {
       }
     },
 
-    apiBibleBooks(state) {
-      let ls = localStorage.getItem('apiBibleBooks')
+    bibleBooks(state) {
+      let ls = localStorage.getItem('bibleBooks')
       if (ls) {
-        state.apiBibleBooks = JSON.parse(ls)
+        state.bibleBooks = JSON.parse(ls)
       }
-      return state.apiBibleBooks
+      return state.bibleBooks
     },
-    apiBibleChapters(state) {
-      let ls = localStorage.getItem('apiBibleChapters')
+    bibleChapters(state) {
+      let ls = localStorage.getItem('bibleChapters')
       if (ls) {
-        state.apiBibleChapters = JSON.parse(ls)
+        state.bibleChapters = JSON.parse(ls)
       }
-      return state.apiBibleChapters
+      return state.bibleChapters
     },
-    apiBibleVerses(state) {
-      let ls = localStorage.getItem('apiBibleVerses')
+    bibleVerses(state) {
+      let ls = localStorage.getItem('bibleVerses')
       if (ls) {
-        state.apiBibleVerses = JSON.parse(ls)
+        state.bibleVerses = JSON.parse(ls)
       }
-      return state.apiBibleVerses
+      return state.bibleVerses
     }
   }
 }

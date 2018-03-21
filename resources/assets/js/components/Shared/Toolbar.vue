@@ -28,6 +28,11 @@
         </v-list-tile>
         
       </v-list>
+        
+      <v-divider></v-divider>
+      
+      <app-health overallOnly></app-health>
+
     </v-navigation-drawer>
 
 

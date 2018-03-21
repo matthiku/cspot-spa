@@ -1,6 +1,6 @@
 /**
  * central registration of all Vue components
- * 
+ *
  * (C) 2018 Matthias Kuhs
  */
 import Vue from 'vue'
@@ -34,18 +34,22 @@ import ShowSimplePlanList from './components/Plan/View/SelectList.vue'
 import EditSongField from './components/Song/Edit/EditSongField'
 import EditSongTextAreaField from './components/Song/Edit/EditSongTextAreaField'
 
+import Health from './components/Admin/Health'
 import AdminUserList from './components/Admin/Users'
 import AdminRoleList from './components/Admin/Roles'
 import AdminTypeList from './components/Admin/Types'
 import AdminEditFieldDialog from './components/Admin/Edit/EditFieldDialog'
 
-export default function sharedComponents () {
+export default function sharedComponents() {
   Vue.component('app-alert', AlertCmp)
   Vue.component('app-success', SuccessCmp)
   Vue.component('app-footer', FooterCmp)
   Vue.component('app-toolbar', ToolbarCmp)
 
-  Vue.component('app-edit-plan-action-scripture-dialog', EditPlanActionScriptureDialog)
+  Vue.component(
+    'app-edit-plan-action-scripture-dialog',
+    EditPlanActionScriptureDialog
+  )
   Vue.component('app-edit-plan-action-buttons', EditPlanActionButtons)
   Vue.component('app-edit-plan-action-list', EditPlanActionList)
   Vue.component('app-edit-plan-single-staff', EditPlanStaffSingle)
@@ -67,6 +71,7 @@ export default function sharedComponents () {
   Vue.component('app-edit-song-textarea-field', EditSongTextAreaField)
   Vue.component('app-edit-song-field', EditSongField)
 
+  Vue.component('app-health', Health)
   Vue.component('app-admin-user-list', AdminUserList)
   Vue.component('app-admin-type-list', AdminTypeList)
   Vue.component('app-admin-role-list', AdminRoleList)

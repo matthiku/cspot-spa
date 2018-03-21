@@ -76,7 +76,7 @@
         <v-tabs-items v-model="admin.selectedTab">
 
           <v-tab-item id="tab-0">
-            <health></health>
+            <app-health></app-health>
           </v-tab-item>
 
           <v-tab-item id="tab-1">
@@ -94,7 +94,8 @@
           </v-tab-item>
 
           <v-tab-item id="tab-4">
-            <app-admin-user-list></app-admin-user-list>
+            <app-admin-user-list
+              ></app-admin-user-list>
           </v-tab-item>
 
         </v-tabs-items>
@@ -106,11 +107,8 @@
 </template>
 
 <script>
-  import Health from './Health'
-
   import genericMixins from '../../mixins/'
   export default {
-    components: {Health},
     mixins: [genericMixins],
     data () {
       return {

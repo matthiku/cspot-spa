@@ -30,21 +30,30 @@
         <v-list-tile :color="eventsCount ? 'green' : 'red'">
           <v-list-tile-content>
             <v-list-tile-title>Events List</v-list-tile-title>
-            <v-list-tile-sub-title>Number of (loaded) events: <span class="subheading">{{ eventsCount }}</span></v-list-tile-sub-title>
+            <v-list-tile-sub-title>
+              Number of (loaded) events: <span class="subheading">{{ eventsCount }}</span>
+              - Last updated: {{ plansUpdatedAt | dateShort }}
+            </v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
 
         <v-list-tile :color="songsCount ? 'green' : 'red'">
           <v-list-tile-content>
             <v-list-tile-title>Songs</v-list-tile-title>
-            <v-list-tile-sub-title>Number of songs: <span class="subheading">{{ songsCount }}</span></v-list-tile-sub-title>
+            <v-list-tile-sub-title>
+              Number of songs: <span class="subheading">{{ songsCount }}</span>
+              - Last updated: {{ songsUpdatedAt | dateShort }}
+            </v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
 
         <v-list-tile :color="usersCount ? 'green' : 'red'">
           <v-list-tile-content>
             <v-list-tile-title>Users</v-list-tile-title>
-            <v-list-tile-sub-title>Number of users: <span class="subheading">{{ usersCount }}</span></v-list-tile-sub-title>
+            <v-list-tile-sub-title>
+              Number of users: <span class="subheading">{{ usersCount }}</span>
+              - Last updated: {{ usersUpdatedAt | dateShort }}
+            </v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -182,6 +191,15 @@ export default {
     },
     overAllHealthColour () {
       return this.overAllHealth < 75 ? 'red' : this.overAllHealth === 100 ? 'green' : 'yellow'
+    },
+    plansUpdatedAt () {
+      return this.$store.getters.plansUpdatedAt
+    },
+    songsUpdatedAt () {
+      return this.$store.getters.songsUpdatedAt
+    },
+    usersUpdatedAt () {
+      return this.$store.getters.usersUpdatedAt
     }
   }
 }

@@ -74,6 +74,7 @@ export default {
       // load basic bible structure (books, chapters, verses)
       dispatch('loadBibleStructure')
       dispatch('loadSongParts')
+
       // repeat this later with conditions
       setTimeout(() => {
         console.log('checking all items....')

@@ -92,17 +92,19 @@ export default {
     // make sure we load this at least once
     if (
       !Object.keys(this.songParts).length ||
-      this.$store.state.song.songPartsArray === 'loading'
+      !(this.songPartsArray instanceof Array) ||
+      this.songPartsArray === 'loading'
     ) {
       setTimeout(() => {
         if (
           !Object.keys(this.songParts).length ||
-          this.$store.state.song.songPartsArray === 'loading'
+          !(this.songPartsArray instanceof Array) ||
+          this.songPartsArray === 'loading'
         ) {
           console.log('reloading songParts!', Object.keys(this.songParts))
           this.$store.dispatch('loadSongParts')
         }
-      }, 500)
+      }, 5000)
     }
   }
 }

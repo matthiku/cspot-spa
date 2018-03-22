@@ -5,7 +5,7 @@
         v-model="menu"
         :close-on-content-click="false"
       >
-      <v-btn icon dark slot="activator">
+      <v-btn fab small dark slot="activator">
         <v-tooltip top>
           <v-icon slot="activator">text_format</v-icon>
           <span>configuration</span>

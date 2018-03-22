@@ -10,8 +10,6 @@
 
     <title>c-SPOT-SPA</title>
 
-    <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet" type="text/css">
-
     <script>
       window.cspot2_server_data = "{!! addslashes(json_encode($data)) !!}"
       window.csrf_token = "{{ csrf_token() }}"

@@ -5,14 +5,18 @@
         dark fixed
       >
 
+      <!-- button to minimize footer -->
       <v-btn small absolute dark fab
           top left color="brown"
           @click="showFooter = false"
         ><v-icon>expand_more</v-icon>
       </v-btn>
 
-      <v-chip outline color="primary" class="ml-5">{{ time }}</v-chip>
+      <!-- show CLOCK -->
+      &nbsp; &nbsp;<span class="show-clock ml-5">{{ time }}</span>
 
+
+      <!-- button for configuration menu -->
       <config-menu></config-menu>
 
 
@@ -102,6 +106,14 @@
 
   </span>
 </template>
+
+<style>
+.show-clock {
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 3px;
+  font-size: large;
+}
+</style>
 
 
 <script>

@@ -12,9 +12,19 @@ export default {
 
   mutations: {
     setSongs(state, payload) {
-      state.songs = payload
+      let songs = {}
+      // turn SONGS array into an addressable object - by song_id
+      if (payload.forEach) {
+        payload.forEach(elem => {
+          let obj = elem
+          songs[obj.id] = elem
+        })
+      } else {
+        console.warn('invalid data for SONGS!', payload)
+      }
+      state.songs = songs
       // also write data into localStorage
-      localStorage.setItem('songs', JSON.stringify(payload))
+      localStorage.setItem('songs', JSON.stringify(songs))
     },
     setSongsUpdateDate(state, payload) {
       state.songsUpdatedAt = payload

@@ -1,11 +1,15 @@
 <template>
   <span>
-    <v-footer v-if="presentation.showFooter"    
-        dark fixed>
+    <v-footer v-if="showFooter"
+      dark fixed>
 
-      <v-btn icon  @click="presentation.showFooter = false">X</v-btn>
+      <v-btn small absolute dark fab
+          top left color="brown"
+          @click="showFooter = false"
+        ><v-icon>expand_more</v-icon>
+      </v-btn>
 
-      <v-chip outline color="primary">{{ time }}</v-chip>
+      <v-chip outline color="primary" class="ml-5">{{ time }}</v-chip>
 
       <config-menu></config-menu>
 
@@ -82,8 +86,16 @@
 
     </v-footer>
 
-    <v-footer v-else>
-      <v-btn icon @click="presentation.showFooter = true">X</v-btn>
+
+    <v-footer v-else
+        style="min-height: 0"
+        dark fixed height="5">
+
+      <v-btn small absolute dark fab
+          top left color="brown"
+          @click="showFooter = true"
+        ><v-icon>expand_less</v-icon>
+      </v-btn>      
     </v-footer>
 
   </span>
@@ -107,6 +119,7 @@ export default {
 
   data () {
     return {
+      showFooter: true,
       time: this.$moment().format('H:mm')
     }
   },
@@ -150,9 +163,13 @@ export default {
     },
 
     prevItem () {
-      return this.actionList.reverse().find(
+      // reverse the array of actions in order to find the previous showable item
+      let item = this.actionList.reverse().find(
         item => item.seqNo < this.currentItemSeqNo -1 && item.type !== 'text' && !item.forLeadersEyesOnly
       )
+      // re-reverse the list again
+      this.actionList.reverse()
+      return item
     }
   },
 
@@ -183,6 +200,10 @@ export default {
       setTimeout(() => {
         this.updateTimer()
       }, 30000);
+    },
+    toggleFooter () {
+      if (this.footerHeight === 32) this.footerHeight = 3
+      else this.footerHeight = 32
     }
   }
 }

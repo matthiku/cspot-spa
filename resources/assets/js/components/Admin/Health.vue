@@ -2,25 +2,28 @@
   <v-card>
 
     <span v-if="overallOnly !== undefined">
-      <v-toolbar flat class="transparent" height="150">
-        <v-list>
-          <v-list-tile-content class="ml-4">
+      <transition name="fade">
+        <v-toolbar v-if="showHealthGraph"
+            flat class="transparent" height="150">
+          <v-list>
+            <v-list-tile-content class="ml-4">
 
-            <div class="health-status">
-              Data {{ overAllHealth < 100 ? 'loading:' : 'ready!' }}
-              <v-progress-circular
-                  :size="90"
-                  :width="15"
-                  :rotate="360"
-                  :value="overAllHealth"
-                  :color="overAllHealthColour"
-                >{{ overAllHealth }}%
-              </v-progress-circular>
-            </div>
+              <div class="health-status">
+                Data {{ overAllHealth === 100 ? 'ready!' : 'loading:' }}
+                <v-progress-circular
+                    :size="90"
+                    :width="15"
+                    :rotate="360"
+                    :value="overAllHealth"
+                    :color="overAllHealthColour"
+                  >{{ overAllHealth }}%
+                </v-progress-circular>
+              </div>
 
-          </v-list-tile-content>
-        </v-list>
-      </v-toolbar>
+            </v-list-tile-content>
+          </v-list>
+        </v-toolbar>
+      </transition>
     </span>
 
     <span v-else>
@@ -34,7 +37,7 @@
             <v-list-tile-title>Events List</v-list-tile-title>
             <v-list-tile-sub-title>
               Number of (loaded) events: <span class="subheading">{{ eventsCount }}</span>
-              - Last updated: {{ plansUpdatedAt | dateShort }}
+              <span :title="plansUpdatedAt">- Last updated: {{ plansUpdatedAt | dateDiff }}</span>
             </v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
@@ -44,7 +47,7 @@
             <v-list-tile-title>Songs</v-list-tile-title>
             <v-list-tile-sub-title>
               Number of songs: <span class="subheading">{{ songsCount }}</span>
-              - Last updated: {{ songsUpdatedAt | dateShort }}
+              <span :title="songsUpdatedAt">- Last updated: {{ songsUpdatedAt | dateDiff }}</span>
             </v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
@@ -54,7 +57,7 @@
             <v-list-tile-title>Users</v-list-tile-title>
             <v-list-tile-sub-title>
               Number of users: <span class="subheading">{{ usersCount }}</span>
-              - Last updated: {{ usersUpdatedAt | dateShort }}
+              <span :title="usersUpdatedAt">- Last updated: {{ usersUpdatedAt | dateDiff }}</span>
             </v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
@@ -181,6 +184,12 @@ export default {
 
   props: ['overallOnly'],
 
+  data () {
+    return {
+      showHealthGraph: true
+    }
+  },
+
   computed: {
     eventsCount () { return (this.plans instanceof Array) && this.plans && this.plans.length },
     songsCount () { return (this.songs instanceof Object) && Object.keys(this.songs).length },
@@ -225,6 +234,24 @@ export default {
     usersUpdatedAt () {
       return this.$store.getters.usersUpdatedAt
     }
+  },
+
+  methods: {
+    checkHealth () {
+      // repeat this check until full health is reached
+      if (this.overAllHealth < 100) {
+        setTimeout(() => {
+          this.checkHealth()
+        }, 9000)
+      } else {
+        // health graph can disappear shortly after app is healthy
+        this.showHealthGraph = false
+      }
+    }
+  },
+
+  mounted () {
+    this.checkHealth()
   }
 }
 </script>

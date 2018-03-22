@@ -6,6 +6,9 @@ export default {
     users() {
       return this.$store.getters.users
     },
+    usersUpdatedAt() {
+      return this.$store.getters.usersUpdatedAt
+    },
     error() {
       return this.$store.getters.error
     },

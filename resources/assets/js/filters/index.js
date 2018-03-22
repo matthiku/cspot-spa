@@ -5,6 +5,7 @@ import * as stringFilters from './string'
 
 export default function filters () {
   Vue.filter('date', dateFilters.date)
+  Vue.filter('dateDiff', dateFilters.dateDiff)
   Vue.filter('dateShort', dateFilters.dateShort)
   Vue.filter('time', dateFilters.time)
   Vue.filter('weekdayName', dateFilters.weekdayName)

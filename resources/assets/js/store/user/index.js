@@ -366,6 +366,9 @@ export default {
     users(state) {
       return state.users
     },
+    usersUpdatedAt(state) {
+      return state.usersUpdatedAt
+    },
     userIsAdmin(state) {
       if (state.adminSuspended) {
         return false

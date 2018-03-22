@@ -202,8 +202,14 @@ export default {
       this.showCurrentItem() // make the current item visible (remove the 'hidden' class)
       // set focus again on the slide so that we can capture keyboard events
       let elem = document.getElementById('item-seqno-' + seqNo)
-      console.log('setPresentationSlide', seqNo, elem)
+      // console.log('setPresentationSlide', seqNo, elem)
       if (elem) elem.focus()
+      // prepare ConfigMenu depending on current item type
+      let item = this.actionList.find(elem => elem.seqNo === seqNo)
+      if (item) {
+        if (item.type === 'read') this.presentation.selectedTab = 2
+        if (item.type === 'song') this.presentation.selectedTab = 1
+      }
     },
 
     getCurrentSlides(seqNo, dir) {

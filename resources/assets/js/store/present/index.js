@@ -2,6 +2,7 @@ export default {
   state: {
     presentation: {
       versesPerSlide: 5,
+      selectedTab: '',
       lyricsFont: {
         size: 40,
         bold: 'normal',

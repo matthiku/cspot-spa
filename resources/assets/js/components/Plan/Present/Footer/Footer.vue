@@ -1,7 +1,9 @@
 <template>
-  <span>
+  <span
+    >
     <v-footer v-if="showFooter"
-      dark fixed>
+        dark fixed
+      >
 
       <v-btn small absolute dark fab
           top left color="brown"

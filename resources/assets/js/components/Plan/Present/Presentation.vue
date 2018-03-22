@@ -11,6 +11,9 @@
 
         :id="'item-seqno-' + item.seqNo"
 
+        tabindex="-1"
+        v-on:keyup="keyPressed($event, item.seqNo)"
+
         @click.left="showNext()"
         @click.right.stop.prevent="showNext(-1)"
         @click.middle.stop.prevent="exitPresentation()"
@@ -125,8 +128,12 @@ export default {
   },
 
   methods: {
-    keyPressed (event) {
-      console.log(event)
+    keyPressed (event, seqNo) {
+      console.log('keyPressed', event, seqNo)
+      // set focus again on the slide so that we can capture keyboard events
+      if (seqNo)
+        document.getElementById('item-seqno-' + seqNo).focus()
+
       if (event.code === 'Escape') this.exitPresentation()
       if (event.code === 'ArrowRight') this.showNext()
       if (event.code === 'ArrowLeft') this.showNext(-1)
@@ -159,6 +166,7 @@ export default {
         if (!isNaN(event.where)) this.gotoThisSlide(event.where)
       }
       //TODO: NumpadAdd/NumpadSubtract -> increase/decrease font size, Minus, ...
+
     },
     gotoThisSlide (seqNo, dir) {
       this.setPresentationSlide(seqNo)
@@ -192,6 +200,10 @@ export default {
     setPresentationSlide(seqNo) {
       this.$store.commit('setPresentationSlide', {showSeqNo: seqNo})
       this.showCurrentItem() // make the current item visible (remove the 'hidden' class)
+      // set focus again on the slide so that we can capture keyboard events
+      let elem = document.getElementById('item-seqno-' + seqNo)
+      console.log('setPresentationSlide', seqNo, elem)
+      if (elem) elem.focus()
     },
 
     getCurrentSlides(seqNo, dir) {
@@ -267,6 +279,11 @@ export default {
           element.classList.add('hidden')
         }
       }
+
+      // always set focus on the slide so that we can capture keyboard events
+      let elem = document.getElementById('item-seqno-' + activeSeqNo)
+      console.log('showNext', activeSeqNo, elem)
+      if (elem) elem.focus()
     }    
   },
 

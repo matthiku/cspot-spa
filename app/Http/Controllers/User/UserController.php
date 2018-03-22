@@ -1,12 +1,31 @@
 <?php
-
+/**
+ * PHP Version 7.x
+ *
+ * @category Controller
+ * @package  C-SpotSPA
+ * @author   Matthias Kuhs <matthiku@yahoo.com>
+ * @license  MIT mit.com
+ * @link     Dummy
+ */
 namespace App\Http\Controllers\User;
 
+use Auth;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 
+
+/**
+ * UserController
+ *
+ * @category Controller
+ * @package  C-SpotSPA
+ * @author   Matthias Kuhs <matthiku@yahoo.com>
+ * @license  MIT mit.com
+ * @link     Dummy
+ */
 class UserController extends Controller
 {
     /**
@@ -16,11 +35,23 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
-        return response(User::with('roles')->get()->jsonSerialize(), Response::HTTP_OK);
+        if (Auth::user()->isAdmin()) {
+            // full user list for Admins
+            return response(
+                User::with('roles')->get()->jsonSerialize(), Response::HTTP_OK
+            );
+        }
+        // normal users only get their own profile
+        $user = User::where('id', Auth::id())->with('roles')->get();
+        return response($user, Response::HTTP_OK);       
     }
 
-    // get date of latest change in this table:
+
+    /**
+     * Get date of latest change in this table
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function latest()
     {        
         $latest = User::latest('updated_at')->first()->updated_at;
@@ -30,7 +61,8 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request the HTTP request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -41,8 +73,9 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\User  $user
+     * @param \Illuminate\Http\Request $request the HTTP request
+     * @param \App\User                $user    the USER object
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, User $user)
@@ -61,7 +94,8 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\User  $user
+     * @param \App\User $user the USER object
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(User $user)

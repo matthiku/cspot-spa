@@ -30,6 +30,11 @@ export default {
       state.presentation.showSeqNo = payload.showSeqNo
     },
 
+    setVersesPerSlide (state, payload) {
+      state.presentation.versesPerSlide = payload
+      localStorage.setItem('versesPerSlide', payload)
+    },
+
     setLyricsFont (state, payload) {
       if (payload.lyricsFontSize)
         state.presentation.lyricsFont.size = payload.lyricsFontSize

@@ -36,7 +36,7 @@
           <v-tab-item>
             <v-card flat>
               <v-card-text>
-                <v-container fluid px-0>
+                <v-container fluid px-0 class="my-0 py-0">
                   Size: <v-chip outline>{{ lyricsTitleFontSize }}</v-chip>
                   <v-slider class="ma-0 pa-0" v-model="lyricsTitleFontSize" min="15" max="70"></v-slider>
 
@@ -63,7 +63,7 @@
           <v-tab-item>
             <v-card flat>
               <v-card-text>
-                <v-container fluid px-0>
+                <v-container fluid px-0 class="my-0 py-0">
                   Size: <v-chip outline>{{ lyricsFontSize }}</v-chip>
                   <v-slider class="ma-0 pa-0" v-model="lyricsFontSize" min="15" max="70"></v-slider>
 
@@ -91,19 +91,40 @@
           <v-tab-item>
             <v-card flat>
               <v-card-text>
-                <v-container fluid px-0>
-                  Size: <v-chip outline>{{ scriptureFontSize }}</v-chip>
-                  <v-slider class="ma-0 pa-0" v-model="scriptureFontSize" min="15" max="70"></v-slider>
+                <v-container fluid px-0 class="my-0 py-0">
+                  <v-layout row wrap>
+                    <v-flex xs10>
+                      <v-slider label="Font size:" class="ma-0 pa-0" v-model="scriptureFontSize" min="15" max="70"></v-slider>
+                    </v-flex>
+                    <v-flex xs2>
+                      <v-chip outline>{{ scriptureFontSize }}</v-chip>
+                    </v-flex>
+                  </v-layout>
 
-                  <v-switch
-                    :label="`Italic: ${switch1.toString()}`"
-                    v-model="scriptureItalic"
-                  ></v-switch>
+                  <v-layout row wrap>
+                    <v-flex xs6>
+                      <v-switch
+                        :label="`Italic: ${switch1.toString()}`"
+                        v-model="scriptureItalic"
+                      ></v-switch>
+                    </v-flex>
+                    <v-flex xs-6>
+                      <v-switch
+                        :label="`Bold: ${switch1.toString()}`"
+                        v-model="scriptureBold"
+                      ></v-switch>
+                    </v-flex>
+                  </v-layout>
+                  <v-divider light></v-divider>
+                  <v-layout row wrap>
+                    <v-flex xs10>
+                      <v-slider label="Verses per Slide:" :min="1" :max="25" v-model="versesPerSlide"></v-slider>
+                    </v-flex>
+                    <v-flex xs2>
+                      <v-text-field v-model="versesPerSlide" solo type="number"></v-text-field>
+                    </v-flex>
+                  </v-layout>
 
-                  <v-switch
-                    :label="`Bold: ${switch1.toString()}`"
-                    v-model="scriptureBold"
-                  ></v-switch>
                 </v-container>
               </v-card-text>
 
@@ -118,25 +139,21 @@
           <v-tab-item>
             <v-card flat>
               <v-card-text>
-                <v-container fluid px-0>
-                  <v-checkbox
-                    :label="`Checkbox 1: ${checkbox.toString()}`"
-                    v-model="checkbox"
-                  ></v-checkbox>
-                  <v-radio-group v-model="radioGroup">
-                    <v-radio
-                      v-for="n in 3"
-                      :key="n"
-                      :label="`Radio ${n}`"
-                      :value="n"
-                    ></v-radio>
-                  </v-radio-group>
-                  <v-switch
-                    :label="`Switch 1: ${switch1.toString()}`"
-                    v-model="switch1"
-                  ></v-switch>
+                <v-container fluid grid-list-md>
+                  <v-layout row wrap>
+                    <v-flex xs9>
+                      <v-slider label="Verses per Slide" :min="1" :max="25" v-model="versesPerSlide"></v-slider>
+                    </v-flex>
+                    <v-flex xs3>
+                      <v-text-field v-model="versesPerSlide" type="number"></v-text-field>
+                    </v-flex>
+                  </v-layout>
                 </v-container>
               </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn small @click="menu = false">OK</v-btn>
+              </v-card-actions>
             </v-card>
           </v-tab-item>
 
@@ -167,6 +184,8 @@
         scriptureFontSize: 35,
         scriptureItalic: null,
         scriptureBold: null,
+
+        versesPerSlide: 0
       }
     },
 
@@ -177,19 +196,24 @@
     },
 
     mounted () {
-      this.scriptureFontSize = this.presentation.scriptureFont.size
+      this.versesPerSlide = this.presentation.versesPerSlide || 5
+
       this.scriptureBold = this.presentation.scriptureFont.bold === 'bold'
       this.scriptureItalic = (this.presentation.scriptureFont.italic === 'italic')
+      this.scriptureFontSize = this.presentation.scriptureFont.size
 
-      this.lyricsFontSize = this.presentation.lyricsFont.size
-      this.lyricsTitleFontSize = this.presentation.lyricsFont.titleSize
       this.lyricsBold = this.presentation.lyricsFont.bold === 'bold'
-      this.lyricsTitleBold = this.presentation.lyricsFont.titleBold === 'bold'
       this.lyricsItalic = (this.presentation.lyricsFont.italic === 'italic')
+      this.lyricsFontSize = this.presentation.lyricsFont.size
+      this.lyricsTitleBold = this.presentation.lyricsFont.titleBold === 'bold'
       this.lyricsTitleItalic = (this.presentation.lyricsFont.titleItalic === 'italic')
+      this.lyricsTitleFontSize = this.presentation.lyricsFont.titleSize
     },
 
     watch: {
+      versesPerSlide (val) {
+        this.$store.commit('setVersesPerSlide', this.versesPerSlide)
+      },
       lyricsFontSize (val) {
         this.$store.commit('setLyricsFont', {lyricsFontSize: val})
       },

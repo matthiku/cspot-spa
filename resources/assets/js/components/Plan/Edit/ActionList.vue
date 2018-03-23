@@ -204,7 +204,7 @@
 
     methods: {
       startPresentation (seqNo) {
-        this.$router.push({name: 'present', params: {itemId: seqNo}})
+        this.$router.push({name: 'present', params: {seqNo}})
       },
 
       // user selected an action on a listed plan activity (in the hamburger menu)

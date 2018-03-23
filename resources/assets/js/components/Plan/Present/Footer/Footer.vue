@@ -179,7 +179,7 @@ export default {
     prevItem () {
       // reverse the array of actions in order to find the previous showable item
       let item = this.actionList.reverse().find(
-        item => item.seqNo < this.currentItemSeqNo -1 && item.type !== 'text' && !item.forLeadersEyesOnly
+        item => item.seqNo < this.currentItemSeqNo && item.type !== 'text' && !item.forLeadersEyesOnly
       )
       // re-reverse the list again
       this.actionList.reverse()

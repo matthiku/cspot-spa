@@ -108,7 +108,6 @@ export default {
         )
         .then(data => {
           let backendUpdateDate = data.data.date
-          console.log('refreshPlans:', backendUpdateDate, frontendUpdateDate)
           if (!backendUpdateDate && (data.data instanceof Array)) {
             commit('setPlans', data.data)
             console.log('PLANS updated from backend')
@@ -121,7 +120,6 @@ export default {
               .catch(error => console.warn(error))
           } else if (backendUpdateDate && (state.plans instanceof Array) && state.plans.length) {
             commit('setPlansUpdateDate', backendUpdateDate)
-            console.log('PLANS still up-to-date')
           } else {
             commit('setPlansUpdateDate', '')
             console.log('not getting valid PLANS data from backend!', data);

@@ -100,7 +100,6 @@ export default {
       // repeat this every 30 secs
       setTimeout(() => {
         // check if the initial loading of data (see below) had already been successful
-        console.log('re-checking all items....')
         dispatch('refreshAllItems')
       }, 30000)
     },

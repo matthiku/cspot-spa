@@ -78,7 +78,7 @@ export default {
 
   mixins: [genericMixins, planMixins],
 
-  props: ['itemId'],
+  props: ['seqNo'],
 
   data () {
     return {
@@ -112,17 +112,23 @@ export default {
 
   mounted () {
     // plan has items, but none of them are 'showable'
-    if (!this.itemId && !this.firstVisibleItem) {
+    if (!this.seqNo && !this.firstVisibleItem) {
       console.warn('no showable items found in this plan')
       return
     }
 
     // start with the seqNo provided in the URL param or with the first showable item if omitted
-    this.setPresentationSlide(this.itemId || this.firstVisibleItem.seqNo)
-
+    if (this.seqNo) {
+      // console.log('mounted - show specific item', this.seqNo)
+      this.setPresentationSlide(this.seqNo)
+    } else {
+      // console.log('mounted - show firstVisibleItem', this.firstVisibleItem.seqNo)
+      this.setPresentationSlide(this.firstVisibleItem.seqNo)
+    }
     // within the item, now un-hide the first slide
     // but wait until document is ready!
     setTimeout(() => {
+      // console.log('delayed showNext')
       this.showNext()
     }, 500)
   },
@@ -186,18 +192,21 @@ export default {
     showCurrentItem () {
       // remove 'hidden' class from the whole element (item) with the currently active SeqNo
       let planItems = document.getElementsByClassName('plan-action-item')
-      console.log('SeqNo', this.presentation.showSeqNo, '- un-hide this item', planItems)
+      // console.log('showCurrentItem - SeqNo', this.presentation.showSeqNo, '- un-hide this item')
       for (let index = 0; index < planItems.length; index++) {
         const elem = planItems[index];
         if (elem.id === 'item-seqno-' + this.presentation.showSeqNo) {
           elem.classList.remove('hidden')
+          // console.log('showCurrentItem - showing element', elem)
         } else {
           elem.classList.add('hidden') // make sure all other items are hidden
         }
       }
     },
 
+    // determine which Plan Activity Item to show next
     setPresentationSlide(seqNo) {
+      // console.log('setPresentationSlide')
       this.$store.commit('setPresentationSlide', {showSeqNo: seqNo})
       this.showCurrentItem() // make the current item visible (remove the 'hidden' class)
 
@@ -213,7 +222,7 @@ export default {
       }
     },
 
-    // collect all html elements (slides) belonging to one action item
+    // collect all html elements (slides) belonging to one Plan Action Item
     getCurrentSlides(seqNo, dir) {
       if (seqNo < 0) seqNo = this.plan.actionList.length -1
       if (seqNo > this.plan.actionList.length) seqNo = 0
@@ -224,8 +233,7 @@ export default {
       for (let index = 0; index <= this.plan.actionList.length; index++) {
         slides = document.getElementsByClassName('slides-seqno-' + seqNo)
         if (slides.length) break // next valid item found
-        // debugger
-        // console.log('SeqNo', seqNo, '- empty! Actions count:', this.plan.actionList.length, this.actionList.length)
+        // console.log('getCurrentSlides - SeqNo', seqNo, '- empty! Actions count:', this.plan.actionList.length, this.actionList.length)
         seqNo += dir
         if (seqNo < 0) seqNo = this.plan.actionList.length -1
         if (seqNo > this.plan.actionList.length) seqNo = 0
@@ -254,7 +262,7 @@ export default {
 
       // get all slides of the currently shown sequence number (seqNo)
       let slides = this.getCurrentSlides(activeSeqNo, dir)
-      // console.log('SeqNo:', activeSeqNo, '- un-hide slide number', this.showSlideNo)
+      // console.log('showNext - SeqNo:', activeSeqNo, '- un-hide slide number', this.showSlideNo)
       if (!slides || !slides.length) return
 
       // have we reached beyond the BEGINNING of the current item?
@@ -264,7 +272,7 @@ export default {
         this.setPresentationSlide(activeSeqNo)
         slides = this.getCurrentSlides(activeSeqNo, dir)
         this.showSlideNo = slides.length -1
-        // console.log('SeqNo:', activeSeqNo, '- showing PREVIOUS item, Slide number', this.showSlideNo)
+        // console.log('showNext - SeqNo:', activeSeqNo, '- showing PREVIOUS item, Slide number', this.showSlideNo)
       }
 
       // have we reached the END of the current item?
@@ -274,14 +282,14 @@ export default {
         this.setPresentationSlide(activeSeqNo)
         slides = this.getCurrentSlides(activeSeqNo, dir)
         this.showSlideNo = 0
-        // console.log('SeqNo:', activeSeqNo, '- showing NEXT item, Slide number:', this.showSlideNo)
+        // console.log('showNext - SeqNo:', activeSeqNo, '- showing NEXT item, Slide number:', this.showSlideNo)
       }
 
       // look for the next slide to be shown and hide all others
       for (let index = 0; index < slides.length; index++) {
         const element = slides[index]
         if (index === this.showSlideNo) {
-          // console.log('showing element', element)
+          // console.log('showNext - showing element', element)
           element.classList.remove('hidden')
         } else {
           element.classList.add('hidden')
@@ -290,13 +298,14 @@ export default {
 
       // always set focus on the slide so that we can capture keyboard events
       let elem = document.getElementById('item-seqno-' + activeSeqNo)
-      // console.log('showNext', activeSeqNo, elem)
+      // console.log('showNext -', activeSeqNo, elem)
       if (elem) elem.focus()
     }    
   },
 
   watch: {
-    'presentation.versesPerSlide' () {
+    'presentation.versesPerSlide' (niu, old) {
+      if (niu === old) return
       // go back to first slide of an item when this number is being changed
       this.showCurrentItem()
       this.showSlideNo = -1
@@ -308,6 +317,8 @@ export default {
     // enable the scrollbar again - TODO: only remove the 'overflow' attribute!
     let page = document.getElementsByTagName('html')[0]
     page.removeAttribute('style')
+    // console.log('presentation component destroyed');
+    
   }
 
 }

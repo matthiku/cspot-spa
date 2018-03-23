@@ -51,7 +51,6 @@ export default {
         )
         .then(data => {
           let backendUpdateDate = data.data.date
-          console.log('refreshSongs:', backendUpdateDate, frontendUpdateDate)
           if (!backendUpdateDate && (data.data instanceof Object)) {
             commit('setSongs', data.data)
             console.log('SONGS updated from backend')
@@ -64,7 +63,6 @@ export default {
               .catch(error => console.warn(error))
           } else if (backendUpdateDate && (state.songs instanceof Object) && Object.keys(state.songs).length) {
             commit('setSongsUpdateDate', backendUpdateDate)
-            console.log('SONGS still up-to-date')
           } else {
             commit('setSongsUpdateDate', '')            
             console.log('not getting valid SONGS data from backend!', data);

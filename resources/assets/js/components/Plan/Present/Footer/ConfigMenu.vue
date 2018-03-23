@@ -14,7 +14,7 @@
       <v-card style="min-height: 500px" dark>
 
         <v-tabs
-            v-model="presentation.selectedTab"
+            v-model="active"
             dark color="black"
             slider-color="yellow"
             show-arrows
@@ -26,6 +26,7 @@
           <v-tab ripple>Scripture Text</v-tab>
 
           <v-tab ripple>Screen Setup</v-tab>
+
 
           <!-- LYRICS TITLE configuration -->
           <v-tab-item>
@@ -44,6 +45,7 @@
               </v-card-actions>
             </v-card>
           </v-tab-item>
+
 
           <!-- LYRICS TEXT configuration -->
           <v-tab-item>
@@ -93,6 +95,7 @@
           </v-tab-item>
 
 
+          <!-- generic presentation configuration -->
           <v-tab-item>
             <v-card flat>
               <v-card-text>
@@ -119,9 +122,10 @@
                     <v-flex xs12>
                       Show Blank Slides between Plan Action Items?
                       <v-checkbox
-                        :label="`${blankSlide.toString()}`"
-                        v-model="blankSlide"
-                      ></v-checkbox>                      
+                          class="pb-5 mb-5"
+                          :label="`${blankSlide.toString()}`"
+                          v-model="blankSlide"
+                        ></v-checkbox>                      
                     </v-flex>
                   </v-layout>
 
@@ -130,7 +134,8 @@
 
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn small @click="menu = false">OK</v-btn>
+                <v-btn small
+                    @click="menu = false">OK</v-btn>
               </v-card-actions>
             </v-card>
           </v-tab-item>

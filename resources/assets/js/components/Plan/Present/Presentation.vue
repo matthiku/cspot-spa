@@ -3,6 +3,7 @@
       v-if="plan instanceof Object && plan.hasOwnProperty('actionList')"
 
       class="text-xs-center light-blue--text text--lighten-5 presentation-space pa-0"
+      :style="presentationStyle"
     >
 
     <div v-for="item in actionList" :key="item.seqNo"
@@ -53,7 +54,6 @@
 .presentation-space {
   width: 100%;
   height: 100%;
-  background-color: darkslategrey;
 }
 .presentation-slide {
   height: 100%;
@@ -82,11 +82,17 @@ export default {
 
   data () {
     return {
-      showSlideNo: -1
+      showSlideNo: -1,
+      blankShowed: false
     }
   },
 
   computed: {
+    presentationStyle () {
+      return {
+        'background-color' : this.presentation.slideBgColour || '#000'
+      }
+    },
     firstVisibleItem () {
       if (this.plan && this.plan.actionList.find)
         return this.plan.actionList.find(item => item.type !== 'text' && !item.forLeadersEyesOnly)
@@ -291,6 +297,14 @@ export default {
 
       // look for the next slide to be shown and hide all others
       for (let index = 0; index < slides.length; index++) {
+        if (index === 0 && this.showSlideNo === 0 && this.presentation.blankSlide && !this.blankShowed) {
+          this.blankShowed = true
+          console.log('showing blank slide!', this.showSlideNo)
+          this.showSlideNo = -1
+          break // presentation configuration requested a BLANK SLIDE
+        } else {
+          this.blankShowed = false
+        }
         const element = slides[index]
         if (index === this.showSlideNo) {
           // console.log('showNext - showing element', element)

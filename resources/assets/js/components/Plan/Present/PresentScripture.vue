@@ -41,6 +41,7 @@ export default {
     },
     scriptureStyle () {
       return {
+        color: this.presentation.scriptureFont.colour,
         fontSize: this.presentation.scriptureFont.size + 'px',
         fontStyle: this.presentation.scriptureFont.italic,
         fontWeight: this.presentation.scriptureFont.bold

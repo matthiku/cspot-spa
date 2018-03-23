@@ -71,6 +71,7 @@ export default {
     },
     lyricsStyle () {
       return {
+        color: this.presentation.lyricsFont.colour,
         fontSize: this.presentation.lyricsFont.size + 'px',
         fontStyle: this.presentation.lyricsFont.italic,
         fontWeight: this.presentation.lyricsFont.bold
@@ -78,6 +79,7 @@ export default {
     },
     lyricsTitleStyle () {
       return {
+        color: this.presentation.lyricsFont.titleColour,
         fontSize: this.presentation.lyricsFont.titleSize + 'px',
         fontStyle: this.presentation.lyricsFont.titleItalic,
         fontWeight: this.presentation.lyricsFont.titleBold

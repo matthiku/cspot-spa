@@ -2,19 +2,22 @@ export default {
   state: {
     presentation: {
       versesPerSlide: 5,
-      selectedTab: '',
+      selectedTab: null,
       lyricsFont: {
         size: 40,
         bold: 'normal',
+        colour: '#ffffff',
         italic: 'normal',
         titleSize: 60,
         titleBold: 'normal',
-        titleItalic: 'italic'
+        titleColour: '#ffffff',
+        titleItalic: 'italic',
       },
       scriptureFont: {
         size: 35,
         bold: 'normal',
-        italic: 'normal'
+        italic: 'normal',
+        colour: '#ffffff'
       },
       showFooter: true
     }
@@ -37,28 +40,34 @@ export default {
     },
 
     setLyricsFont (state, payload) {
-      if (payload.lyricsFontSize)
-        state.presentation.lyricsFont.size = payload.lyricsFontSize
-      if (payload.lyricsTitleFontSize)
-        state.presentation.lyricsFont.titleSize = payload.lyricsTitleFontSize
       if (payload.lyricsBold)
         state.presentation.lyricsFont.bold = payload.lyricsBold
-      if (payload.lyricsTitleBold)
-        state.presentation.lyricsFont.titleBold = payload.lyricsTitleBold
+      if (payload.lyricsFontSize)
+        state.presentation.lyricsFont.size = payload.lyricsFontSize
       if (payload.lyricsItalic)
         state.presentation.lyricsFont.italic = payload.lyricsItalic
+      if (payload.lyricsColour)
+        state.presentation.lyricsFont.colour = payload.lyricsColour
+      if (payload.lyricsTitleBold)
+        state.presentation.lyricsFont.titleBold = payload.lyricsTitleBold
       if (payload.lyricsTitleItalic)
         state.presentation.lyricsFont.titleItalic = payload.lyricsTitleItalic
+      if (payload.lyricsTitleColour)
+        state.presentation.lyricsFont.titleColour = payload.lyricsTitleColour
+      if (payload.lyricsTitleFontSize)
+        state.presentation.lyricsFont.titleSize = payload.lyricsTitleFontSize
       localStorage.setItem('lyricsFont', JSON.stringify(state.presentation.lyricsFont))
     },
 
     setScriptureFont (state, payload) {
-      if (payload.scriptureFontSize)
-        state.presentation.scriptureFont.size = payload.scriptureFontSize
       if (payload.scriptureBold)
         state.presentation.scriptureFont.bold = payload.scriptureBold
+      if (payload.scriptureFontSize)
+        state.presentation.scriptureFont.size = payload.scriptureFontSize
       if (payload.scriptureItalic)
         state.presentation.scriptureFont.italic = payload.scriptureItalic
+      if (payload.scriptureColour)
+        state.presentation.scriptureFont.colour = payload.scriptureColour
       localStorage.setItem('scriptureFont', JSON.stringify(state.presentation.scriptureFont))
     }
   },

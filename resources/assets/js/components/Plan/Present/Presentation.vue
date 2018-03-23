@@ -88,7 +88,8 @@ export default {
 
   computed: {
     firstVisibleItem () {
-      return this.plan.actionList.find(item => item.type !== 'text' && !item.forLeadersEyesOnly)
+      if (this.plan.actionList.find)
+        return this.plan.actionList.find(item => item.type !== 'text' && !item.forLeadersEyesOnly)
     }
   },
 

@@ -1,7 +1,6 @@
 <template>
   <div class="text-xs-center">
-    <v-menu
-        bottom
+    <v-menu lazy left offset-y nudge-top="3px"
         v-model="menu"
         :close-on-content-click="false"
       >
@@ -15,25 +14,20 @@
       <v-card dark>
 
         <v-tabs
-            v-model="presentation.selectedTab"
+            v-model="active"
             dark color="black"
             slider-color="yellow"
             show-arrows
           >
-          <v-tab href="#tab-0" ripple>Lyrics Title</v-tab>
-          <v-tab href="#tab-1" ripple>Lyrics Text</v-tab>
+          <v-tab ripple>Lyrics Title</v-tab>
+          <v-tab ripple>Lyrics Text</v-tab>
 
-          <v-tab href="#tab-2" ripple>Scripture Text</v-tab>
+          <v-tab ripple>Scripture Text</v-tab>
 
-          <v-tab href="#tab-3" ripple>Colours</v-tab>
-        </v-tabs>
-
-
-        <v-tabs-items
-            v-model="presentation.selectedTab">
+          <v-tab ripple>Colours</v-tab>
 
           <!-- LYRICS TITLE configuration -->
-          <v-tab-item id="tab-0">
+          <v-tab-item>
             <v-card flat>
               <v-card-text>
                 <v-container fluid px-0 class="my-0 py-0">
@@ -60,7 +54,7 @@
           </v-tab-item>
 
           <!-- LYRICS TEXT configuration -->
-          <v-tab-item id="tab-1">
+          <v-tab-item>
             <v-card flat>
               <v-card-text>
                 <v-container fluid px-0 class="my-0 py-0">
@@ -88,7 +82,7 @@
 
 
           <!-- SCRIPTURE TEXT configuration -->
-          <v-tab-item id="tab-2">
+          <v-tab-item>
             <v-card flat>
               <v-card-text>
                 <v-container fluid px-0 class="my-0 py-0">
@@ -136,7 +130,7 @@
           </v-tab-item>
 
 
-          <v-tab-item id="tab-3">
+          <v-tab-item>
             <v-card flat>
               <v-card-text>
                 <v-container fluid grid-list-md>
@@ -157,7 +151,7 @@
             </v-card>
           </v-tab-item>
 
-        </v-tabs-items>
+        </v-tabs>
 
       </v-card>
     </v-menu>
@@ -169,6 +163,7 @@
     data () {
       return {
         menu: false,
+        active: null,
         radioGroup: 1,
         switch1: true,
         checkbox: true,

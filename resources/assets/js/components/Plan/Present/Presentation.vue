@@ -207,7 +207,7 @@ export default {
 
     // determine which Plan Activity Item to show next
     setPresentationSlide(seqNo) {
-      // console.log('setPresentationSlide')
+      // console.log('setPresentationSlide', seqNo)
       this.$store.commit('setPresentationSlide', {showSeqNo: seqNo})
       this.showCurrentItem() // make the current item visible (remove the 'hidden' class)
 
@@ -234,12 +234,13 @@ export default {
       for (let index = 0; index <= this.plan.actionList.length; index++) {
         slides = document.getElementsByClassName('slides-seqno-' + seqNo)
         if (slides.length) break // next valid item found
-        console.log('getCurrentSlides - SeqNo', seqNo, '- empty! Actions count:', this.plan.actionList.length, this.actionList.length)
+        // console.log('getCurrentSlides - SeqNo', seqNo, '- empty! Actions count:', this.plan.actionList.length, this.actionList.length)
         seqNo += dir
         if (seqNo < 0) seqNo = this.plan.actionList.length -1
         if (seqNo > this.plan.actionList.length) seqNo = 0
         if (this.plan.actionList.length === 1) seqNo = 1 // plan has only one item, no need to watch seqNo
       }
+      // console.log('getCurrentSlides - calling setPresentationSlide')
       this.setPresentationSlide(seqNo)
       if (!slides.length) {
         console.warn('getCurrentSlides - no slides found for', seqNo)
@@ -256,7 +257,7 @@ export default {
       let activeSeqNo = this.presentation.showSeqNo
       if (isNaN(activeSeqNo) || activeSeqNo > this.plan.actionList.length) {
         console.log('showNext - seqNo invalid:', activeSeqNo)
-        // this.emptyPlan()
+        this.emptyPlan()
         return
       }
 
@@ -308,7 +309,7 @@ export default {
 
   watch: {
     'presentation.versesPerSlide' (niu, old) {
-      if (niu === old) return
+      if (niu === parseInt(old)) return
       // go back to first slide of an item when this number is being changed
       this.showCurrentItem()
       this.showSlideNo = -1

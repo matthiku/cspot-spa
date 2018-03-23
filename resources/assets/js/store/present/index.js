@@ -34,7 +34,6 @@ export default {
   mutations: {
 
     setPresentation (state, payload) {
-      console.log('setPresentation', payload)
       state.presentation = payload
     },
 
@@ -44,7 +43,6 @@ export default {
     },
 
     setPresentationSlide (state, payload) {
-      console.log('setPresentationSlide', payload)
       state.presentation.showSeqNo = payload.showSeqNo
     },
 

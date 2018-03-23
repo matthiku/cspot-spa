@@ -1,11 +1,11 @@
 <template>
   <div class="text-xs-center">
-    <v-menu lazy left offset-y nudge-top="3px"
+    <v-menu left top
         v-model="menu"
         :close-on-content-click="false"
       >
       <v-btn fab small dark slot="activator">
-        <v-tooltip top>
+        <v-tooltip right>
           <v-icon slot="activator">text_format</v-icon>
           <span>configuration</span>
         </v-tooltip>

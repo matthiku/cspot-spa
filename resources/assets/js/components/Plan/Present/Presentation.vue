@@ -186,7 +186,7 @@ export default {
     showCurrentItem () {
       // remove 'hidden' class from the whole element (item) with the currently active SeqNo
       let planItems = document.getElementsByClassName('plan-action-item')
-      // console.log('SeqNo', this.presentation.showSeqNo, '- un-hide this item', planItems)
+      console.log('SeqNo', this.presentation.showSeqNo, '- un-hide this item', planItems)
       for (let index = 0; index < planItems.length; index++) {
         const elem = planItems[index];
         if (elem.id === 'item-seqno-' + this.presentation.showSeqNo) {
@@ -200,10 +200,11 @@ export default {
     setPresentationSlide(seqNo) {
       this.$store.commit('setPresentationSlide', {showSeqNo: seqNo})
       this.showCurrentItem() // make the current item visible (remove the 'hidden' class)
+
       // set focus again on the slide so that we can capture keyboard events
       let elem = document.getElementById('item-seqno-' + seqNo)
-      // console.log('setPresentationSlide', seqNo, elem)
       if (elem) elem.focus()
+
       // prepare ConfigMenu depending on current item type
       let item = this.actionList.find(elem => elem.seqNo === seqNo)
       if (item) {
@@ -212,6 +213,7 @@ export default {
       }
     },
 
+    // collect all html elements (slides) belonging to one action item
     getCurrentSlides(seqNo, dir) {
       if (seqNo < 0) seqNo = this.plan.actionList.length -1
       if (seqNo > this.plan.actionList.length) seqNo = 0
@@ -288,9 +290,18 @@ export default {
 
       // always set focus on the slide so that we can capture keyboard events
       let elem = document.getElementById('item-seqno-' + activeSeqNo)
-      console.log('showNext', activeSeqNo, elem)
+      // console.log('showNext', activeSeqNo, elem)
       if (elem) elem.focus()
     }    
+  },
+
+  watch: {
+    'presentation.versesPerSlide' () {
+      // go back to first slide of an item when this number is being changed
+      this.showCurrentItem()
+      this.showSlideNo = -1
+      this.showNext()
+    }
   },
 
   destroyed () {

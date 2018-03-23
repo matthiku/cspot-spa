@@ -33,66 +33,7 @@
               <v-card-text class="pb-0 mb-0">
                 <v-container fluid px-0 class="mt-0 pt-0">
 
-                  <v-layout row wrap justify-space-between>
-                    <v-flex xs9>
-                      <v-slider label="Text Size:" class="mb-0 pa-0" v-model="lyricsTitleFontSize" min="15" max="70"></v-slider>
-                    </v-flex>
-                    <v-flex xs2>
-                      <v-chip outline>{{ lyricsTitleFontSize }}</v-chip>
-                    </v-flex>
-                  </v-layout>
-                  <v-divider class="mt-1 mb-2"></v-divider>
-
-                  <v-layout row wrap justify-space-between>
-                    <v-flex xs9>
-                      <span class="input-group input-group--slider">
-                        <label>Text Color:</label>
-                      </span>
-                    </v-flex>
-                    <v-flex xs2>
-                      <swatches
-                          v-model="lyricsTitleColour"
-                          colors="material-light"
-                          popover-to="left"
-                          row-length="7"
-                        ></swatches>
-                    </v-flex>
-                  </v-layout>
-                  <v-divider class="mt-1 mb-2"></v-divider>
-
-                  <v-layout row wrap justify-space-between>
-                    <v-flex xs4>
-                      <v-switch
-                        :label="`Italic: ${lyricsTitleItalic.toString()}`"
-                        v-model="lyricsTitleItalic"
-                      ></v-switch>
-                    </v-flex>
-                    <v-flex xs4>
-                      <v-switch
-                        :label="`Bold: ${lyricsTitleBold.toString()}`"
-                        v-model="lyricsTitleBold"
-                      ></v-switch>
-                    </v-flex>
-                  </v-layout>
-                  <v-divider class="my-1"></v-divider>
-
-                  <v-layout row wrap justify-space-between>
-                    <v-flex xs8>
-                      <span class="input-group input-group--slider">
-                        <label>Text Alignement:</label>
-                      </span>                      
-                    </v-flex>
-                    <v-flex xs4>
-                      <v-radio-group v-model="lyricsTitleAlign">
-                        <v-radio
-                          v-for="n in aligns"
-                          :key="n"
-                          :label="`Align ${n}`"
-                          :value="n"
-                        ></v-radio>
-                      </v-radio-group>
-                    </v-flex>
-                  </v-layout>
+                  <font-setup entity="lyricsTitle"></font-setup>
 
                 </v-container>
               </v-card-text>
@@ -110,66 +51,7 @@
               <v-card-text class="pb-0 mb-0">
                 <v-container fluid px-0 class="mt-0 pt-0">
 
-                  <v-layout row wrap justify-space-between>
-                    <v-flex xs9>
-                      <v-slider label="Text Size:" class="mb-0 pa-0" v-model="lyricsFontSize" min="15" max="70"></v-slider>
-                    </v-flex>
-                    <v-flex xs2>
-                      <v-chip outline>{{ lyricsFontSize }}</v-chip>
-                    </v-flex>
-                  </v-layout>
-                  <v-divider class="mt-1 mb-2"></v-divider>
-
-                  <v-layout row wrap justify-space-between>
-                    <v-flex xs9>
-                      <span class="input-group input-group--slider">
-                        <label>Text Color:</label>
-                      </span>
-                    </v-flex>
-                    <v-flex xs2>
-                      <swatches
-                          v-model="lyricsColour"
-                          colors="material-light"
-                          popover-to="left"
-                          row-length="7"
-                        ></swatches>
-                    </v-flex>
-                  </v-layout>
-                  <v-divider class="mt-1 mb-2"></v-divider>
-
-                  <v-layout row wrap justify-space-between>
-                    <v-flex xs4>
-                      <v-switch
-                        :label="`Italic: ${lyricsItalic.toString()}`"
-                        v-model="lyricsItalic"
-                      ></v-switch>
-                    </v-flex>
-                    <v-flex xs4>
-                      <v-switch
-                        :label="`Bold: ${lyricsBold.toString()}`"
-                        v-model="lyricsBold"
-                      ></v-switch>
-                    </v-flex>
-                  </v-layout>
-                  <v-divider class="my-1"></v-divider>
-
-                  <v-layout row wrap justify-space-between>
-                    <v-flex xs8>
-                      <span class="input-group input-group--slider">
-                        <label>Text Alignement:</label>
-                      </span>                      
-                    </v-flex>
-                    <v-flex xs4>
-                      <v-radio-group v-model="lyricsAlign">
-                        <v-radio
-                          v-for="n in aligns"
-                          :key="n"
-                          :label="`Align ${n}`"
-                          :value="n"
-                        ></v-radio>
-                      </v-radio-group>
-                    </v-flex>
-                  </v-layout>
+                  <font-setup entity="lyrics"></font-setup>
 
                 </v-container>
               </v-card-text>
@@ -188,68 +70,9 @@
               <v-card-text>
                 <v-container fluid px-0 class="my-0 py-0">
 
-                  <v-layout row wrap justify-space-between>
-                    <v-flex xs9>
-                      <v-slider label="Text Size:" class="mb-0 pa-0" v-model="scriptureFontSize" min="15" max="70"></v-slider>
-                    </v-flex>
-                    <v-flex xs2>
-                      <v-chip outline>{{ scriptureFontSize }}</v-chip>
-                    </v-flex>
-                  </v-layout>
-                  <v-divider class="mt-1 mb-2"></v-divider>
+                  <font-setup entity="scripture"></font-setup>
 
-                  <v-layout row wrap justify-space-between>
-                    <v-flex xs9>
-                      <span class="input-group input-group--slider">
-                        <label>Text Color:</label>
-                      </span>
-                    </v-flex>
-                    <v-flex xs2>
-                      <swatches
-                          v-model="scriptureColour"
-                          colors="material-light"
-                          popover-to="left"
-                          row-length="7"
-                        ></swatches>
-                    </v-flex>
-                  </v-layout>
-                  <v-divider class="mt-1 mb-2"></v-divider>
-
-                  <v-layout row wrap justify-space-between>
-                    <v-flex xs4>
-                      <v-switch
-                        :label="`Italic: ${scriptureItalic.toString()}`"
-                        v-model="scriptureItalic"
-                      ></v-switch>
-                    </v-flex>
-                    <v-flex xs4>
-                      <v-switch
-                        :label="`Bold: ${scriptureBold.toString()}`"
-                        v-model="scriptureBold"
-                      ></v-switch>
-                    </v-flex>
-                  </v-layout>
-                  <v-divider class="my-1"></v-divider>
-
-                  <v-layout row wrap justify-space-between>
-                    <v-flex xs8>
-                      <span class="input-group input-group--slider">
-                        <label>Text Alignement:</label>
-                      </span>                      
-                    </v-flex>
-                    <v-flex xs4>
-                      <v-radio-group v-model="scriptureAlign">
-                        <v-radio
-                          v-for="n in aligns"
-                          :key="n"
-                          :label="`Align ${n}`"
-                          :value="n"
-                        ></v-radio>
-                      </v-radio-group>
-                    </v-flex>
-                  </v-layout>
                   <v-divider class="my-0"></v-divider>
-
                   <v-layout row wrap>
                     <v-flex xs10>
                       <v-slider label="Verses per Slide:" :min="1" :max="25" v-model="versesPerSlide"></v-slider>
@@ -299,38 +122,18 @@
 </template>
 
 <script>
-import Swatches from 'vue-swatches'
-import "vue-swatches/dist/vue-swatches.min.css"
+import FontSetup from './FontSetup'
 
 export default {
-  components: {Swatches},
+  components: {FontSetup},
 
   data () {
     return {
       menu: false,
       active: null,
-
       radioGroup: 1,
       switch1: true,
       checkbox: true,
-      aligns: ['left', 'center', 'right'],
-
-      lyricsFontSize: 35,
-      lyricsTitleFontSize: 50,
-      lyricsTitleItalic: false,
-      lyricsTitleColour: null,
-      lyricsTitleAlign: 'center',
-      lyricsTitleBold: false,
-      lyricsItalic: false,
-      lyricsColour: null,
-      lyricsAlign: 'center',
-      lyricsBold: false,
-
-      scriptureFontSize: 35,
-      scriptureItalic: false,
-      scriptureColour: null,
-      scriptureAlign: 'center',
-      scriptureBold: false,
       versesPerSlide: 0
     }
   },
@@ -341,75 +144,15 @@ export default {
     }
   },
 
+  // map all global settings to the local data
   mounted () {
     this.versesPerSlide = this.presentation.versesPerSlide || 5
-    this.scriptureBold = this.presentation.scriptureFont.bold === 'bold'
-    this.scriptureAlign = this.presentation.scriptureFont.align
-    this.scriptureItalic = this.presentation.scriptureFont.italic === 'italic'
-    this.scriptureColour = this.presentation.scriptureFont.colour
-    this.scriptureFontSize = this.presentation.scriptureFont.size
-
-    this.lyricsBold = this.presentation.lyricsFont.bold === 'bold'
-    this.lyricsAlign = this.presentation.lyricsFont.align
-    this.lyricsItalic = this.presentation.lyricsFont.italic === 'italic'
-    this.lyricsColour = this.presentation.lyricsFont.colour
-    this.lyricsFontSize = this.presentation.lyricsFont.size
-    this.lyricsTitleBold = this.presentation.lyricsFont.titleBold === 'bold'
-    this.lyricsTitleAlign = this.presentation.lyricsFont.titleAlign
-    this.lyricsTitleColour = this.presentation.lyricsFont.titleColour
-    this.lyricsTitleItalic = this.presentation.lyricsFont.titleItalic === 'italic'
-    this.lyricsTitleFontSize = this.presentation.lyricsFont.titleSize
   },
 
+  // when the local data changes, reflect it back to the global store
   watch: {
-    lyricsAlign (val) {
-      this.$store.commit('setLyricsFont', {lyricsAlign: val})
-    },
-    lyricsColour (val) {
-      this.$store.commit('setLyricsFont', {lyricsColour: val})
-    },
-    lyricsFontSize (val) {
-      this.$store.commit('setLyricsFont', {lyricsFontSize: val})
-    },
-    lyricsTitleFontSize (val) {
-      this.$store.commit('setLyricsFont', {lyricsTitleFontSize: val})
-    },
-    lyricsBold (val) {
-      this.$store.commit('setLyricsFont', {lyricsBold: val ? 'bold' : 'normal'})
-    },
-    lyricsTitleAlign (val) {
-      this.$store.commit('setLyricsFont', {lyricsTitleAlign: val})
-    },
-    lyricsTitleColour (val) {
-      this.$store.commit('setLyricsFont', {lyricsTitleColour: val})
-    },
-    lyricsTitleBold (val) {
-      this.$store.commit('setLyricsFont', {lyricsTitleBold: val ? 'bold' : 'normal'})
-    },
-    lyricsItalic (val) {
-      this.$store.commit('setLyricsFont', {lyricsItalic: val ? 'italic' : 'normal'})
-    },
-    lyricsTitleItalic (val) {
-      this.$store.commit('setLyricsFont', {lyricsTitleItalic: val ? 'italic' : 'normal'})
-    },
-
     versesPerSlide (val) {
       this.$store.commit('setVersesPerSlide', this.versesPerSlide)
-    },
-    scriptureAlign (val) {
-      this.$store.commit('setScriptureFont', {scriptureAlign: val})
-    },
-    scriptureColour (val) {
-      this.$store.commit('setScriptureFont', {scriptureColour: val})
-    },
-    scriptureFontSize (val) {
-      this.$store.commit('setScriptureFont', {scriptureFontSize: val})
-    },
-    scriptureBold (val) {
-      this.$store.commit('setScriptureFont', {scriptureBold: val ? 'bold' : 'normal'})
-    },
-    scriptureItalic (val) {
-      this.$store.commit('setScriptureFont', {scriptureItalic: val ? 'italic' : 'normal'})
     }
   }
 }

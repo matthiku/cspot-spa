@@ -80,11 +80,11 @@ export default {
     },
     lyricsTitleStyle () {
       return {
-        color: this.presentation.lyricsFont.titleColour,
-        fontSize: this.presentation.lyricsFont.titleSize + 'px',
-        textAlign: this.presentation.lyricsFont.titleAlign,
-        fontStyle: this.presentation.lyricsFont.titleItalic,
-        fontWeight: this.presentation.lyricsFont.titleBold
+        color: this.presentation.lyricsTitleFont.colour,
+        fontSize: this.presentation.lyricsTitleFont.size + 'px',
+        textAlign: this.presentation.lyricsTitleFont.align,
+        fontStyle: this.presentation.lyricsTitleFont.italic,
+        fontWeight: this.presentation.lyricsTitleFont.bold
       }
     }
   },

@@ -3,17 +3,19 @@ export default {
     presentation: {
       versesPerSlide: 5,
       selectedTab: null,
+      lyricsTitleFont: {
+        size: 40,
+        bold: 'normal',
+        align: 'center',
+        italic: 'normal',
+        colour: '#ffffff',
+      },
       lyricsFont: {
         size: 40,
         bold: 'normal',
         align: 'center',
-        colour: '#ffffff',
         italic: 'normal',
-        titleSize: 60,
-        titleBold: 'normal',
-        titleAlign: 'center',
-        titleColour: '#ffffff',
-        titleItalic: 'italic',
+        colour: '#ffffff',
       },
       scriptureFont: {
         size: 35,
@@ -42,42 +44,19 @@ export default {
       localStorage.setItem('versesPerSlide', payload)
     },
 
-    setLyricsFont (state, payload) {
-      if (payload.lyricsBold)
-        state.presentation.lyricsFont.bold = payload.lyricsBold
-      if (payload.lyricsAlign)
-        state.presentation.lyricsFont.align = payload.lyricsAlign
-      if (payload.lyricsFontSize)
-        state.presentation.lyricsFont.size = payload.lyricsFontSize
-      if (payload.lyricsItalic)
-        state.presentation.lyricsFont.italic = payload.lyricsItalic
-      if (payload.lyricsColour)
-        state.presentation.lyricsFont.colour = payload.lyricsColour
-      if (payload.lyricsTitleBold)
-        state.presentation.lyricsFont.titleBold = payload.lyricsTitleBold
-      if (payload.lyricsTitleAlign)
-        state.presentation.lyricsFont.titleAlign = payload.lyricsTitleAlign
-      if (payload.lyricsTitleItalic)
-        state.presentation.lyricsFont.titleItalic = payload.lyricsTitleItalic
-      if (payload.lyricsTitleColour)
-        state.presentation.lyricsFont.titleColour = payload.lyricsTitleColour
-      if (payload.lyricsTitleFontSize)
-        state.presentation.lyricsFont.titleSize = payload.lyricsTitleFontSize
-      localStorage.setItem('lyricsFont', JSON.stringify(state.presentation.lyricsFont))
-    },
+    setPresentationFont (state, payload) {
+      if (payload.bold)
+        state.presentation[payload.entity + 'Font'].bold = payload.bold
+      if (payload.align)
+        state.presentation[payload.entity + 'Font'].align = payload.align
+      if (payload.fontSize)
+        state.presentation[payload.entity + 'Font'].size = payload.fontSize
+      if (payload.italic)
+        state.presentation[payload.entity + 'Font'].italic = payload.italic
+      if (payload.colour)
+        state.presentation[payload.entity + 'Font'].colour = payload.colour
 
-    setScriptureFont (state, payload) {
-      if (payload.scriptureBold)
-        state.presentation.scriptureFont.bold = payload.scriptureBold
-      if (payload.scriptureAlign)
-        state.presentation.scriptureFont.align = payload.scriptureAlign
-      if (payload.scriptureFontSize)
-        state.presentation.scriptureFont.size = payload.scriptureFontSize
-      if (payload.scriptureItalic)
-        state.presentation.scriptureFont.italic = payload.scriptureItalic
-      if (payload.scriptureColour)
-        state.presentation.scriptureFont.colour = payload.scriptureColour
-      localStorage.setItem('scriptureFont', JSON.stringify(state.presentation.scriptureFont))
+      localStorage.setItem(payload.entity + 'Font', JSON.stringify(state.presentation.scriptureFont))
     }
   },
 
@@ -90,6 +69,9 @@ export default {
       }
       if (localStorage.getItem('lyricsFont')) {
         state.presentation.lyricsFont = JSON.parse(localStorage.getItem('lyricsFont'))
+      }
+      if (localStorage.getItem('lyricsTitleFont')) {
+        state.presentation.lyricsTitleFont = JSON.parse(localStorage.getItem('lyricsTitleFont'))
       }
       if (localStorage.getItem('scriptureFont')) {
         state.presentation.scriptureFont = JSON.parse(localStorage.getItem('scriptureFont'))

@@ -73,6 +73,7 @@ export default {
       return {
         color: this.presentation.lyricsFont.colour,
         fontSize: this.presentation.lyricsFont.size + 'px',
+        textAlign: this.presentation.lyricsFont.align,
         fontStyle: this.presentation.lyricsFont.italic,
         fontWeight: this.presentation.lyricsFont.bold
       }
@@ -81,6 +82,7 @@ export default {
       return {
         color: this.presentation.lyricsFont.titleColour,
         fontSize: this.presentation.lyricsFont.titleSize + 'px',
+        textAlign: this.presentation.lyricsFont.titleAlign,
         fontStyle: this.presentation.lyricsFont.titleItalic,
         fontWeight: this.presentation.lyricsFont.titleBold
       }

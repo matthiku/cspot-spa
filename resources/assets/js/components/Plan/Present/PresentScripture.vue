@@ -43,6 +43,7 @@ export default {
       return {
         color: this.presentation.scriptureFont.colour,
         fontSize: this.presentation.scriptureFont.size + 'px',
+        textAlign: this.presentation.scriptureFont.align,
         fontStyle: this.presentation.scriptureFont.italic,
         fontWeight: this.presentation.scriptureFont.bold
       }

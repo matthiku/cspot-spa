@@ -6,16 +6,19 @@ export default {
       lyricsFont: {
         size: 40,
         bold: 'normal',
+        align: 'center',
         colour: '#ffffff',
         italic: 'normal',
         titleSize: 60,
         titleBold: 'normal',
+        titleAlign: 'center',
         titleColour: '#ffffff',
         titleItalic: 'italic',
       },
       scriptureFont: {
         size: 35,
         bold: 'normal',
+        align: 'center',
         italic: 'normal',
         colour: '#ffffff'
       },
@@ -42,6 +45,8 @@ export default {
     setLyricsFont (state, payload) {
       if (payload.lyricsBold)
         state.presentation.lyricsFont.bold = payload.lyricsBold
+      if (payload.lyricsAlign)
+        state.presentation.lyricsFont.align = payload.lyricsAlign
       if (payload.lyricsFontSize)
         state.presentation.lyricsFont.size = payload.lyricsFontSize
       if (payload.lyricsItalic)
@@ -50,6 +55,8 @@ export default {
         state.presentation.lyricsFont.colour = payload.lyricsColour
       if (payload.lyricsTitleBold)
         state.presentation.lyricsFont.titleBold = payload.lyricsTitleBold
+      if (payload.lyricsTitleAlign)
+        state.presentation.lyricsFont.titleAlign = payload.lyricsTitleAlign
       if (payload.lyricsTitleItalic)
         state.presentation.lyricsFont.titleItalic = payload.lyricsTitleItalic
       if (payload.lyricsTitleColour)
@@ -62,6 +69,8 @@ export default {
     setScriptureFont (state, payload) {
       if (payload.scriptureBold)
         state.presentation.scriptureFont.bold = payload.scriptureBold
+      if (payload.scriptureAlign)
+        state.presentation.scriptureFont.align = payload.scriptureAlign
       if (payload.scriptureFontSize)
         state.presentation.scriptureFont.size = payload.scriptureFontSize
       if (payload.scriptureItalic)

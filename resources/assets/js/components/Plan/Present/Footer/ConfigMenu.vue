@@ -14,27 +14,40 @@
       <v-card style="min-height: 400px" dark>
 
         <v-tabs
-            v-model="active"
+            v-model="presentation.selectedTab"
             dark color="black"
             slider-color="yellow"
             show-arrows
           >
           <v-tab ripple>Lyrics Title</v-tab>
+
           <v-tab ripple>Lyrics Text</v-tab>
 
           <v-tab ripple>Scripture Text</v-tab>
 
-          <v-tab ripple>Colours</v-tab>
+          <v-tab ripple>Screen Setup</v-tab>
 
           <!-- LYRICS TITLE configuration -->
           <v-tab-item>
             <v-card style="min-height: 350px" flat>
               <v-card-text>
-                <v-container fluid px-0 class="my-0 py-0">
+                <v-container fluid px-0 class="mt-0 pt-0">
 
                   <v-layout row wrap justify-space-between>
                     <v-flex xs9>
-                      <v-subheader>Text Color</v-subheader>
+                      <v-slider label="Font Size:" class="mb-0 pa-0" v-model="lyricsTitleFontSize" min="15" max="70"></v-slider>
+                    </v-flex>
+                    <v-flex xs2>
+                      <v-chip outline>{{ lyricsTitleFontSize }}</v-chip>
+                    </v-flex>
+                  </v-layout>
+                  <v-divider class="my-1"></v-divider>
+
+                  <v-layout row wrap justify-space-between>
+                    <v-flex xs9>
+                      <span class="input-group input-group--slider">
+                        <label>Text Color:</label>
+                      </span>
                     </v-flex>
                     <v-flex xs2>
                       <swatches
@@ -45,15 +58,7 @@
                         ></swatches>
                     </v-flex>
                   </v-layout>
-
-                  <v-layout row wrap justify-space-between>
-                    <v-flex xs9>
-                      <v-slider label="Font size:" class="ma-0 pa-0" v-model="lyricsTitleFontSize" min="15" max="70"></v-slider>
-                    </v-flex>
-                    <v-flex xs2>
-                      <v-chip outline>{{ lyricsTitleFontSize }}</v-chip>
-                    </v-flex>
-                  </v-layout>
+                  <v-divider class="my-1"></v-divider>
 
                   <v-layout row wrap justify-space-around>
                     <v-flex xs4>
@@ -67,6 +72,25 @@
                         :label="`Bold: ${lyricsTitleBold.toString()}`"
                         v-model="lyricsTitleBold"
                       ></v-switch>
+                    </v-flex>
+                  </v-layout>
+                  <v-divider class="my-1"></v-divider>
+
+                  <v-layout row wrap justify-space-between>
+                    <v-flex xs8>
+                      <span class="input-group input-group--slider">
+                        <label>Text Alignement:</label>
+                      </span>                      
+                    </v-flex>
+                    <v-flex xs4>
+                      <v-radio-group v-model="lyricsTitleAlign">
+                        <v-radio
+                          v-for="n in aligns"
+                          :key="n"
+                          :label="`Align ${n}`"
+                          :value="n"
+                        ></v-radio>
+                      </v-radio-group>
                     </v-flex>
                   </v-layout>
 
@@ -84,11 +108,11 @@
           <v-tab-item>
             <v-card flat>
               <v-card-text>
-                <v-container fluid px-0 class="my-0 py-0">
+                <v-container fluid px-0 class="mt-0 pt-0">
 
                   <v-layout row wrap justify-space-between>
                     <v-flex xs9>
-                      <v-subheader>Text Color</v-subheader>
+                      <label>Text Color:</label>
                     </v-flex>
                     <v-flex xs2>
                       <swatches
@@ -99,15 +123,17 @@
                         ></swatches>
                     </v-flex>
                   </v-layout>
+                  <v-divider></v-divider>
 
                   <v-layout row wrap justify-space-between>
                     <v-flex xs9>
-                      <v-slider label="Font size:" class="ma-0 pa-0" v-model="lyricsFontSize" min="15" max="70"></v-slider>
+                      <v-slider label="Font size:" class="mb-0 pa-0" v-model="lyricsFontSize" min="15" max="70"></v-slider>
                     </v-flex>
                     <v-flex xs2>
                       <v-chip outline>{{ lyricsFontSize }}</v-chip>
                     </v-flex>
                   </v-layout>
+                  <v-divider></v-divider>
 
                   <v-layout row wrap justify-space-around>
                     <v-flex xs4>
@@ -163,7 +189,7 @@
                       ></v-switch>
                     </v-flex>
                   </v-layout>
-                  <v-divider light></v-divider>
+                  <v-divider></v-divider>
                   <v-layout row wrap>
                     <v-flex xs10>
                       <v-slider label="Verses per Slide:" :min="1" :max="25" v-model="versesPerSlide"></v-slider>
@@ -223,24 +249,28 @@ export default {
     return {
       menu: false,
       active: null,
+
       radioGroup: 1,
       switch1: true,
       checkbox: true,
+      aligns: ['left', 'center', 'right'],
 
       lyricsFontSize: 35,
       lyricsTitleFontSize: 50,
       lyricsTitleItalic: false,
       lyricsTitleColour: null,
+      lyricsTitleAlign: 'center',
       lyricsTitleBold: false,
       lyricsItalic: false,
       lyricsColour: null,
+      lyricsAlign: 'center',
       lyricsBold: false,
 
       scriptureFontSize: 35,
       scriptureItalic: false,
       scriptureColour: null,
+      scriptureAlign: 'center',
       scriptureBold: false,
-
       versesPerSlide: 0
     }
   },
@@ -253,25 +283,27 @@ export default {
 
   mounted () {
     this.versesPerSlide = this.presentation.versesPerSlide || 5
-
     this.scriptureBold = this.presentation.scriptureFont.bold === 'bold'
+    this.scriptureAlign = this.presentation.scriptureFont.align
     this.scriptureItalic = this.presentation.scriptureFont.italic === 'italic'
     this.scriptureColour = this.presentation.scriptureFont.colour
     this.scriptureFontSize = this.presentation.scriptureFont.size
 
     this.lyricsBold = this.presentation.lyricsFont.bold === 'bold'
+    this.lyricsAlign = this.presentation.lyricsFont.align
     this.lyricsItalic = this.presentation.lyricsFont.italic === 'italic'
     this.lyricsColour = this.presentation.lyricsFont.colour
     this.lyricsFontSize = this.presentation.lyricsFont.size
     this.lyricsTitleBold = this.presentation.lyricsFont.titleBold === 'bold'
+    this.lyricsTitleAlign = this.presentation.lyricsFont.titleAlign
     this.lyricsTitleColour = this.presentation.lyricsFont.titleColour
     this.lyricsTitleItalic = this.presentation.lyricsFont.titleItalic === 'italic'
     this.lyricsTitleFontSize = this.presentation.lyricsFont.titleSize
   },
 
   watch: {
-    versesPerSlide (val) {
-      this.$store.commit('setVersesPerSlide', this.versesPerSlide)
+    lyricsAlign (val) {
+      this.$store.commit('setLyricsFont', {lyricsAlign: val})
     },
     lyricsColour (val) {
       this.$store.commit('setLyricsFont', {lyricsColour: val})
@@ -279,14 +311,14 @@ export default {
     lyricsFontSize (val) {
       this.$store.commit('setLyricsFont', {lyricsFontSize: val})
     },
-    lyricsColour (val) {
-      this.$store.commit('setLyricsFont', {lyricsColour: val})
-    },
     lyricsTitleFontSize (val) {
       this.$store.commit('setLyricsFont', {lyricsTitleFontSize: val})
     },
     lyricsBold (val) {
       this.$store.commit('setLyricsFont', {lyricsBold: val ? 'bold' : 'normal'})
+    },
+    lyricsTitleAlign (val) {
+      this.$store.commit('setLyricsFont', {lyricsTitleAlign: val})
     },
     lyricsTitleColour (val) {
       this.$store.commit('setLyricsFont', {lyricsTitleColour: val})
@@ -301,6 +333,9 @@ export default {
       this.$store.commit('setLyricsFont', {lyricsTitleItalic: val ? 'italic' : 'normal'})
     },
 
+    versesPerSlide (val) {
+      this.$store.commit('setVersesPerSlide', this.versesPerSlide)
+    },
     scriptureColour (val) {
       this.$store.commit('setScriptureFont', {scriptureColour: val})
     },

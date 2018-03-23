@@ -29,19 +29,19 @@
 
           <!-- LYRICS TITLE configuration -->
           <v-tab-item>
-            <v-card style="min-height: 350px" flat>
-              <v-card-text>
+            <v-card flat>
+              <v-card-text class="pb-0 mb-0">
                 <v-container fluid px-0 class="mt-0 pt-0">
 
                   <v-layout row wrap justify-space-between>
                     <v-flex xs9>
-                      <v-slider label="Font Size:" class="mb-0 pa-0" v-model="lyricsTitleFontSize" min="15" max="70"></v-slider>
+                      <v-slider label="Text Size:" class="mb-0 pa-0" v-model="lyricsTitleFontSize" min="15" max="70"></v-slider>
                     </v-flex>
                     <v-flex xs2>
                       <v-chip outline>{{ lyricsTitleFontSize }}</v-chip>
                     </v-flex>
                   </v-layout>
-                  <v-divider class="my-1"></v-divider>
+                  <v-divider class="mt-1 mb-2"></v-divider>
 
                   <v-layout row wrap justify-space-between>
                     <v-flex xs9>
@@ -58,9 +58,9 @@
                         ></swatches>
                     </v-flex>
                   </v-layout>
-                  <v-divider class="my-1"></v-divider>
+                  <v-divider class="mt-1 mb-2"></v-divider>
 
-                  <v-layout row wrap justify-space-around>
+                  <v-layout row wrap justify-space-between>
                     <v-flex xs4>
                       <v-switch
                         :label="`Italic: ${lyricsTitleItalic.toString()}`"
@@ -97,7 +97,7 @@
                 </v-container>
               </v-card-text>
 
-              <v-card-actions>
+              <v-card-actions class="pt-0">
                 <v-spacer></v-spacer>
                 <v-btn small @click="menu = false">OK</v-btn>
               </v-card-actions>
@@ -107,12 +107,24 @@
           <!-- LYRICS TEXT configuration -->
           <v-tab-item>
             <v-card flat>
-              <v-card-text>
+              <v-card-text class="pb-0 mb-0">
                 <v-container fluid px-0 class="mt-0 pt-0">
 
                   <v-layout row wrap justify-space-between>
                     <v-flex xs9>
-                      <label>Text Color:</label>
+                      <v-slider label="Text Size:" class="mb-0 pa-0" v-model="lyricsFontSize" min="15" max="70"></v-slider>
+                    </v-flex>
+                    <v-flex xs2>
+                      <v-chip outline>{{ lyricsFontSize }}</v-chip>
+                    </v-flex>
+                  </v-layout>
+                  <v-divider class="mt-1 mb-2"></v-divider>
+
+                  <v-layout row wrap justify-space-between>
+                    <v-flex xs9>
+                      <span class="input-group input-group--slider">
+                        <label>Text Color:</label>
+                      </span>
                     </v-flex>
                     <v-flex xs2>
                       <swatches
@@ -123,19 +135,9 @@
                         ></swatches>
                     </v-flex>
                   </v-layout>
-                  <v-divider></v-divider>
+                  <v-divider class="mt-1 mb-2"></v-divider>
 
                   <v-layout row wrap justify-space-between>
-                    <v-flex xs9>
-                      <v-slider label="Font size:" class="mb-0 pa-0" v-model="lyricsFontSize" min="15" max="70"></v-slider>
-                    </v-flex>
-                    <v-flex xs2>
-                      <v-chip outline>{{ lyricsFontSize }}</v-chip>
-                    </v-flex>
-                  </v-layout>
-                  <v-divider></v-divider>
-
-                  <v-layout row wrap justify-space-around>
                     <v-flex xs4>
                       <v-switch
                         :label="`Italic: ${lyricsItalic.toString()}`"
@@ -149,11 +151,30 @@
                       ></v-switch>
                     </v-flex>
                   </v-layout>
+                  <v-divider class="my-1"></v-divider>
+
+                  <v-layout row wrap justify-space-between>
+                    <v-flex xs8>
+                      <span class="input-group input-group--slider">
+                        <label>Text Alignement:</label>
+                      </span>                      
+                    </v-flex>
+                    <v-flex xs4>
+                      <v-radio-group v-model="lyricsAlign">
+                        <v-radio
+                          v-for="n in aligns"
+                          :key="n"
+                          :label="`Align ${n}`"
+                          :value="n"
+                        ></v-radio>
+                      </v-radio-group>
+                    </v-flex>
+                  </v-layout>
 
                 </v-container>
               </v-card-text>
 
-              <v-card-actions>
+              <v-card-actions class="pt-0">
                 <v-spacer></v-spacer>
                 <v-btn small @click="menu = false">OK</v-btn>
               </v-card-actions>
@@ -166,30 +187,69 @@
             <v-card flat>
               <v-card-text>
                 <v-container fluid px-0 class="my-0 py-0">
-                  <v-layout row wrap>
-                    <v-flex xs10>
-                      <v-slider label="Font size:" class="ma-0 pa-0" v-model="scriptureFontSize" min="15" max="70"></v-slider>
+
+                  <v-layout row wrap justify-space-between>
+                    <v-flex xs9>
+                      <v-slider label="Text Size:" class="mb-0 pa-0" v-model="scriptureFontSize" min="15" max="70"></v-slider>
                     </v-flex>
                     <v-flex xs2>
                       <v-chip outline>{{ scriptureFontSize }}</v-chip>
                     </v-flex>
                   </v-layout>
+                  <v-divider class="mt-1 mb-2"></v-divider>
 
-                  <v-layout row wrap>
-                    <v-flex xs6>
+                  <v-layout row wrap justify-space-between>
+                    <v-flex xs9>
+                      <span class="input-group input-group--slider">
+                        <label>Text Color:</label>
+                      </span>
+                    </v-flex>
+                    <v-flex xs2>
+                      <swatches
+                          v-model="scriptureColour"
+                          colors="material-light"
+                          popover-to="left"
+                          row-length="7"
+                        ></swatches>
+                    </v-flex>
+                  </v-layout>
+                  <v-divider class="mt-1 mb-2"></v-divider>
+
+                  <v-layout row wrap justify-space-between>
+                    <v-flex xs4>
                       <v-switch
-                        :label="`Italic: ${switch1.toString()}`"
+                        :label="`Italic: ${scriptureItalic.toString()}`"
                         v-model="scriptureItalic"
                       ></v-switch>
                     </v-flex>
-                    <v-flex xs-6>
+                    <v-flex xs4>
                       <v-switch
-                        :label="`Bold: ${switch1.toString()}`"
+                        :label="`Bold: ${scriptureBold.toString()}`"
                         v-model="scriptureBold"
                       ></v-switch>
                     </v-flex>
                   </v-layout>
-                  <v-divider></v-divider>
+                  <v-divider class="my-1"></v-divider>
+
+                  <v-layout row wrap justify-space-between>
+                    <v-flex xs8>
+                      <span class="input-group input-group--slider">
+                        <label>Text Alignement:</label>
+                      </span>                      
+                    </v-flex>
+                    <v-flex xs4>
+                      <v-radio-group v-model="scriptureAlign">
+                        <v-radio
+                          v-for="n in aligns"
+                          :key="n"
+                          :label="`Align ${n}`"
+                          :value="n"
+                        ></v-radio>
+                      </v-radio-group>
+                    </v-flex>
+                  </v-layout>
+                  <v-divider class="my-0"></v-divider>
+
                   <v-layout row wrap>
                     <v-flex xs10>
                       <v-slider label="Verses per Slide:" :min="1" :max="25" v-model="versesPerSlide"></v-slider>
@@ -335,6 +395,9 @@ export default {
 
     versesPerSlide (val) {
       this.$store.commit('setVersesPerSlide', this.versesPerSlide)
+    },
+    scriptureAlign (val) {
+      this.$store.commit('setScriptureFont', {scriptureAlign: val})
     },
     scriptureColour (val) {
       this.$store.commit('setScriptureFont', {scriptureColour: val})

@@ -234,7 +234,7 @@ export default {
       for (let index = 0; index <= this.plan.actionList.length; index++) {
         slides = document.getElementsByClassName('slides-seqno-' + seqNo)
         if (slides.length) break // next valid item found
-        // console.log('getCurrentSlides - SeqNo', seqNo, '- empty! Actions count:', this.plan.actionList.length, this.actionList.length)
+        console.log('getCurrentSlides - SeqNo', seqNo, '- empty! Actions count:', this.plan.actionList.length, this.actionList.length)
         seqNo += dir
         if (seqNo < 0) seqNo = this.plan.actionList.length -1
         if (seqNo > this.plan.actionList.length) seqNo = 0
@@ -242,6 +242,7 @@ export default {
       }
       this.setPresentationSlide(seqNo)
       if (!slides.length) {
+        console.warn('getCurrentSlides - no slides found for', seqNo)
         this.emptyPlan()
         return
       }
@@ -254,7 +255,8 @@ export default {
 
       let activeSeqNo = this.presentation.showSeqNo
       if (isNaN(activeSeqNo) || activeSeqNo > this.plan.actionList.length) {
-        this.emptyPlan()
+        console.log('showNext - seqNo invalid:', activeSeqNo)
+        // this.emptyPlan()
         return
       }
 

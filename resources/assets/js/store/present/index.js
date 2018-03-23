@@ -2,7 +2,9 @@ export default {
   state: {
     presentation: {
       versesPerSlide: 5,
-      selectedTab: null,
+      selectedTab: 1,
+      blankSlide: true,
+      slideBgColour: '#e1f5fe',
       lyricsTitleFont: {
         size: 40,
         bold: 'normal',
@@ -32,16 +34,18 @@ export default {
   mutations: {
 
     setPresentation (state, payload) {
+      console.log('setPresentation', payload)
       state.presentation = payload
     },
 
-    setPresentationSlide (state, payload) {
-      state.presentation.showSeqNo = payload.showSeqNo
+    setPresentationItem (state, payload) {
+      state.presentation[payload.item] = payload.value
+      localStorage.setItem(payload.item, payload.value)
     },
 
-    setVersesPerSlide (state, payload) {
-      state.presentation.versesPerSlide = payload
-      localStorage.setItem('versesPerSlide', payload)
+    setPresentationSlide (state, payload) {
+      console.log('setPresentationSlide', payload)
+      state.presentation.showSeqNo = payload.showSeqNo
     },
 
     setPresentationFont (state, payload) {
@@ -66,6 +70,12 @@ export default {
     presentation (state) {
       if (localStorage.getItem('versesPerSlide')) {
         state.presentation.versesPerSlide = localStorage.getItem('versesPerSlide')
+      }
+      if (localStorage.getItem('blankSlide')) {
+        state.presentation.blankSlide = localStorage.getItem('blankSlide')
+      }
+      if (localStorage.getItem('slideBgColour')) {
+        state.presentation.slideBgColour = localStorage.getItem('slideBgColour')
       }
       if (localStorage.getItem('lyricsFont')) {
         state.presentation.lyricsFont = JSON.parse(localStorage.getItem('lyricsFont'))

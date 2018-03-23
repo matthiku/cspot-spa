@@ -11,7 +11,7 @@
         </v-tooltip>
       </v-btn>
 
-      <v-card style="min-height: 400px" dark>
+      <v-card style="min-height: 500px" dark>
 
         <v-tabs
             v-model="presentation.selectedTab"
@@ -97,16 +97,37 @@
             <v-card flat>
               <v-card-text>
                 <v-container fluid grid-list-md>
-                  <v-layout row wrap>
+
+                  <v-layout row wrap justify-space-between>
                     <v-flex xs9>
-                      <v-slider label="Verses per Slide" :min="1" :max="25" v-model="versesPerSlide"></v-slider>
+                      <span class="input-group input-group--slider">
+                        <label>Slides Background Color:</label>
+                      </span>
                     </v-flex>
-                    <v-flex xs3>
-                      <v-text-field v-model="versesPerSlide" type="number"></v-text-field>
+                    <v-flex xs2>
+                      <swatches
+                          v-model="slideBgColour"
+                          colors="material-dark"
+                          popover-to="left"
+                          row-length="7"
+                        ></swatches>
                     </v-flex>
                   </v-layout>
+                  <v-divider class="mt-1 mb-2"></v-divider>
+
+                  <v-layout row wrap>
+                    <v-flex xs12>
+                      Show Blank Slides between Plan Action Items?
+                      <v-checkbox
+                        :label="`${blankSlide.toString()}`"
+                        v-model="blankSlide"
+                      ></v-checkbox>                      
+                    </v-flex>
+                  </v-layout>
+
                 </v-container>
               </v-card-text>
+
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn small @click="menu = false">OK</v-btn>
@@ -123,18 +144,19 @@
 
 <script>
 import FontSetup from './FontSetup'
+import Swatches from 'vue-swatches'
+import "vue-swatches/dist/vue-swatches.min.css"
 
 export default {
-  components: {FontSetup},
+  components: {FontSetup, Swatches},
 
   data () {
     return {
       menu: false,
       active: null,
-      radioGroup: 1,
-      switch1: true,
-      checkbox: true,
-      versesPerSlide: 0
+      versesPerSlide: 0,
+      blankSlide: true,
+      slideBgColour: '#e1f5fe'
     }
   },
 
@@ -147,12 +169,20 @@ export default {
   // map all global settings to the local data
   mounted () {
     this.versesPerSlide = this.presentation.versesPerSlide || 5
+    this.blankSlide = this.presentation.blankSlide || true
+    this.slideBgColour = this.presentation.slideBgColour || '#e1f5fe'
   },
 
   // when the local data changes, reflect it back to the global store
   watch: {
-    versesPerSlide (val) {
-      this.$store.commit('setVersesPerSlide', this.versesPerSlide)
+    versesPerSlide (value) {
+      this.$store.commit('setPresentationItem', {item: 'versesPerSlide', value})
+    },
+    blankSlide (value) {
+      this.$store.commit('setPresentationItem', {item: 'blankSlide', value})
+    },
+    slideBgColour (value) {
+      this.$store.commit('setPresentationItem', {item: 'slideBgColour', value})
     }
   }
 }

@@ -62,7 +62,28 @@ export default {
     }
   },
 
+  watch: {
+    'presentation.showSeqNo' (valnew, volold) {
+      console.log(valnew, valold)
+      if (val == this.item.seqNo) {
+        console.log('this component has the current show item')
+      }
+    },
+    'presentation.versesPerSlide' (niu, old) {
+      console.log(niu,old)
+    },
+    showing (valnew, valold) {
+      console.log('showing', val);
+    },
+    presentation (v) {
+      console.log(v)
+    }
+  },
+
   computed: {
+    showing () {
+      return this.presentation.showSeqNo
+    },
     slideClass () {
       return 'slides-seqno-' + this.item.seqNo
     },

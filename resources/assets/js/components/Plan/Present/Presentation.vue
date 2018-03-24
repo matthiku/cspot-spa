@@ -213,9 +213,10 @@ export default {
 
     // determine which Plan Activity Item to show next
     setPresentationSlide(seqNo) {
-      // console.log('setPresentationSlide', seqNo)
-      this.$store.commit('setPresentationSlide', {showSeqNo: seqNo})
-      this.showCurrentItem() // make the current item visible (remove the 'hidden' class)
+      this.$store.commit('setPresentationItem', {item: 'showSeqNo', value: seqNo})
+
+      // make the current item visible (remove the 'hidden' class)
+      this.showCurrentItem()
 
       // set focus again on the slide so that we can capture keyboard events
       let elem = document.getElementById('item-seqno-' + seqNo)
@@ -297,13 +298,14 @@ export default {
 
       // look for the next slide to be shown and hide all others
       for (let index = 0; index < slides.length; index++) {
-        if (index === 0 && this.showSlideNo === 0 && this.presentation.blankSlide && !this.blankShowed) {
-          this.blankShowed = true
-          console.log('showing blank slide!', this.showSlideNo)
-          this.showSlideNo = -1
-          break // presentation configuration requested a BLANK SLIDE
-        } else {
-          this.blankShowed = false
+        if (this.presentation.blankSlide) {
+          if (index === 0 && this.showSlideNo === 0 && !this.blankShowed) {
+            this.blankShowed = true
+            this.showSlideNo = -1
+            break // presentation configuration requested a BLANK SLIDE
+          } else {
+            this.blankShowed = false
+          }
         }
         const element = slides[index]
         if (index === this.showSlideNo) {
@@ -328,6 +330,9 @@ export default {
       this.showCurrentItem()
       this.showSlideNo = -1
       this.showNext()
+    },
+    'presentation.showSeqNo' (valnew, valold) {
+      console.log('presn showSeqNo', valnew, valold)
     }
   },
 

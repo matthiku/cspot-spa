@@ -42,10 +42,6 @@ export default {
       localStorage.setItem(payload.item, payload.value)
     },
 
-    setPresentationSlide (state, payload) {
-      state.presentation.showSeqNo = payload.showSeqNo
-    },
-
     setPresentationFont (state, payload) {
       if (payload.bold)
         state.presentation[payload.entity + 'Font'].bold = payload.bold
@@ -67,10 +63,10 @@ export default {
 
     presentation (state) {
       if (localStorage.getItem('versesPerSlide')) {
-        state.presentation.versesPerSlide = localStorage.getItem('versesPerSlide')
+        state.presentation.versesPerSlide = parseInt(localStorage.getItem('versesPerSlide'))
       }
       if (localStorage.getItem('blankSlide')) {
-        state.presentation.blankSlide = localStorage.getItem('blankSlide')
+        state.presentation.blankSlide = localStorage.getItem('blankSlide') === 'true' ? true : false
       }
       if (localStorage.getItem('slideBgColour')) {
         state.presentation.slideBgColour = localStorage.getItem('slideBgColour')

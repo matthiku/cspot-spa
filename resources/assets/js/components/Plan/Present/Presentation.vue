@@ -112,6 +112,7 @@ export default {
     }
     // ... and the plan contains action items!
     if (this.plan && (!this.plan.hasOwnProperty('actionList') || !this.plan.actionList.length)) {
+      // TODO: disable the 'Present' links on the Plans Details page or enable 'impromptu' presentations!
       this.$store.commit('setError', 'Cannot present, this plan has no actions!')
       this.exitPresentation()
       return
@@ -156,13 +157,13 @@ export default {
       if (event.code === 'ArrowLeft') this.showNext(-1)
       if (event.code === 'Space') this.showNext()
       if (event.code === 'Backspace') this.showNext(-1)
-      if (event.code === 'Home') { // go to first valid slide
+      if (event.code === 'Home') { // go to first valid ITEM
         this.setPresentationSlide(this.firstVisibleItem.seqNo)
         this.showSlideNo = -1
         this.showNext()
         return
       }
-      if (event.code === 'End') { // go to last valid slide
+      if (event.code === 'End') { // go to last valid PLAN ITEM
         this.setPresentationSlide(this.plan.actionList.length - 1)
         this.showSlideNo = 0
         this.showNext(-1)
@@ -178,8 +179,8 @@ export default {
       }
       if (event.code === 'go') {
         if (event.where === 'back') this.exitPresentation()
-        if (event.where === 'nextSlide') this.showNext()
-        if (event.where === 'prevSlide') this.showNext(-1)
+        if (event.where === 'nextItem') this.gotoThisSlide(this.presentation.showSeqNo + 1)
+        if (event.where === 'prevItem') this.gotoThisSlide(this.presentation.showSeqNo - 1, -1)
         if (!isNaN(event.where)) this.gotoThisSlide(event.where)
       }
       //TODO: NumpadAdd/NumpadSubtract -> increase/decrease font size, Minus, ...
@@ -216,92 +217,19 @@ export default {
       }
     },
 
-    // collect all html elements (slides) belonging to one Plan Action Item
-    getCurrentSlides(seqNo, dir) {
-      if (seqNo < 0) seqNo = this.plan.actionList.length -1
-      if (seqNo > this.plan.actionList.length) seqNo = 0
-      if (this.plan.actionList.length === 1) seqNo = 1 // plan has only one item, no need to watch seqNo
-
-      // find the next (resp. previous) non-empty item but make sure we do not run this endlessly on an empty plan
-      let slides
-      for (let index = 0; index <= this.plan.actionList.length; index++) {
-        slides = document.getElementsByClassName('slides-seqno-' + seqNo)
-        if (slides.length) break // next valid item found
-        // console.log('getCurrentSlides - SeqNo', seqNo, '- empty! Actions count:', this.plan.actionList.length, this.actionList.length)
-        seqNo += dir
-        if (seqNo < 0) seqNo = this.plan.actionList.length -1
-        if (seqNo > this.plan.actionList.length) seqNo = 0
-        if (this.plan.actionList.length === 1) seqNo = 1 // plan has only one item, no need to watch seqNo
-      }
-      // console.log('getCurrentSlides - calling setPresentationSlide')
-      this.setPresentationSlide(seqNo)
-      if (!slides.length) {
-        console.warn('getCurrentSlides - no slides found for', seqNo)
-        this.emptyPlan()
-        return
-      }
-      return slides
-    },
-
     showNext(dir) {
       // default direction is forward, -1 for backwards
       if (dir === undefined) dir = 1
 
       let activeSeqNo = this.presentation.showSeqNo
       if (isNaN(activeSeqNo) || activeSeqNo > this.plan.actionList.length) {
-        console.log('showNext - seqNo invalid:', activeSeqNo)
+        console.warn('showNext - seqNo invalid:', activeSeqNo)
         this.emptyPlan()
         return
       }
 
-      // increase the visible-slide-indicator but make sure we do not reach 'out-of-bounds'
+      // increase the visible-slide-indicator
       this.showSlideNo = this.showSlideNo + dir
-      return
-
-      // get all slides of the currently shown sequence number (seqNo)
-      let slides = this.getCurrentSlides(activeSeqNo, dir)
-      // console.log('showNext - SeqNo:', activeSeqNo, '- un-hide slide number', this.showSlideNo)
-      if (!slides || !slides.length) return
-
-      // have we reached beyond the BEGINNING of the current item?
-      if (this.showSlideNo < 0) {
-        // ... then we need to go to the PREVIOUS Plan Activity Item
-        activeSeqNo -= 1
-        this.setPresentationSlide(activeSeqNo)
-        slides = this.getCurrentSlides(activeSeqNo, dir)
-        this.showSlideNo = slides.length -1
-        // console.log('showNext - SeqNo:', activeSeqNo, '- showing PREVIOUS item, Slide number', this.showSlideNo)
-      }
-
-      // have we reached the END of the current item?
-      if (this.showSlideNo >= slides.length) {
-        // ... then we have to go to the NEXT Plan Activity Item
-        activeSeqNo += 1
-        this.setPresentationSlide(activeSeqNo)
-        slides = this.getCurrentSlides(activeSeqNo, dir)
-        this.showSlideNo = 0
-        // console.log('showNext - SeqNo:', activeSeqNo, '- showing NEXT item, Slide number:', this.showSlideNo)
-      }
-
-      // look for the next slide to be shown and hide all others
-      for (let index = 0; index < slides.length; index++) {
-        if (this.presentation.blankSlide) {
-          if (index === 0 && this.showSlideNo === 0 && !this.blankShowed) {
-            this.blankShowed = true
-            this.showSlideNo = -1
-            break // presentation configuration requested a BLANK SLIDE
-          } else {
-            this.blankShowed = false
-          }
-        }
-        const element = slides[index]
-        if (index === this.showSlideNo) {
-          // console.log('showNext - showing element', element)
-          element.classList.remove('hidden')
-        } else {
-          element.classList.add('hidden')
-        }
-      }
 
       // always set focus on the slide so that we can capture keyboard events
       let elem = document.getElementById('item-seqno-' + activeSeqNo)

@@ -4,18 +4,20 @@
     <!-- SONG -->
     <present-lyrics
         v-if="item.type==='song'"
-        :item="item"
         :currentItemSeqNo="currentItemSeqNo"
         :currentSlideNo="currentSlideNo"
+        v-on:keyPressed="keyPressed"
+        :item="item"
       ></present-lyrics>
 
 
     <!-- READING -->
     <present-scripture 
         v-if="item.type==='read'"
-        :item="item"
+        v-on:keyPressed="keyPressed"
         :currentSlideNo="currentSlideNo"
         :currentItemSeqNo="currentItemSeqNo"
+        :item="item"
       ></present-scripture>
 
 
@@ -35,6 +37,12 @@ export default {
     presentLyrics
   },
 
-  props: ['item', 'currentItemSeqNo', 'currentSlideNo']
+  props: ['item', 'currentItemSeqNo', 'currentSlideNo'],
+
+  methods: {
+    keyPressed (what) {
+      this.$emit('keyPressed', what)
+    }
+  }
 }
 </script>

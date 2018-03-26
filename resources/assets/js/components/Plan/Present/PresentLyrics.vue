@@ -62,18 +62,17 @@ export default {
     return {
       verses: [],
       showSongTitle: false,
-      showSlides: []
+      showSlides: [false]
     }
   },
 
   watch: {
+    // this value is being set by the main Presentation component
     currentItemSeqNo (showSeqNo) {
       // showSeqNo: the item with this SeqNo needs to become visible now
-      if (showSeqNo == this.item.seqNo) {
-        console.log('this component has the current show item. Slide No:', this.currentSlideNo)
-        if (this.currentSlideNo <= 0) {
-          this.showSongTitle = true
-        }
+      if (showSeqNo == this.item.seqNo && this.currentSlideNo <= 0) {
+        // console.log('show title of this component has the current show item. Slide No:', this.currentSlideNo)
+        this.showSongTitle = true
       }
     },
 
@@ -81,24 +80,31 @@ export default {
       // determines which slide needs to become visible
       // provided this is the right Plan Activity Item
       if (this.currentItemSeqNo === this.item.seqNo) {
-        console.log('showing next slide', slideNo)
+        // console.log('curr. SeqNo', this.item.seqNo, 'showing next slide', slideNo)
         // first, hide all slides
         this.showSongTitle = false
+        // now hide all verses and parts
         for (let index = 0; index < this.showSlides.length; index++) {
           this.showSlides[index] = false
         }
-        // should the song title become visible?
+        // check if requested slide is beyond the END of the current item
+        if (slideNo >= this.showSlides.length) {
+          this.$emit('keyPressed', {code: 'go', where: 'nextItem'})
+          return
+        }
+        // check if requested slide is beyond the START of the current item
         if (slideNo < 0) {
+          this.$emit('keyPressed', {code: 'go', where: 'prevItem'})
+          return
+        }
+        // should the song title become visible?
+        if (slideNo < 1) {
           this.showSongTitle = true
         } else {
           // this.showSlides[slideNo] = true
-          this.$set(this.showSlides, slideNo, true)
+          this.$set(this.showSlides, slideNo-1, true)
         }
       }
-    },
-
-    'presentation.versesPerSlide' (niu, old) {
-      console.log(niu,old)
     }
   },
 

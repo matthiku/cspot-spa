@@ -3,8 +3,8 @@
 
       <span v-for="(ref, index) in verses" :key="index"
         >
-        <div v-for="(verseBlock, index) in ref" :key="index"
-            v-show="showSlides[index]"
+        <div v-for="(verseBlock, idx) in ref" :key="idx"
+            v-show="showSlides[idx]"
             class="presentation-slide"
             :style="scriptureStyle"
             :class="slideClass"
@@ -61,8 +61,8 @@ export default {
     currentItemSeqNo (showSeqNo) {
       // showSeqNo: the item with this SeqNo needs to become visible now
       if (showSeqNo == this.item.seqNo && this.currentSlideNo <= 0) {
-        this.showSlides[0] = true
-        console.log(this.showSlides, 'show title of this component has the current show item. Slide No:', this.currentSlideNo)
+        this.$set(this.showSlides, 0, true)
+        // console.log(this.verses[0], 'show title of this component has the current show item. Slide No:', this.currentSlideNo)
       }
     },
 

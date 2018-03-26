@@ -5,6 +5,8 @@
     <present-lyrics
         v-if="item.type==='song'"
         :item="item"
+        :currentItemSeqNo="currentItemSeqNo"
+        :currentSlideNo="currentSlideNo"
       ></present-lyrics>
 
 
@@ -12,6 +14,8 @@
     <present-scripture 
         v-if="item.type==='read'"
         :item="item"
+        :currentSlideNo="currentSlideNo"
+        :currentItemSeqNo="currentItemSeqNo"
       ></present-scripture>
 
 
@@ -31,6 +35,6 @@ export default {
     presentLyrics
   },
 
-  props: ['item']
+  props: ['item', 'currentItemSeqNo', 'currentSlideNo']
 }
 </script>

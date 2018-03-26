@@ -27,7 +27,7 @@ export default {
 
   mixins: [genericMixins, planMixins],
 
-  props: ['item'],
+  props: ['item', 'currentItemSeqNo', 'currentSlideNo'],
 
   data () {
     return {

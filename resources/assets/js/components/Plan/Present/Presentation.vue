@@ -19,12 +19,16 @@
         @click.right.stop.prevent="showNext(-1)"
         @click.middle.stop.prevent="exitPresentation()"
 
-        class="plan-action-item full-width full-height hidden"
+        class="plan-action-item full-width full-height"
+
+        :class="{hidden: presentation.showSeqNo !== item.seqNo}"
       >
 
       <!-- show the current item -->
       <presentation-space
           :item="item"
+          :currentSlideNo="showSlideNo"
+          :currentItemSeqNo="presentation.showSeqNo"
           v-on:keyPressed="keyPressed"
         ></presentation-space>
 
@@ -102,8 +106,8 @@ export default {
   created () {
     // make sure we have a plan
     if (!(this.plan instanceof Object)) {
-      console.log('no plan found, returning to plans list')
-      this.$router.push('/plans')
+      console.warn('no plan found, returning to plans list')
+      this.$router.push('/nextSunday')
       return
     }
     // ... and the plan contains action items!
@@ -191,32 +195,14 @@ export default {
       this.$router.go(-1) // go back to previous page
     },
     emptyPlan () {      
-      console.warn('Document ready:', document.readyState, ' - No showable items found in this plan!', this.plan.actionList)
+      console.warn('Document readyState -', document.readyState, ' - No showable items found in this plan!', this.plan.actionList)
       this.$store.commit('setError', 'no showable items found in this plan')
       this.exitPresentation()
-    },
-
-    showCurrentItem () {
-      // remove 'hidden' class from the whole element (item) with the currently active SeqNo
-      let planItems = document.getElementsByClassName('plan-action-item')
-      // console.log('showCurrentItem - SeqNo', this.presentation.showSeqNo, '- un-hide this item')
-      for (let index = 0; index < planItems.length; index++) {
-        const elem = planItems[index];
-        if (elem.id === 'item-seqno-' + this.presentation.showSeqNo) {
-          elem.classList.remove('hidden')
-          // console.log('showCurrentItem - showing element', elem)
-        } else {
-          elem.classList.add('hidden') // make sure all other items are hidden
-        }
-      }
     },
 
     // determine which Plan Activity Item to show next
     setPresentationSlide(seqNo) {
       this.$store.commit('setPresentationItem', {item: 'showSeqNo', value: seqNo})
-
-      // make the current item visible (remove the 'hidden' class)
-      this.showCurrentItem()
 
       // set focus again on the slide so that we can capture keyboard events
       let elem = document.getElementById('item-seqno-' + seqNo)
@@ -270,6 +256,7 @@ export default {
 
       // increase the visible-slide-indicator but make sure we do not reach 'out-of-bounds'
       this.showSlideNo = this.showSlideNo + dir
+      return
 
       // get all slides of the currently shown sequence number (seqNo)
       let slides = this.getCurrentSlides(activeSeqNo, dir)
@@ -327,13 +314,9 @@ export default {
     'presentation.versesPerSlide' (niu, old) {
       if (niu === parseInt(old)) return
       // go back to first slide of an item when this number is being changed
-      this.showCurrentItem()
       this.showSlideNo = -1
       this.showNext()
     },
-    'presentation.showSeqNo' (valnew, valold) {
-      console.log('presn showSeqNo', valnew, valold)
-    }
   },
 
   destroyed () {

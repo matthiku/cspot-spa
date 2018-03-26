@@ -4,14 +4,16 @@
       <!-- slide with just the song title -->
       <h3 class="presentation-slide"
           :style="lyricsTitleStyle"
-          :class="[firstSlide, slideClass]"
+          :class="slideClass"
+          v-show="showSongTitle"
         >{{ item.title }}</h3>
 
       <!-- slides for each song particle -->
       <div v-for="(part, index) in verses"
           :key="index"
           :class="slideClass"
-          class="presentation-slide hidden"
+          class="presentation-slide"
+          v-show="showSlides[index]"
         >
         <div v-for="(line, index) in part"
             :key="index"
@@ -54,41 +56,55 @@ export default {
 
   mixins: [genericMixins, planMixins],
 
-  props: ['item'],
+  props: ['item', 'currentItemSeqNo', 'currentSlideNo'],
 
   data () {
     return {
-      verses: []
+      verses: [],
+      showSongTitle: false,
+      showSlides: []
     }
   },
 
   watch: {
-    'presentation.showSeqNo' (valnew, volold) {
-      console.log(valnew, valold)
-      if (val == this.item.seqNo) {
-        console.log('this component has the current show item')
+    currentItemSeqNo (showSeqNo) {
+      // showSeqNo: the item with this SeqNo needs to become visible now
+      if (showSeqNo == this.item.seqNo) {
+        console.log('this component has the current show item. Slide No:', this.currentSlideNo)
+        if (this.currentSlideNo <= 0) {
+          this.showSongTitle = true
+        }
       }
     },
+
+    currentSlideNo (slideNo) {
+      // determines which slide needs to become visible
+      // provided this is the right Plan Activity Item
+      if (this.currentItemSeqNo === this.item.seqNo) {
+        console.log('showing next slide', slideNo)
+        // first, hide all slides
+        this.showSongTitle = false
+        for (let index = 0; index < this.showSlides.length; index++) {
+          this.showSlides[index] = false
+        }
+        // should the song title become visible?
+        if (slideNo < 0) {
+          this.showSongTitle = true
+        } else {
+          // this.showSlides[slideNo] = true
+          this.$set(this.showSlides, slideNo, true)
+        }
+      }
+    },
+
     'presentation.versesPerSlide' (niu, old) {
       console.log(niu,old)
-    },
-    showing (valnew, valold) {
-      console.log('showing', val);
-    },
-    presentation (v) {
-      console.log(v)
     }
   },
 
   computed: {
-    showing () {
-      return this.presentation.showSeqNo
-    },
     slideClass () {
       return 'slides-seqno-' + this.item.seqNo
-    },
-    firstSlide () {
-      return this.presentation.showSeqNo === this.item.seqNo ? '' : 'hidden'
     },
     lyricsStyle () {
       return {
@@ -214,7 +230,10 @@ export default {
 
         // check if lyrics contain a blank line, indicating a new slide
         let slides = this.splitByEmptyLine(lyrics)
-        slides.forEach(slide => this.verses.push(slide))
+        slides.forEach(slide => {
+          this.verses.push(slide)
+          this.showSlides.push(false)
+        })
       })
     }
 

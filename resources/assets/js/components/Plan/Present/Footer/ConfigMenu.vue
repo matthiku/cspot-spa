@@ -133,15 +133,6 @@
                         ></v-checkbox>                      
                     </v-flex>
                   </v-layout>
-                  
-                  <v-layout row wrap>
-                    <v-flex xs10>
-                      <v-slider label="Set Item:" :min="1" :max="25" v-model="showSeqNo"></v-slider>
-                    </v-flex>
-                    <v-flex xs2>
-                      <v-text-field v-model="showSeqNo" solo type="number"></v-text-field>
-                    </v-flex>
-                  </v-layout>
 
                 </v-container>
               </v-card-text>
@@ -175,8 +166,7 @@ export default {
       active: null,
       versesPerSlide: 0,
       blankSlide: true,
-      slideBgColour: '#e1f5fe',
-      showSeqNo: 1
+      slideBgColour: '#e1f5fe'
     }
   },
 
@@ -191,7 +181,6 @@ export default {
     this.versesPerSlide = this.presentation.versesPerSlide || 5
     this.blankSlide = this.presentation.blankSlide || true
     this.slideBgColour = this.presentation.slideBgColour || '#e1f5fe'
-    this.showSeqNo = this.presentation.showSeqNo
   },
 
   // when the local data changes, reflect it back to the global store
@@ -204,10 +193,6 @@ export default {
     },
     slideBgColour (value) {
       this.$store.commit('setPresentationItem', {item: 'slideBgColour', value})
-    },
-    showSeqNo (value) {
-      if (parseInt(value))
-        this.$store.commit('setPresentationItem', {item: 'showSeqNo', value})
     }
   }
 }

@@ -6,6 +6,13 @@ export default {
       numberOfSlides: 1,
       blankSlide: true,
       slideBgColour: '#e1f5fe',
+      textTitleFont: {
+        size: 45,
+        bold: 'bold',
+        align: 'center',
+        italic: 'normal',
+        colour: '#ffffff',
+      },
       lyricsTitleFont: {
         size: 40,
         bold: 'normal',

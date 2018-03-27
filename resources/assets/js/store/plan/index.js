@@ -448,6 +448,7 @@ export default {
           } else {
             obj.type = 'text'
             obj.title = action.comment
+            obj.showTitle = action.show_comment
           }
           // assign the proper icon and colour depending on type
           obj.color = state.activity.colours[obj.type]

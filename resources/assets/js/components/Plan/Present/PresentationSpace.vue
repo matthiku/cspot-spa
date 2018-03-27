@@ -21,20 +21,32 @@
       ></present-scripture>
 
 
+    <!-- READING -->
+    <present-text 
+        v-if="item.type==='text'"
+        v-on:keyPressed="keyPressed"
+        :currentSlideNo="currentSlideNo"
+        :currentItemSeqNo="currentItemSeqNo"
+        :item="item"
+      ></present-text>
+
+
   </span>  
 </template>
 
 
 <script>
-import presentLyrics from './PresentLyrics.vue'
-import presentScripture from './PresentScripture.vue'
+import presentText from './lyrics/ShowText.vue'
+import presentLyrics from './lyrics/ShowLyrics.vue'
+import presentScripture from './lyrics/ShowScripture.vue'
 
 export default {
   name: 'PresentationSpace',
 
   components: {
     presentScripture,
-    presentLyrics
+    presentLyrics,
+    presentText
   },
 
   props: ['item', 'currentItemSeqNo', 'currentSlideNo'],

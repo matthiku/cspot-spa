@@ -19,22 +19,17 @@
   <v-container fluid
       v-if="plan instanceof Object && plan.hasOwnProperty('actionList')"
 
-
       class="text-xs-center presentation-space pa-0"
       :style="presentationStyle"
     >
-      <!-- @click.left="showNext()"
-      @click.middle.stop.prevent="exitPresentation()" -->
-      <!-- @click.right.stop.prevent="showNext(-1)" -->
 
     <div v-for="item in actionList" :key="item.seqNo"
-
-        v-if="item.type==='song' || item.type==='read'"
 
         :id="'item-seqno-' + item.seqNo"
 
         @click.left="showNext()"
         @click.middle.stop.prevent="exitPresentation()"
+        @click.right.stop.prevent="showNext(-1)"
 
         tabindex="-1"
         v-on:keyup="keyPressed($event, item.seqNo)"
@@ -126,7 +121,7 @@ export default {
     // make sure we have a plan
     if (!(this.plan instanceof Object)) {
       console.warn('no plan found, returning to plans list')
-      this.$router.push('/nextSunday')
+      this.$router.push({name: 'nextsunday'})
       return
     }
     // ... and the plan contains action items!
@@ -167,43 +162,24 @@ export default {
   methods: {
     keyPressed (event, seqNo) {
       console.log('keyPressed', event, seqNo)
-      // set focus again on the slide so that we can capture keyboard events
-      // if (seqNo) document.getElementById('item-seqno-' + seqNo).focus()
-      let ps = document.getElementsByClassName('presentation-space')[0]
-      if (ps) ps.focus()
 
-      if (event.code === 'Escape') this.exitPresentation()
       if (event.code === 'ArrowRight') this.showNext()
       if (event.code === 'ArrowLeft') this.showNext(-1)
-      if (event.code === 'Space') this.showNext()
       if (event.code === 'Backspace') this.showNext(-1)
-      if (event.code === 'Home') { // go to first valid ITEM
-        this.setPresentationSlide(this.firstVisibleItem.seqNo)
-        this.showSlideNo = -1
-        this.showNext()
-        return
-      }
-      if (event.code === 'End') { // go to last valid PLAN ITEM
-        this.setPresentationSlide(this.plan.actionList.length)
-        this.showSlideNo = 0
-        this.showNext(-1)
-        return
-      }
-      if (event.code === 'PageUp' || event.code === 'ArrowUp') { // go to next slide
+      if (event.code === 'Escape') this.exitPresentation()
+      if (event.code === 'Space') this.showNext()
+      if (event.code === 'Home') this.gotoThisItem(this.firstVisibleItem.seqNo)
+      if (event.code === 'End')  this.gotoThisItem(this.plan.actionList.length)
+      if (event.code === 'PageUp' || event.code === 'ArrowUp') 
+        this.gotoThisItem(this.presentation.showSeqNo - 1)
+      if (event.code === 'PageDown' || event.code === 'ArrowDown')
         this.gotoThisItem(this.presentation.showSeqNo + 1)
-        return
-      }
-      if (event.code === 'PageDown' || event.code === 'ArrowDown') { // go to previous slide
-        this.gotoThisItem(this.presentation.showSeqNo - 1, -1)
-        return
-      }
       if (event.code === 'go') {
         if (event.where === 'back') this.exitPresentation()
         if (event.where === 'nextSlide') this.showNext()
         if (event.where === 'prevSlide') this.showNext(-1)
         if (event.where === 'nextItem') this.gotoThisItem(this.presentation.showSeqNo + 1)
         if (event.where === 'prevItem') this.gotoThisItem(this.presentation.showSeqNo - 1, -1)
-        console.log('go to specific seqNo', event.where)
         if (!isNaN(event.where)) this.gotoThisItem(event.where)
       }
       //TODO: NumpadAdd/NumpadSubtract -> increase/decrease font size, Minus, ...
@@ -293,10 +269,6 @@ export default {
       let elem = document.getElementById('item-seqno-' + activeSeqNo)
       // console.log('showNext -', activeSeqNo, elem)
       if (elem) elem.focus()
-      else {
-        let ps = document.getElementsByClassName('presentation-space')[0]
-        if (ps) ps.focus()
-      }
     }    
   },
 

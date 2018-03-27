@@ -52,7 +52,8 @@
         >
         {{ currentItem.seqNo }}.0&nbsp;
         {{ currentItem.title.substr(0,35) }}&nbsp;
-        ({{ currentSlideNo + 1 }} of {{ presentation.numberOfSlides }})
+        <span v-if="presentation.numberOfSlides > 1">
+          ({{ currentSlideNo + 1 }} of {{ presentation.numberOfSlides }})</span>
         <v-icon
             v-if="currentSlideNo + 1 < presentation.numberOfSlides"
             @click="goNextSlide"

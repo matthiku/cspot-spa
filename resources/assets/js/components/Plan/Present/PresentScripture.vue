@@ -65,6 +65,9 @@ export default {
         this.$set(this.showSlides, 0, true)
         // publish the amount of slides for this PLAN ACTIVITY ITEM
         this.$store.commit('setPresentationItem', {item: 'numberOfSlides', value: this.showSlides.length})
+        // put focus on main element for key and mouse events to work
+        let elem = document.getElementById('item-seqno-' + showSeqNo)
+        if (elem) elem.focus()
       }
     },
 

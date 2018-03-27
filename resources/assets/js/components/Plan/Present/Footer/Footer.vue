@@ -50,6 +50,7 @@
       <span v-if="currentItemSeqNo && currentItem"
           :title="currentItem.title"
         >
+        {{ currentItem.seqNo }}.0&nbsp;
         {{ currentItem.title.substr(0,35) }}&nbsp;
         ({{ currentSlideNo + 1 }} of {{ presentation.numberOfSlides }})
         <v-icon

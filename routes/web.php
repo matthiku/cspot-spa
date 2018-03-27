@@ -17,6 +17,7 @@ Route::get('/login', 'AppController@index');
 Route::get('/signin', 'AppController@index');
 Route::get('/profile', 'AppController@index');
 Route::get('/nextsunday', 'AppController@index');
+Route::get('/nextSunday', 'AppController@index');
 Route::get('/songs', 'AppController@index');
 Route::get('/addsongtoplan', 'AppController@index');
 Route::get('/plans', 'AppController@index');

@@ -64,7 +64,7 @@ export default {
     createMenu () {
       this.menuItems = []
       this.plan.actionList.forEach(item => {
-        if (item.type !== 'text' && !item.forLeadersEyesOnly)
+        if (!item.forLeadersEyesOnly)
           this.menuItems.push({ 
             title: `(${item.seqNo}) ${item.title}`,
             action: item.seqNo,

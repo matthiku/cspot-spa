@@ -23,7 +23,7 @@
       <v-spacer></v-spacer>
 
 
-      <!-- show title of PREVIOUS item -->
+      <!-- show Navigation icons and Title of  PREVIOUS  item -->
       <small 
           v-if="prevItem"
           @click="goPrevItem"
@@ -34,34 +34,36 @@
       <v-icon
           v-if="prevItem"
           @click="goPrevItem"
-          class="cursor-pointer"
+          class="mr-2 cursor-pointer"
           :title="prevItem.title"
         >fast_rewind</v-icon>
 
       <v-icon
-          v-if="currentItem"
+          v-if="currentItem && currentSlideNo > 0"
           @click="goPrevSlide"
           title="show previous slide"
-          class="cursor-pointer"
+          class="ml-1 cursor-pointer"
         >keyboard_arrow_left</v-icon>
 
 
-      <!-- show current item title -->
+      <!-- show  TITLE  of current Plan Activity item -->
       <span v-if="currentItemSeqNo && currentItem"
           :title="currentItem.title"
         >
-        {{ currentItem.title.substr(0,25) }}
+        {{ currentItem.title.substr(0,35) }}&nbsp;
+        ({{ currentSlideNo + 1 }} of {{ presentation.numberOfSlides }})
         <v-icon
+            v-if="currentSlideNo + 1 < presentation.numberOfSlides"
             @click="goNextSlide"
             title="show next slide"
-            class="cursor-pointer"
+            class="mr-1 cursor-pointer"
           >keyboard_arrow_right</v-icon>
       </span>
 
       <v-icon
           v-if="nextItem"
           @click="goNextItem"
-          class="cursor-pointer"
+          class="ml-2 cursor-pointer"
           :title="nextItem.title"
         >fast_forward</v-icon>
 
@@ -119,7 +121,7 @@
 <script>
 import jumpMenu from './JumpMenu'
 import configMenu from './ConfigMenu'
-import addActionItems from './AddActionItems'
+import addActionItem from './AddActionItem'
 
 import genericMixins from '../../../../mixins/'
 import planMixins from '../../mixins'
@@ -127,7 +129,7 @@ import planMixins from '../../mixins'
 export default {
   mixins: [genericMixins, planMixins],
 
-  components: { configMenu, jumpMenu, addActionItems },
+  components: { configMenu, jumpMenu, addActionItem },
 
   props: ['currentItemSeqNo', 'currentSlideNo', 'firstVisibleItem'],
 
@@ -172,14 +174,14 @@ export default {
 
     nextItem () {
       return this.actionList.find(
-        item => item.seqNo > this.currentItemSeqNo && item.type !== 'text' && !item.forLeadersEyesOnly
+        item => item.seqNo > this.currentItemSeqNo && !item.forLeadersEyesOnly
       )
     },
 
     prevItem () {
       // reverse the array of actions in order to find the previous showable item
       let item = this.actionList.reverse().find(
-        item => item.seqNo < this.currentItemSeqNo && item.type !== 'text' && !item.forLeadersEyesOnly
+        item => item.seqNo < this.currentItemSeqNo && !item.forLeadersEyesOnly
       )
       // re-reverse the list again
       this.actionList.reverse()

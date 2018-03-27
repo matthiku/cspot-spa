@@ -73,6 +73,8 @@ export default {
       if (showSeqNo == this.item.seqNo && this.currentSlideNo <= 0) {
         // console.log('show title of this component has the current show item. Slide No:', this.currentSlideNo)
         this.showSongTitle = true
+        // publish the amount of slides for this PLAN ACTIVITY ITEM
+        this.$store.commit('setPresentationItem', {item: 'numberOfSlides', value: this.showSlides.length})
       }
     },
 
@@ -219,8 +221,8 @@ export default {
       /*
         The sequence attribute of a song contains the codes for the individual onsong parts.
         It determines the order and repetition of the song parts in the lyrics presentation.
-        These codes are the index (id) for the songParts object in the Vuex store
-        The id number of those codes are the name for each individual Onsong objects
+        These codes are the index (id) for the 'songParts' object in the Vuex store.
+        The id number of those codes are the name for each individual Onsong object.
       */
       let sequenceArr = this.item.sequence.split(',')
       sequenceArr.forEach(seq => {

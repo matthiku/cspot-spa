@@ -1,7 +1,7 @@
 <template>
   <span>
 
-      <span v-for="(ref, index) in verses" :key="index"
+      <span v-for="(ref, index) in verseBlocks" :key="index"
         >
         <div v-for="(verseBlock, idx) in ref" :key="idx"
             v-show="showSlides[idx]"
@@ -32,7 +32,7 @@ export default {
 
   data () {
     return {
-      verses: [],
+      verseBlocks: [],
       showSlides: []
     }
   },
@@ -61,8 +61,10 @@ export default {
     currentItemSeqNo (showSeqNo) {
       // showSeqNo: the item with this SeqNo needs to become visible now
       if (showSeqNo == this.item.seqNo && this.currentSlideNo <= 0) {
+        // console.log(this.verseBlocks[0], 'show title of this component has the current show item. Slide No:', this.currentSlideNo)
         this.$set(this.showSlides, 0, true)
-        // console.log(this.verses[0], 'show title of this component has the current show item. Slide No:', this.currentSlideNo)
+        // publish the amount of slides for this PLAN ACTIVITY ITEM
+        this.$store.commit('setPresentationItem', {item: 'numberOfSlides', value: this.showSlides.length})
       }
     },
 
@@ -99,7 +101,10 @@ export default {
 
   methods: {
     formatSlide () {
-      this.verses = []
+      // get all relevent scripture Refs and divide them into blocks of verses
+      // These blocks form the actual slides.
+      this.verseBlocks = [] // containing the actual verse blocks
+      this.showSlides = []  // controls visibility of each block
       // a scripture reference might have other text or have 
       // multiple references - all separated by a semicolon
       let arBref = this.item.title.split(';')
@@ -118,18 +123,20 @@ export default {
             // push the bucket as a new slide into the block
             if (bucket === maxBucketSize) {
               block.push(slide)
-              this.showSlides.push(false) // initially, each verse block must be invisble
+              this.showSlides.push(false) // initially, set each block of verses as invisible
               slide = '<h4>' + bRef + '</h4>'
               bucket = 0
             }
           }
           if (bucket > 1) {
             block.push(slide)
-            this.showSlides.push(false) // initially, each verse block must be invisble
+            this.showSlides.push(false) // initially, set each block of verses as invisible
           }
         }
-        this.verses.push(block)
+        this.verseBlocks.push(block)
       })
+      // publish the amount of slides for this PLAN ACTIVITY ITEM
+      this.$store.commit('setPresentationItem', {item: 'numberOfSlides', value: this.showSlides.length})
     }
   }
 

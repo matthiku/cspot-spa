@@ -1,3 +1,12 @@
+/**
+ * Starting point for all Event Plan presentations - Lyrics/Chords/Music/Leader
+ * 
+ * Imports:
+ *    Presentation Space  - the actual presentation space
+ *    Presentation Footer - shows titles and provides controls for items and slides
+ *
+ * 
+ */
 <template>
   <v-container fluid
       v-if="plan instanceof Object && plan.hasOwnProperty('actionList')"
@@ -99,7 +108,7 @@ export default {
     },
     firstVisibleItem () {
       if (this.plan && this.plan.actionList.find)
-        return this.plan.actionList.find(item => item.type !== 'text' && !item.forLeadersEyesOnly)
+        return this.plan.actionList.find(item => !item.forLeadersEyesOnly)
     }
   },
 
@@ -179,6 +188,8 @@ export default {
       }
       if (event.code === 'go') {
         if (event.where === 'back') this.exitPresentation()
+        if (event.where === 'nextSlide') this.showNext()
+        if (event.where === 'prevSlide') this.showNext(-1)
         if (event.where === 'nextItem') this.gotoThisSlide(this.presentation.showSeqNo + 1)
         if (event.where === 'prevItem') this.gotoThisSlide(this.presentation.showSeqNo - 1, -1)
         if (!isNaN(event.where)) this.gotoThisSlide(event.where)
@@ -186,11 +197,13 @@ export default {
       //TODO: NumpadAdd/NumpadSubtract -> increase/decrease font size, Minus, ...
 
     },
+
     gotoThisSlide (seqNo, dir) {
       this.setPresentationSlide(seqNo)
       this.showSlideNo = -1
       this.showNext(dir || 1)      
     },
+
     exitPresentation () {
       this.showSlideNo = 0
       this.$router.go(-1) // go back to previous page
@@ -201,8 +214,15 @@ export default {
       this.exitPresentation()
     },
 
+
     // determine which Plan Activity Item to show next
     setPresentationSlide(seqNo) {
+      // is this new Plan Activity item Seq.No. different the current one?
+      if (this.presentation.showSeqNo !== seqNo) {
+        // then reset the number of slides for this item
+        this.$store.commit('setPresentationItem', {item: 'numberOfSlides', value: 1})
+      }
+
       this.$store.commit('setPresentationItem', {item: 'showSeqNo', value: seqNo})
 
       // set focus again on the slide so that we can capture keyboard events
@@ -216,6 +236,7 @@ export default {
         if (item.type === 'song') this.presentation.selectedTab = 1
       }
     },
+
 
     showNext(dir) {
       // default direction is forward, -1 for backwards

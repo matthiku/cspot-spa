@@ -13,6 +13,7 @@
 
 // all routes lead to the app controller as they are managed by the frontend
 Route::get('/', 'AppController@index');
+Route::get('/home', 'AppController@index');
 Route::get('/login', 'AppController@index');
 Route::get('/signin', 'AppController@index');
 Route::get('/profile', 'AppController@index');

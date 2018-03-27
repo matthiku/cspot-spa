@@ -9,7 +9,7 @@
             <v-list-tile-content class="ml-4">
 
               <div class="health-status">
-                Data {{ overAllHealth === 100 ? 'ready!' : 'loading:' }}
+                App {{ overAllHealth === 100 ? 'ready!' : 'loading' }}
                 <v-progress-circular
                     :size="90"
                     :width="15"

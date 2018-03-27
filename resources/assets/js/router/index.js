@@ -44,13 +44,6 @@ export default new Router({
       component: Signup
     },
     {
-      path: '/',
-      name: 'home',
-      meta: { title: 'Home' },
-      component: Plans,
-      beforeEnter: AuthGuard
-    },
-    {
       path: '/profile',
       name: 'profile',
       component: Profile,
@@ -129,6 +122,17 @@ export default new Router({
       meta: { title: 'User Profile' },
       beforeEnter: AuthGuard,
       props: true
+    },
+    {
+      path: '/home',
+      name: 'home',
+      meta: { title: 'Home' },
+      component: Plans,
+      beforeEnter: AuthGuard
+    },
+    {
+      path: '/',
+      redirect: {name: 'home'}
     }
   ]
 })

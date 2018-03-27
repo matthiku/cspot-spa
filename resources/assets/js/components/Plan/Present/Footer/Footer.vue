@@ -79,10 +79,10 @@
       <v-spacer></v-spacer>
 
       <!-- ADD plan activity items -->
-      <add-action-items
+      <add-action-item
           v-if="userOwnsThisPlan"
           :firstVisibleItem="firstVisibleItem"
-        ></add-action-items>
+        ></add-action-item>
 
       
       <!-- show menu to JUMP to other plan activity items -->

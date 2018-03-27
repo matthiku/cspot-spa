@@ -1,15 +1,28 @@
 /**
- * Starting point for all Event Plan presentations - Lyrics/Chords/Music/Leader
+ * Event Plan Presentations
  * 
- * Imports:
+ * Starting point for Lyrics/Chords/Music or Leader presentations
+ * 
+ * Imported SFCs:
  *    Presentation Space  - the actual presentation space
  *    Presentation Footer - shows titles and provides controls for items and slides
  *
+ * All plan items are immediately rendered, but not shown yet, only the first one
+ * Or, if the presentation was started with a specific Item sequence number, that item will be shown first
  * 
+ * The imported Single File Components (SFCs) will receive the seq.no. of the currently
+ * visible Item respective the number of the currently visible slide within that item
+ * 
+ * The SFCs can emit an event ('keyPressed') to control the progress of the presentation
  */
 <template>
   <v-container fluid
       v-if="plan instanceof Object && plan.hasOwnProperty('actionList')"
+
+      tabindex="1"
+      @click.left="showNext()"
+      @click.right.stop.prevent="showNext(-1)"
+      @click.middle.stop.prevent="exitPresentation()"
 
       class="text-xs-center light-blue--text text--lighten-5 presentation-space pa-0"
       :style="presentationStyle"
@@ -24,12 +37,7 @@
         tabindex="-1"
         v-on:keyup="keyPressed($event, item.seqNo)"
 
-        @click.left="showNext()"
-        @click.right.stop.prevent="showNext(-1)"
-        @click.middle.stop.prevent="exitPresentation()"
-
         class="plan-action-item full-width full-height"
-
         :class="{hidden: presentation.showSeqNo !== item.seqNo}"
       >
 
@@ -158,8 +166,9 @@ export default {
     keyPressed (event, seqNo) {
       console.log('keyPressed', event, seqNo)
       // set focus again on the slide so that we can capture keyboard events
-      if (seqNo)
-        document.getElementById('item-seqno-' + seqNo).focus()
+      // if (seqNo) document.getElementById('item-seqno-' + seqNo).focus()
+      let ps = document.getElementsByClassName('presentation-space')[0]
+      if (ps) ps.focus()
 
       if (event.code === 'Escape') this.exitPresentation()
       if (event.code === 'ArrowRight') this.showNext()
@@ -179,26 +188,33 @@ export default {
         return
       }
       if (event.code === 'PageUp' || event.code === 'ArrowUp') { // go to next slide
-        this.gotoThisSlide(this.presentation.showSeqNo + 1)
+        this.gotoThisItem(this.presentation.showSeqNo + 1)
         return
       }
       if (event.code === 'PageDown' || event.code === 'ArrowDown') { // go to previous slide
-        this.gotoThisSlide(this.presentation.showSeqNo - 1, -1)
+        this.gotoThisItem(this.presentation.showSeqNo - 1, -1)
         return
       }
       if (event.code === 'go') {
         if (event.where === 'back') this.exitPresentation()
         if (event.where === 'nextSlide') this.showNext()
         if (event.where === 'prevSlide') this.showNext(-1)
-        if (event.where === 'nextItem') this.gotoThisSlide(this.presentation.showSeqNo + 1)
-        if (event.where === 'prevItem') this.gotoThisSlide(this.presentation.showSeqNo - 1, -1)
-        if (!isNaN(event.where)) this.gotoThisSlide(event.where)
+        if (event.where === 'nextItem') this.gotoThisItem(this.presentation.showSeqNo + 1)
+        if (event.where === 'prevItem') this.gotoThisItem(this.presentation.showSeqNo - 1, -1)
+        if (!isNaN(event.where)) this.gotoThisItem(event.where)
       }
       //TODO: NumpadAdd/NumpadSubtract -> increase/decrease font size, Minus, ...
 
     },
 
-    gotoThisSlide (seqNo, dir) {
+    gotoThisItem (seqNo, dir) {
+      // wrap around the items list if necessary
+      if (seqNo < 1) {
+        seqNo = this.actionList.length
+      }
+      if (seqNo > this.actionList.length) {
+        seqNo = 1
+      }
       this.setPresentationSlide(seqNo)
       this.showSlideNo = -1
       this.showNext(dir || 1)      
@@ -223,14 +239,26 @@ export default {
         this.$store.commit('setPresentationItem', {item: 'numberOfSlides', value: 1})
       }
 
+      // check if this is a 'showable' item
+      let item = this.actionList.find(elem => elem.seqNo === seqNo)
+      if (item.forLeadersEyesOnly) {
+        // go to next item
+        seqNo += 1
+        // or go to first showable item if this was already the last one
+        if (seqNo > this.actionList.length) {
+          seqNo = this.firstVisibleItem.seqNo
+        }
+      }
+
       this.$store.commit('setPresentationItem', {item: 'showSeqNo', value: seqNo})
 
       // set focus again on the slide so that we can capture keyboard events
-      let elem = document.getElementById('item-seqno-' + seqNo)
-      if (elem) elem.focus()
+      // let elem = document.getElementById('item-seqno-' + seqNo)
+      // if (elem) elem.focus()
+      let ps = document.getElementsByClassName('presentation-space')[0]
+      if (ps) ps.focus()
 
       // prepare ConfigMenu depending on current item type
-      let item = this.actionList.find(elem => elem.seqNo === seqNo)
       if (item) {
         if (item.type === 'read') this.presentation.selectedTab = 2
         if (item.type === 'song') this.presentation.selectedTab = 1
@@ -252,10 +280,18 @@ export default {
       // increase the visible-slide-indicator
       this.showSlideNo = this.showSlideNo + dir
 
+      // check if this is still a valid slide number within the current item
+      if (this.showSlideNo >= this.presentation.numberOfSlides || this.showSlideNo < 0) {
+        this.showSlideNo = 0
+        this.gotoThisItem(activeSeqNo + dir)
+      }
+
       // always set focus on the slide so that we can capture keyboard events
-      let elem = document.getElementById('item-seqno-' + activeSeqNo)
+      // let elem = document.getElementById('item-seqno-' + activeSeqNo)
       // console.log('showNext -', activeSeqNo, elem)
-      if (elem) elem.focus()
+      // if (elem) elem.focus()
+      let ps = document.getElementsByClassName('presentation-space')[0]
+      if (ps) ps.focus()
     }    
   },
 

@@ -138,6 +138,7 @@
         </template>
 
         <v-list-tile v-show="insertBefore===plan.actionList.length"
+            id="insert-indicator"
             title="items will be inserted here"
             class="drop-insert-indicator">
         </v-list-tile>
@@ -286,11 +287,7 @@
         if (!targetLi) return
         if (this.targetId === targetLi.id) return
         this.targetId = targetLi.id
-        // get the indicator and move it above the current element
-        let kid = document.getElementById('insert-indicator').parentNode
-        kid.parentNode.removeChild(kid) // temporarily remove it from the (visible) DOM
-        let parentUL = targetLi.parentElement.parentElement // find the parent UL element
-        parentUL.insertBefore(kid, targetLi.parentElement) // insert the indicator into the new location
+        this.insertBefore = this.findSeqNo(targetLi.id) - 1
       },
       dragleave (event) {
         let targetLi = this.getParent(event, '.list__tile')

@@ -22,7 +22,7 @@
         "vue-router": "^2.7.0",
         "vue-simple-calendar": "^2.2.0",
         "vue-swatches": "^1.0.1",
-        "vuetify": "^1.0.10",
+        "vuetify": "^1.0.11",
         "vuex": "^3.0.1"
     },
     "devDependencies": {

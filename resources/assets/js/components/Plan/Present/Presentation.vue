@@ -41,7 +41,7 @@
       <!-- show the current item -->
       <presentation-space
           :item="item"
-          :type="presentationType"
+          :presentationType="presentationType"
           :currentSlideNo="showSlideNo"
           :currentItemSeqNo="presentation.showSeqNo"
           v-on:keyPressed="keyPressed"
@@ -127,6 +127,7 @@ export default {
       this.$router.push({name: 'nextsunday'})
       return
     }
+
     // ... and the plan contains action items!
     if (this.plan && (!this.plan.hasOwnProperty('actionList') || !this.plan.actionList.length)) {
       // TODO: disable the 'Present' links on the Plans Details page or enable 'impromptu' presentations!
@@ -134,9 +135,10 @@ export default {
       this.exitPresentation()
       return
     }
-    // remove the scrollbar on the right side
+
+    // remove the scrollbar on the right side, but only for the Lyrics presentation
     let page = document.getElementsByTagName('html')[0]
-    page.style.overflowY = 'hidden'
+    page.style.overflowY = this.presentationType === 'present'? 'hidden' : 'auto'
   },
 
   mounted () {
@@ -270,6 +272,7 @@ export default {
         this.showSlideNo = 0
         activeSeqNo += dir
         this.gotoThisItem(activeSeqNo)
+        return
       }
 
       // always set focus on the slide so that we can capture keyboard events

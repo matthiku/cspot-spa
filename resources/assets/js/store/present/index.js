@@ -2,7 +2,7 @@ export default {
   state: {
     presentation: {
       versesPerSlide: 5,
-      selectedTab: 1,
+      selectedTab: "1",
       numberOfSlides: 1,
       blankSlide: true,
       slideBgColour: '#e1f5fe',

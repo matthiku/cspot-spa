@@ -1,6 +1,6 @@
 <template>
   <div class="text-xs-center">
-    <v-menu left top
+    <v-menu left top lazy
         v-model="menu"
         :close-on-content-click="false"
       >
@@ -14,7 +14,7 @@
       <v-card style="min-height: 500px" dark>
 
         <v-tabs
-            v-model="active"
+            v-model="activeTab"
             dark color="black"
             slider-color="yellow"
             show-arrows
@@ -195,7 +195,7 @@ export default {
   data () {
     return {
       menu: false,
-      active: null,
+      activeTab: null,
       versesPerSlide: 0,
       blankSlide: null,
       slideBgColour: '#e1f5fe'
@@ -205,6 +205,9 @@ export default {
   computed: {
     presentation () {
       return this.$store.getters.presentation      
+    },
+    setActiveTab () {
+      return this.presentation.selectedTab.toString()
     }
   },
 
@@ -217,6 +220,9 @@ export default {
 
   // when the local data changes, reflect it back to the global store
   watch: {
+    setActiveTab (value) {
+      this.activeTab = value
+    },
     versesPerSlide (value) {
       this.$store.commit('setPresentationItem', {item: 'versesPerSlide', value})
     },

@@ -229,8 +229,8 @@ export default {
           seqNo = this.firstVisibleItem.seqNo
         }
       }
-      // console.log('set presentation to seqNo', seqNo, item)
 
+      // set the current SeqNo in Store
       this.$store.commit('setPresentationItem', {item: 'showSeqNo', value: seqNo})
 
       // set focus again on the slide so that we can capture keyboard events
@@ -238,10 +238,13 @@ export default {
       if (elem) elem.focus()
 
       // prepare ConfigMenu depending on current item type
-      if (item) {
-        if (item.type === 'read') this.presentation.selectedTab = 2
-        if (item.type === 'song') this.presentation.selectedTab = 1
-      }
+      item = this.actionList.find(elem => elem.seqNo === seqNo)
+      let selectedTab = '4'
+      if (item.type === 'text') selectedTab = '3'
+      if (item.type === 'read') selectedTab = '2'
+      if (item.type === 'song') selectedTab = '1'
+      if (item.type === 'song' && this.showSlideNo < 1) selectedTab = '0'
+      this.$store.commit('setPresentationItem', {item: 'selectedTab', value: selectedTab})
     },
 
 
@@ -262,13 +265,23 @@ export default {
       // check if this is still a valid slide number within the current item
       if (this.showSlideNo >= this.presentation.numberOfSlides || this.showSlideNo < 0) {
         this.showSlideNo = 0
-        this.gotoThisItem(activeSeqNo + dir)
+        activeSeqNo += dir
+        this.gotoThisItem(activeSeqNo)
       }
 
       // always set focus on the slide so that we can capture keyboard events
       let elem = document.getElementById('item-seqno-' + activeSeqNo)
       // console.log('showNext -', activeSeqNo, elem)
       if (elem) elem.focus()
+
+      // prepare ConfigMenu depending on current item type
+      let item = this.actionList.find(elem => elem.seqNo === activeSeqNo)
+      let selectedTab = '4'
+      if (item.type === 'text') selectedTab = '3'
+      if (item.type === 'read') selectedTab = '2'
+      if (item.type === 'song') selectedTab = '1'
+      if (item.type === 'song' && this.showSlideNo < 1) selectedTab = '0'
+      this.$store.commit('setPresentationItem', {item: 'selectedTab', value: selectedTab})
     }    
   },
 

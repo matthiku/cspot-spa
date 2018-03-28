@@ -41,6 +41,7 @@
       <!-- show the current item -->
       <presentation-space
           :item="item"
+          :type="presentationType"
           :currentSlideNo="showSlideNo"
           :currentItemSeqNo="presentation.showSeqNo"
           v-on:keyPressed="keyPressed"
@@ -96,7 +97,9 @@ export default {
 
   mixins: [genericMixins, planMixins],
 
-  props: ['seqNo'],
+  // seqNo            the sequence number of the Activity Item that should be presented first
+  // presentationType can be either 'present' (=default!), 'lead', 'chords' or 'music'
+  props: ['seqNo', 'presentationType'],
 
   data () {
     return {

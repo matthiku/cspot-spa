@@ -49,7 +49,7 @@ export default {
     presentText
   },
 
-  props: ['item', 'currentItemSeqNo', 'currentSlideNo'],
+  props: ['item', 'currentItemSeqNo', 'currentSlideNo', 'presentationType'],
 
   methods: {
     keyPressed (what) {

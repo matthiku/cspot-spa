@@ -87,7 +87,7 @@ export default new Router({
       beforeEnter: AuthGuard
     },
     {
-      path: '/present/:seqNo?',
+      path: '/present/:seqNo?/:presentationType?',
       name: 'present',
       props: true,
       component: Presentation,

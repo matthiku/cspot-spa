@@ -3,11 +3,11 @@
 
     <v-chip outline
         v-if="songsCount"
-        color="primary"
+        :color="activityColours.song"
         class="plan-actions-title ma-0"
       ><v-tooltip bottom lazy>
         <span slot="activator">
-          <v-icon color="primary">{{ activityIcons.song }}</v-icon>
+          <v-icon :color="activityColours.song">{{ activityIcons.song }}</v-icon>
           {{ songsCount }}
           song{{ songsCount > 1 ? 's' : ''}}
         </span>
@@ -17,11 +17,11 @@
 
     <v-chip outline
         v-if="othersCounts"
-        color="primary"
+        :color="activityColours.text"
         class="plan-actions-title ma-0"
       ><v-tooltip bottom lazy>
         <span slot="activator">      
-          <v-icon color="primary">{{ activityIcons.text }}</v-icon>
+          <v-icon :color="activityColours.text">{{ activityIcons.text }}</v-icon>
           {{ othersCounts }} gen.item{{ othersCounts > 1 ? 's' : ''}}
         </span>
         <span>generic items</span>
@@ -31,11 +31,11 @@
     <v-chip
         v-if="scripturesCount"
         outline
-        color="primary"
+        :color="activityColours.read"
         class="plan-actions-title ma-0"
       ><v-tooltip bottom lazy>
         <span slot="activator">
-          <v-icon color="primary">{{ activityIcons.read }}</v-icon>
+          <v-icon :color="activityColours.read">{{ activityIcons.read }}</v-icon>
           {{ scripturesCount }} reading{{ scripturesCount > 1 ? 's' : ''}}
         </span>
         <span>number of scripture readings</span>
@@ -63,6 +63,9 @@ export default {
     },
     activityIcons() {
       return this.$store.state.plan.activity.icons
+    },
+    activityColours() {
+      return this.$store.state.plan.activity.colours
     },
     othersCounts () {
       return this.getCounter(this.plan.actionList, 'text')

@@ -25,6 +25,8 @@
 
           <v-tab ripple>Scripture Text</v-tab>
 
+          <v-tab ripple>Generic Text</v-tab>
+
           <v-tab ripple>Screen Setup</v-tab>
 
 
@@ -95,6 +97,26 @@
           </v-tab-item>
 
 
+          <!-- GENERIC TEXT configuration -->
+          <v-tab-item>
+            <v-card flat>
+              <v-card-text class="pb-0 mb-0">
+                <v-container fluid px-0 class="mt-0 pt-0">
+
+                  <font-setup entity="textTitle"></font-setup>
+
+                </v-container>
+              </v-card-text>
+
+              <v-card-actions class="pt-0">
+                <v-spacer></v-spacer>
+                <v-btn small @click="menu = false">OK</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-tab-item>
+
+
+
           <!-- generic presentation configuration -->
           <v-tab-item>
             <v-card flat>
@@ -102,17 +124,18 @@
                 <v-container fluid grid-list-md>
 
                   <v-layout row wrap justify-space-between>
-                    <v-flex xs9>
+                    <v-flex xs8>
                       <span class="input-group input-group--slider">
                         <label>Slides Background Color:</label>
                       </span>
                       <v-text-field
                         name="slideBgColour"
-                        value="slideBgColour"
-                        label="Col.Code"
+                        :value="slideBgColour"
+                        v-model="slideBgColour"
+                        label="Or enter the colour code:"
                       ></v-text-field>
                     </v-flex>
-                    <v-flex xs2>
+                    <v-flex xs2>generic
                       <swatches
                           v-model="slideBgColour"
                           colors="material-dark"
@@ -120,8 +143,16 @@
                           row-length="7"
                         ></swatches>
                     </v-flex>
+                    <v-flex xs2>advanced
+                      <swatches
+                          v-model="slideBgColour"
+                          colors="text-advanced"
+                          popover-to="left"
+                        ></swatches>
+                    </v-flex>
                   </v-layout>
                   <v-divider class="mt-1 mb-2"></v-divider>
+
 
                   <v-layout row wrap>
                     <v-flex xs12>
@@ -133,6 +164,7 @@
                         ></v-checkbox>                      
                     </v-flex>
                   </v-layout>
+
 
                 </v-container>
               </v-card-text>
@@ -165,7 +197,7 @@ export default {
       menu: false,
       active: null,
       versesPerSlide: 0,
-      blankSlide: true,
+      blankSlide: null,
       slideBgColour: '#e1f5fe'
     }
   },
@@ -177,9 +209,9 @@ export default {
   },
 
   // map all global settings to the local data
-  mounted () {
+  created () {
     this.versesPerSlide = this.presentation.versesPerSlide || 5
-    this.blankSlide = this.presentation.blankSlide || true
+    this.blankSlide = this.presentation.blankSlide || false
     this.slideBgColour = this.presentation.slideBgColour || '#e1f5fe'
   },
 

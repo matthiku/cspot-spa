@@ -229,7 +229,7 @@ export default {
           seqNo = this.firstVisibleItem.seqNo
         }
       }
-      console.log('set presentation to seqNo', seqNo, item)
+      // console.log('set presentation to seqNo', seqNo, item)
 
       this.$store.commit('setPresentationItem', {item: 'showSeqNo', value: seqNo})
 

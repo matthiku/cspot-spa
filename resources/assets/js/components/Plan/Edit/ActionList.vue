@@ -53,7 +53,7 @@
                       }"
                     class="strong white-space-normal py-1 pr-1"
                   >
-                  ({{ item.seqNo }})
+                  <!-- ({{ item.seqNo }}) -->
                   <v-tooltip bottom lazy offset-overflow v-if="item.type!=='text'">
                     <span slot="activator">{{ item.title }}</span>
                     <pre v-if="item.type==='song'">{{ item.lyrics }}</pre>
@@ -66,7 +66,7 @@
                 <span class="on-hover-only"
                     v-if="userOwnsThisPlan && item.type === 'text'"
                     title="click text to edit"
-                  ><v-icon>edit</v-icon></span> 
+                  ><v-icon>edit</v-icon></span>
 
               </v-list-tile-title>
 
@@ -86,9 +86,19 @@
 
             <!-- action buttons -->
             <v-list-tile-action 
-                v-if="!item.warning && item.type === 'song' && songs[item.value] &&  songs[item.value].youtube_id">               
+                v-if="!item.warning && item.type === 'song' && songs[item.value] &&  songs[item.value].youtube_id">
                 <!-- modal to show youtube videos -->
                 <app-show-youtube-modal :youtube-id="songs[item.value].youtube_id"></app-show-youtube-modal>
+            </v-list-tile-action>
+
+            <v-list-tile-action v-if="item.type === 'text' && !item.warning && !item.forLeadersEyesOnly">
+              <v-tooltip bottom>
+                <v-checkbox hide-details slot="activator"
+                    v-model="item.showTitle"
+                    @click="changeItemShowTitle(item)"
+                  ></v-checkbox>
+                <span>Show comment as title in Presentation?</span>
+              </v-tooltip>
             </v-list-tile-action>
 
             <v-list-tile-action v-if="!item.warning && !item.forLeadersEyesOnly && item.type!=='text'">
@@ -200,8 +210,8 @@
         showMenu: false,
         targetId: null,
         menuItems: [
-          { id: 'insAbove', title: 'Insert item above' },
-          { id: 'insBelow', title: 'Insert item below' },
+          { id: 'insAbove', title: 'Insert new item above' },
+          { id: 'insBelow', title: 'Insert new item below' },
           { id: 'editFleo', title: 'Swap FLEO flag' },
           { id: 'delete', title: 'Delete this item' }
         ]
@@ -251,6 +261,17 @@
           // stop the content editing
           event.srcElement.contentEditable = false
           event.srcElement.contentEditable = true
+        })
+      },
+
+      changeItemShowTitle (item) {
+        // determines whether the text of this item will be shown in the presentation
+        if (!this.userOwnsThisPlan) return
+        this.$store.dispatch('updateActionItem', {
+          planId: this.plan.id,
+          actionId: item.key,
+          field: 'show_comment',
+          newValue: item.showTitle ? '0' : '1'
         })
       },
 
@@ -412,6 +433,10 @@
           }
           // this.correctAllSeqNos() // will be done in the backend
           this.oldActionListCount = this.activitiesCount
+
+          // check 
+          if (this.insertBefore > this.activitiesCount)
+            this.insertBefore = this.activitiesCount
         }
       }
     }

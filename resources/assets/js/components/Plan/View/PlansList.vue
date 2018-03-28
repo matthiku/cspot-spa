@@ -31,7 +31,9 @@
 
                   <div>
                     <v-tooltip bottom v-if="plan.items">                      
-                      <v-btn fab dark small color="primary" ma-0 slot="activator">
+                      <v-btn fab dark small ma-0 slot="activator"
+                          :color="(plan.items instanceof Object) && plan.items.length ? 'primary' : 'info'"
+                        >
                         {{ plan.items instanceof Object ? plan.items.length : 0 }}
                       </v-btn>
                       <span><v-icon>list</v-icon> &nbsp; Activities</span>

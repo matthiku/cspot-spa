@@ -57,13 +57,13 @@
     <!-- show floating action button for a presentation menu -->
     <v-tooltip bottom>
       <v-speed-dial
-        v-model="fab" bottom right hover
+        v-model="fab" bottom right open-on-hover
         slot="activator"
         direction="left"
         transition="slide-x-reverse-transition"
       >
         <v-btn
-          v-model="fab" dark fab hover
+          v-model="fab" dark fab
           slot="activator"
           color="blue darken-2"
         >

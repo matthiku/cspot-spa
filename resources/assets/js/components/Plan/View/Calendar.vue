@@ -6,6 +6,7 @@
 			:time-format-options="{hour: 'numeric', minute:'2-digit'}"
 			@setShowDate="setShowDate"
 			@click-event="onClickEvent"
+      @show-date-change="changeShowDate"
       weekdayNameFormat="long"
       showEventTimes
   ></calendar-view>
@@ -69,6 +70,9 @@
       onClickEvent(e) {
         this.$router.push({name: 'plan', params: {planId: e.id}})
       },
+      changeShowDate (d) {
+        this.showDate = this.$moment(d)
+      }
     },
 
     created() {

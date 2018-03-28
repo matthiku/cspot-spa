@@ -43,7 +43,7 @@
 
     <!-- show helper text -->
     <v-slide-y-transition>
-      <v-card-text v-show="show">
+      <v-card-text v-show="show">Insert Before: {{ insertBefore }}
         Activity items will be added into the plan at the location indicated by the thick, maroon-coloured line.
         Initially, this is at the end of the list of items but you can move the "insert indicator" line by 
         clicking on the hamburger menu icon at the right end of each item and selecting the appropriate menu item.

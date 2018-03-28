@@ -9,6 +9,12 @@
         <!-- loop through all plan action items -->
         <template v-for="(item, index) in plan.actionList">
 
+          <v-list-tile v-show="insertBefore===item.seqNo-1"
+              :key="item.key + 'a'"
+              title="items will be inserted here"
+              class="drop-insert-indicator">
+          </v-list-tile>
+
           <v-list-tile
               :id="'activity-item-' + item.seqNo + '-id-' + item.key"
               :draggable="userOwnsThisPlan" 
@@ -128,13 +134,13 @@
 
           </v-list-tile>
 
-          <v-divider v-if="plan.actionList && index + 1 < plan.actionList.length" :key="item.key"></v-divider>
+          <v-divider v-if="plan.actionList && index + 1 < plan.actionList.length" :key="item.key + 'b'"></v-divider>
         </template>
 
-        <v-list-tile v-show="activitiesCount"
-            id="insert-indicator"
+        <v-list-tile v-show="insertBefore===plan.actionList.length"
             title="items will be inserted here"
-            class="drop-insert-indicator"></v-list-tile>
+            class="drop-insert-indicator">
+        </v-list-tile>
 
       </v-list>
 
@@ -188,7 +194,6 @@
 
     data () {
       return {
-        needToMove: false,
         oldActionListCount: 0,
         insertBefore: 0,
         showMenu: false,
@@ -211,11 +216,9 @@
       mSelect (action, activity) {
         if (action.id === 'insAbove') {
           this.insertBefore = activity.seqNo - 1
-          this.moveInsertIndicator()
         }
         if (action.id === 'insBelow') {
           this.insertBefore = activity.seqNo
-          this.moveInsertIndicator()
         }
         if (action.id === 'delete') {
           activity.warning = true
@@ -248,31 +251,6 @@
           event.srcElement.contentEditable = false
           event.srcElement.contentEditable = true
         })
-      },
-
-      moveInsertIndicator () {
-        let position = this.insertBefore
-
-        // get the existing InsertIndicator LI element or create a new one
-        let indicLi = document.getElementById('insert-indicator').parentNode
-
-        // get the parent UL element
-        let parentUL = indicLi.parentNode
-
-        // temporarily remove the indicator from the DOM
-        indicLi.parentNode.removeChild(indicLi)
-
-        // get all LI children in order to find the n-th child (according to the given seqNo)
-        let childrenLI = parentUL.getElementsByTagName('li')
-        let count = childrenLI.length
-
-        // if the seqNo is higher than the number of LI elements,
-        // append the indicator to the end
-        if (count < position) {
-          parentUL.appendChild(indicLi)
-        } else {
-          parentUL.insertBefore(indicLi, childrenLI[position])
-        }
       },
 
       // the user dropped the element on a Plan Activity - now handle the move
@@ -429,22 +407,15 @@
       // sure the sequence numbers are still correct
       actionList (val) {
         if (this.oldActionListCount !== this.activitiesCount) {
-          // also, if an item was added, move the insertion indicator
+          // if an item was added or removed, move the insertion indicator accordingly
           if (this.oldActionListCount < this.activitiesCount) {
             this.insertBefore += 1
-            this.needToMove = true // trigger the move of the indicator after the re-render
+          } else {
+            this.insertBefore -= 1
           }
           // this.correctAllSeqNos() // will be done in the backend
           this.oldActionListCount = this.activitiesCount
         }
-      }
-    },
-
-    updated () {
-      // see if the indicator needs to move after the list of activities was re-rendered
-      if (this.needToMove) {
-        this.moveInsertIndicator()
-        this.needToMove = false
       }
     }
   }

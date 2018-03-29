@@ -19,8 +19,7 @@
   <v-container fluid
       v-if="plan instanceof Object && plan.hasOwnProperty('actionList')"
 
-      class="text-xs-center presentation-space pa-0"
-      :style="presentationStyle"
+      class="presentation-space pa-0"
     >
 
     <div v-for="item in actionList" :key="item.seqNo"
@@ -109,11 +108,6 @@ export default {
   },
 
   computed: {
-    presentationStyle () {
-      return {
-        'background-color' : this.presentation.slideBgColour || '#000'
-      }
-    },
     firstVisibleItem () {
       if (this.plan && this.plan.actionList.find)
         return this.plan.actionList.find(item => !item.forLeadersEyesOnly)
@@ -192,7 +186,6 @@ export default {
     },
 
     gotoThisItem (seqNo, dir) {
-      console.log('go to item with seqNo', seqNo)
       // wrap around the items list if necessary
       if (seqNo < 1) {
         seqNo = this.actionList.length

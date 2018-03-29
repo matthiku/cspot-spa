@@ -143,23 +143,6 @@ export default {
       return line.replace(/^\[region\s*2\]/i, '')
     },
 
-    lineIsRegionTwo (line) {
-      // search for "REGION 2" in the text line (with or without the space character)
-      var patt = /^\[region\s*2\]/i
-      if (patt.test(line)) {
-        return true
-      }
-      return false
-    },
-
-    isLyricsHeader (line) {
-      var patt = /\[region\s*2\]/i
-      if (patt.test(line)) return false
-      var patt = /^\[/
-      if (patt.test(line)) return true
-      return false
-    },
-
     /**
      * Looks for singing instructions at the beginning of the line indicated by simple brackets (xyz) 
      * 
@@ -173,45 +156,6 @@ export default {
       if (!strings.length === 2) return false // not catering for more than 2 instruction blocks...
       strings[0] = strings[0] + ')'
       return strings
-    },
-
-    /**
-     * @description: Create single slides from a block of text (multiple lines) 
-     *               with emptly lines as separators     *
-     * @argument block (string) with possibly mulitple lines of text, 
-     *                          possibly containing one or more empty lines     *
-     * @returns: (array) slides, each containing an array of text lines
-     */
-    splitByEmptyLine (block) {
-      let output = []
-      let slide = []
-      let lines = block.split('\n')
-      let isRegion2 = false
-      lines.forEach(line => {
-        if (line.trim() !== '' && !this.isLyricsHeader(line)) {
-          // ignore a leading dot (line is to be ignored in Chords view only)
-          if (line.indexOf('.') === 0) line = line.substr(1)
-          // check for Region 2 lines
-          if (!isRegion2) {
-            if (this.lineIsRegionTwo(line)) {
-              isRegion2 = true
-              line = '<hr>'
-            }
-          } else {
-            line = '[Region 2]' + line
-          }
-          slide.push(line.trim())
-        } else if (slide.length) {
-          output.push(slide)
-          slide = []
-          isRegion2 = false
-        } else {
-          slide = []
-          isRegion2 = false
-        }
-      })
-      if (slide.length) output.push(slide)
-      return output
     }
   },
 

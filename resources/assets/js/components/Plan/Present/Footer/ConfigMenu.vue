@@ -215,7 +215,7 @@ export default {
   created () {
     this.versesPerSlide = this.presentation.versesPerSlide || 5
     this.blankSlide = this.presentation.blankSlide || false
-    this.slideBgColour = this.presentation.slideBgColour || '#e1f5fe'
+    this.slideBgColour = this.presentation.lyricsFont.slideBgColour || '#e1f5fe'
   },
 
   // when the local data changes, reflect it back to the global store

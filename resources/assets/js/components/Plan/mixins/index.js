@@ -57,7 +57,7 @@ export default {
     },
     activityIcons() {
       return this.$store.state.plan.activity.icons
-    }
+    },
   },
 
   methods: {
@@ -71,12 +71,12 @@ export default {
       }
       // get plan from store and investigate the roles
       let check = false
-      check = plan.teams.find(rl => rl.user_id === user_id)
+      check = plan.teams.find((rl) => rl.user_id === user_id)
       return check ? true : false
     },
 
     getLyricsFromOnsong(onsong) {
-      // extrace the lyrics from lines of onsong code
+      // extract the lyrics from lines of onsong code
       // input: "Amazing [D]Grace, how [G]sweet the [D]sound"
       // output: "Amazing Grace, how sweet the sound"
       onsong = onsong.replace(/\[[a-z|0-9|/|#]+\]/gi, '')
@@ -85,7 +85,63 @@ export default {
       // 1. remove lines with musical instructions, e,g, "(no music)"
       onsong = onsong.replace(/^\(.+\)$\n/gim, '')
       return onsong
-    }
+    },
+
+    lineIsRegionTwo(line) {
+      // search for "REGION 2" in the text line (with or without the space character)
+      var patt = /^\[region\s*2\]/i
+      if (patt.test(line)) {
+        return true
+      }
+      return false
+    },
+
+    isLyricsHeader(line) {
+      var patt = /\[region\s*2\]/i
+      if (patt.test(line)) return false
+      var patt = /^\[/
+      if (patt.test(line)) return true
+      return false
+    },
+
+    /**
+     * @description: Create single slides from a block of text (multiple lines)
+     *               with emptly lines as separators     *
+     * @argument block (string) with possibly mulitple lines of text,
+     *                          possibly containing one or more empty lines     *
+     * @returns: (array) slides, each containing an array of text lines
+     */
+    splitByEmptyLine(block) {
+      let output = []
+      let slide = []
+      let lines = block.split('\n')
+      let isRegion2 = false
+      lines.forEach((line) => {
+        if (line.trim() !== '' && !this.isLyricsHeader(line)) {
+          // ignore a leading dot (line is to be ignored in Chords view only)
+          if (line.indexOf('.') === 0) line = line.substr(1)
+          // check for Region 2 lines
+          if (!isRegion2) {
+            if (this.lineIsRegionTwo(line)) {
+              isRegion2 = true
+              line = '<hr>'
+            }
+          } else {
+            line = '[Region 2]' + line
+          }
+          slide.push(line.trim())
+        } else if (slide.length) {
+          output.push(slide)
+          slide = []
+          isRegion2 = false
+        } else {
+          slide = []
+          isRegion2 = false
+        }
+      })
+      if (slide.length) output.push(slide)
+      return output
+    },
   },
 
   created() {
@@ -106,5 +162,5 @@ export default {
         }
       }, 5000)
     }
-  }
+  },
 }

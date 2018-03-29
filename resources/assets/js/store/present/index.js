@@ -5,7 +5,6 @@ export default {
       selectedTab: "1",
       numberOfSlides: 1,
       blankSlide: true,
-      slideBgColour: '#e1f5fe',
       textTitleFont: {
         size: 45,
         bold: 'bold',
@@ -26,6 +25,15 @@ export default {
         align: 'center',
         italic: 'normal',
         colour: '#ffffff',
+        slideBgColour: '#e1f5fe',
+      },
+      chordsFont: {
+        size: 14,
+        bold: 'normal',
+        align: 'left',
+        italic: 'normal',
+        colour: '#ffffff',
+        slideBgColour: '#e1f5fe',
       },
       scriptureFont: {
         size: 35,
@@ -76,11 +84,11 @@ export default {
       if (localStorage.getItem('blankSlide')) {
         state.presentation.blankSlide = localStorage.getItem('blankSlide') === 'true' ? true : false
       }
-      if (localStorage.getItem('slideBgColour')) {
-        state.presentation.slideBgColour = localStorage.getItem('slideBgColour')
-      }
       if (localStorage.getItem('lyricsFont')) {
         state.presentation.lyricsFont = JSON.parse(localStorage.getItem('lyricsFont'))
+      }
+      if (localStorage.getItem('chordsFont')) {
+        state.presentation.chordsFont = JSON.parse(localStorage.getItem('chordsFont'))
       }
       if (localStorage.getItem('lyricsTitleFont')) {
         state.presentation.lyricsTitleFont = JSON.parse(localStorage.getItem('lyricsTitleFont'))

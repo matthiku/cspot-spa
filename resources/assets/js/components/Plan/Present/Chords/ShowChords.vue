@@ -1,30 +1,16 @@
 <template>
   <span>
 
-      <!-- slides for each song particle -->
+      <!-- show full song with chords on one page -->
       <div v-for="(part, index) in verses"
           :key="index"
           :class="slideClass"
-          class="presentation-slide"
-          v-show="showSlides[index]"
+          :style="chordsStyle"
         >
-        <div v-for="(line, index) in part"
-            :key="index"
-            class="lyrics-line"
-            :style="lyricsStyle"
-          >
-
-          <!-- check if the line contains singing instructions -->
-          <span v-if="hasInstructions(line)">
-            <span class="red--text">{{ removeRegion2(hasInstructions(line)[0]) }}</span>
-            <span :class="{'yellow--text': lineIsRegionTwo(line)}">{{ hasInstructions(line)[1] }}</span>
-          </span>
-
-          <!-- check if we are in region 2 -->
-          <span v-else
-              :class="{'yellow--text': lineIsRegionTwo(line)}"
-            >{{ removeRegion2(line) }}</span>
-
+        <h3 :class="'chords-part-id-' + part.meta.id">{{ part.meta.name }}</h3>
+        <div v-for="(line, index) in part.song" :key="index">
+          <pre>{{ line.chords }}</pre>
+          <pre>{{ line.lyrics }}</pre>
         </div>
       </div>
   </span>  
@@ -34,6 +20,7 @@
 <script>
 import genericMixins from '../../../../mixins/'
 import planMixins from '../../mixins'
+import ChordSheetJS from 'chordsheetjs'
 
 export default {
   name: 'PresentChords',
@@ -44,8 +31,7 @@ export default {
 
   data () {
     return {
-      verses: [],
-      showSlides: []
+      verses: []
     }
   },
 
@@ -53,92 +39,42 @@ export default {
     slideClass () {
       return 'slides-seqno-' + this.item.seqNo
     },
-    lyricsStyle () {
+    chordsStyle () {
       return {
-        color: this.presentation.lyricsFont.colour,
-        fontSize: this.presentation.lyricsFont.size + 'px',
-        textAlign: this.presentation.lyricsFont.align,
-        fontStyle: this.presentation.lyricsFont.italic,
-        fontWeight: this.presentation.lyricsFont.bold
+        color: this.presentation.chordsFont.colour,
+        fontSize: this.presentation.chordsFont.size + 'px',
+        textAlign: this.presentation.chordsFont.align,
+        fontStyle: this.presentation.chordsFont.italic,
+        fontWeight: this.presentation.chordsFont.bold
       }
     }
   },
 
   methods: {
+    /* ChordSheetJSObject - as created by ChordProParser
+        this object contains an array of "lines"
+        these lines are objects which contain arrays of "items"
+        these items contain object with single chords and the corresponding lyrics text
 
-    removeRegion2 (line) {
-      return line.replace(/^\[region\s*2\]/i, '')
-    },
-
-    lineIsRegionTwo (line) {
-      // search for "REGION 2" in the text line (with or without the space character)
-      var patt = /^\[region\s*2\]/i
-      if (patt.test(line)) {
-        return true
+      return: array of objects with complete lines of lyrcis and chords 
+    */ 
+    combineChordsAndLyrcis (ChordSheetJSObject) {
+      let block = []
+      if (ChordSheetJSObject.hasOwnProperty('lines')) {
+        ChordSheetJSObject.lines.forEach((line) => {
+          let lyrics = ''
+          let chords = ''
+          line.items.forEach((elem) => {
+            let lyLen = elem.lyrics.length + 1 // min. one space after the chords
+            let chLen = elem.chords.length
+            let maxLen = Math.floor(lyLen, chLen)
+            lyrics += elem.lyrics.padEnd(maxLen, ' -')
+            chords += elem.chords.padEnd(maxLen)
+          })
+          block.push({lyrics, chords})
+        })
       }
-      return false
-    },
-
-    isLyricsHeader (line) {
-      var patt = /\[region\s*2\]/i
-      if (patt.test(line)) return false
-      var patt = /^\[/
-      if (patt.test(line)) return true
-      return false
-    },
-
-    /**
-     * Looks for singing instructions at the beginning of the line indicated by simple brackets (xyz) 
-     * 
-     * returns false if none found or an array with the actual instructions and the rest of the line
-     */
-    hasInstructions (text) {
-      var patt = /\(.+\)/
-      if (!patt.test(text)) return false
-      // if matching text is found, split the line at the closing bracket
-      let strings = text.split(')')
-      if (!strings.length === 2) return false // not catering for more than 2 instruction blocks...
-      strings[0] = strings[0] + ')'
-      return strings
-    },
-
-    /**
-     * @description: Create single slides from a block of text (multiple lines) 
-     *               with emptly lines as separators     *
-     * @argument block (string) with possibly mulitple lines of text, 
-     *                          possibly containing one or more empty lines     *
-     * @returns: (array) slides, each containing an array of text lines
-     */
-    splitByEmptyLine (block) {
-      let output = []
-      let slide = []
-      let lines = block.split('\n')
-      let isRegion2 = false
-      lines.forEach(line => {
-        if (line.trim() !== '' && !this.isLyricsHeader(line)) {
-          // ignore a leading dot (line is to be ignored in Chords view only)
-          if (line.indexOf('.') === 0) line = line.substr(1)
-          // check for Region 2 lines
-          if (!isRegion2) {
-            if (this.lineIsRegionTwo(line)) {
-              isRegion2 = true
-              line = '<hr>'
-            }
-          } else {
-            line = '[Region 2]' + line
-          }
-          slide.push(line.trim())
-        } else if (slide.length) {
-          output.push(slide)
-          slide = []
-          isRegion2 = false
-        } else {
-          slide = []
-          isRegion2 = false
-        }
-      })
-      if (slide.length) output.push(slide)
-      return output
+      return block
     }
   },
 
@@ -155,23 +91,26 @@ export default {
         The id number of those codes are the name for each individual Onsong object.
       */
       let sequenceArr = this.item.sequence.split(',')
+      const parser = new ChordSheetJS.ChordProParser()
       sequenceArr.forEach(seq => {
-        // intro, notes or meta parts must be ignored
-        if ('smi'.indexOf(seq) >= 0) return
         if (!this.songParts.hasOwnProperty(seq)) return // song part code could not be found!
 
         let partId = this.songParts[seq].id
+
+        // skip sequences that are not found in the onsong data
         if (!this.item.onsongs.hasOwnProperty(partId)) return
 
-        // extract lyrics only from the OnSong data
-        let lyrics = this.getLyricsFromOnsong(this.item.onsongs[partId].text)
+        let obj = {
+          meta: {
+            name: this.songParts[seq].name,
+            id: partId
+          }
+        }
 
-        // check if lyrics contain a blank line, indicating a new slide
-        let slides = this.splitByEmptyLine(lyrics)
-        slides.forEach(slide => {
-          this.verses.push(slide)
-          this.showSlides.push(true)
-        })
+        // extract lyrics only from the OnSong data
+        let song = parser.parse(this.item.onsongs[partId].text)
+        obj.song = this.combineChordsAndLyrcis(song)
+        this.verses.push(obj)
       })
     }
 

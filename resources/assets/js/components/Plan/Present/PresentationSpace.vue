@@ -9,6 +9,7 @@
           :currentItemSeqNo="currentItemSeqNo"
           :currentSlideNo="currentSlideNo"
           v-on:keyPressed="keyPressed"
+          :style="presentationStyle"
           :item="item"
         ></present-lyrics>
 
@@ -19,24 +20,27 @@
           v-on:keyPressed="keyPressed"
           :currentSlideNo="currentSlideNo"
           :currentItemSeqNo="currentItemSeqNo"
+          :style="presentationStyle"
           :item="item"
         ></present-scripture>
 
 
       <!-- READING -->
-      <present-text 
+      <present-text
           v-if="item.type==='text'"
           v-on:keyPressed="keyPressed"
           :currentSlideNo="currentSlideNo"
           :currentItemSeqNo="currentItemSeqNo"
+          :style="presentationStyle"
           :item="item"
         ></present-text>
     </span>
 
 
-    <span v-if="presentationType='chords'">
+    <span v-if="presentationType==='chords'">
       <present-chords
           v-if="item.type==='song'"
+          :style="presentationStyle"
           :item="item"
         ></present-chords>
     </span>
@@ -62,6 +66,23 @@ export default {
   },
 
   props: ['item', 'currentItemSeqNo', 'currentSlideNo', 'presentationType'],
+
+  computed: {
+    presentation() {
+      return this.$store.getters.presentation
+    },
+    presentationStyle () {
+      if (!this.presentation) return
+      // set background colour depending on presentation type
+      let type = 'lyricsFont' // default for the lyrics presentation
+      if (this.presentationType === 'chords') type = 'chordsFont'
+      if (this.presentationType === 'music') type = 'musicFont'
+      if (this.presentationType === 'lead') type = 'leadFont'
+      return {
+        'background-color' : this.presentation[type].slideBgColour
+      }
+    }    
+  },
 
   methods: {
     keyPressed (what) {

@@ -15,6 +15,7 @@
     },
     "dependencies": {
         "axios": "^0.17.1",
+        "chordsheetjs": "^2.2.0",
         "firebase": "^4.12.0",
         "moment": "^2.19.3",
         "moment-timezone": "^0.5.14",

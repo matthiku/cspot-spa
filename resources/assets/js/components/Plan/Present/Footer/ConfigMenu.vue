@@ -234,8 +234,8 @@ export default {
     slideBgColour (value) {
       this.$store.commit('setPresentationItem', {item: 'slideBgColour', value})
       // also change this in the relevant lyricsFont or chordsFont entity!
-      let entity = 'lyrics'
-      if (this.presentationType === 'chords') entity = 'chords'
+      let entity = this.presentationType
+      if (this.presentationType === 'present') entity = 'lyrics'
       this.$store.commit('setPresentationFont', {entity, slideBgColour: value})
     }
   }

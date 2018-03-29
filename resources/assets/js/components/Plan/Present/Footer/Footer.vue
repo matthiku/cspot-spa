@@ -1,6 +1,5 @@
 <template>
-  <span
-    >
+  <div>
     <v-footer v-if="showFooter"
         dark fixed
       >
@@ -110,7 +109,7 @@
       </v-btn>      
     </v-footer>
 
-  </span>
+  </div>
 </template>
 
 <style>

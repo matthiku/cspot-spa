@@ -1,20 +1,42 @@
 <template>
-  <span>
+  <div class="pl-1 pb-5 mb-5">
 
       <!-- show full song with chords on one page -->
-      <div v-for="(part, index) in verses"
-          :key="index"
+      <div v-for="(part, index) in verses" :key="index"
           :class="slideClass"
           :style="chordsStyle"
         >
-        <h3 :class="'chords-part-id-' + part.meta.id">{{ part.meta.name }}</h3>
-        <div v-for="(line, index) in part.song" :key="index">
-          <pre>{{ line.chords }}</pre>
-          <pre>{{ line.lyrics }}</pre>
+        <!-- showing song part names -->
+        <h3 v-if="part.meta && part.meta.code !== 'm'"
+            class="pl-3 mt-2"
+            :class="[parseInt(part.meta.code) ? 'primary' : 'info']"
+          >{{ part.meta.name }}:</h3>
+
+        <!-- showing notes -->
+        <pre v-if="part.meta.code === 'm'"
+            color="red" class="title" 
+          >{{ part.meta.song }}</pre>
+
+        <!-- showing actual chords/lyrics -->
+        <div v-else v-for="(line, index) in part.song" :key="index">
+          <pre class="chords-line">{{ line.chords }}</pre>
+          <pre class="lyrics-line mb-1">{{ line.lyrics }}</pre>
         </div>
+
       </div>
-  </span>  
+  </div>  
 </template>
+
+
+<style>
+.chords-line {
+  color: red;
+  font-weight: bold;
+}
+.lyrics-line {
+  font-weight: normal;
+}
+</style>
 
 
 <script>
@@ -91,6 +113,18 @@ export default {
         These codes are the index (id) for the 'songParts' object in the Vuex store.
         The id number of those codes are the name for each individual Onsong object.
       */
+      // first, push the Notes into the verses array, if any
+      let notesId = this.songParts.m.id
+      if (this.item.onsongs[notesId]) {
+        this.verses.push({
+          meta: {
+            name: this.songParts.m.name,
+            code: 'm'
+          },
+          song: this.item.onsongs[notesId].text
+        })
+      }
+
       let sequenceArr = this.item.sequence.split(',')
       const parser = new ChordSheetJS.ChordProParser()
       sequenceArr.forEach(seq => {
@@ -104,7 +138,7 @@ export default {
         let obj = {
           meta: {
             name: this.songParts[seq].name,
-            id: partId
+            code: this.songParts[seq].code
           }
         }
 

@@ -17,7 +17,9 @@
 
 
       <!-- button for configuration menu -->
-      <config-menu></config-menu>
+      <config-menu
+          :presentationType="presentationType"
+        ></config-menu>
 
 
       <v-spacer></v-spacer>
@@ -133,7 +135,7 @@ export default {
 
   components: { configMenu, jumpMenu, addActionItem },
 
-  props: ['currentItemSeqNo', 'currentSlideNo', 'firstVisibleItem'],
+  props: ['currentItemSeqNo', 'currentSlideNo', 'firstVisibleItem', 'presentationType'],
 
   data () {
     return {

@@ -40,8 +40,8 @@
       <!-- show the current item -->
       <presentation-space
           :item="item"
-          :presentationType="presentationType"
           :currentSlideNo="showSlideNo"
+          :presentationType="presentationType"
           :currentItemSeqNo="presentation.showSeqNo"
           v-on:keyPressed="keyPressed"
         ></presentation-space>
@@ -52,6 +52,7 @@
         :currentSlideNo="showSlideNo"
         :firstVisibleItem="firstVisibleItem"
         :currentItemSeqNo="presentation.showSeqNo"
+        :presentationType="presentationType"
         v-on:keyPressed="keyPressed"
       ></presentation-footer>
 

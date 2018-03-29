@@ -192,6 +192,8 @@ import "vue-swatches/dist/vue-swatches.min.css"
 export default {
   components: {FontSetup, Swatches},
 
+  props: ['presentationType'],
+
   data () {
     return {
       menu: false,
@@ -231,7 +233,10 @@ export default {
     },
     slideBgColour (value) {
       this.$store.commit('setPresentationItem', {item: 'slideBgColour', value})
-      // TODO: also change this in the relevant lyricsFont or chordsFont entity!
+      // also change this in the relevant lyricsFont or chordsFont entity!
+      let entity = 'lyrics'
+      if (this.presentationType === 'chords') entity = 'chords'
+      this.$store.commit('setPresentationFont', {entity, slideBgColour: value})
     }
   }
 }

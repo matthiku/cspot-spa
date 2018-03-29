@@ -58,6 +58,8 @@ export default {
     },
 
     setPresentationFont(state, payload) {
+      //TODO: use this format
+      // state.presentation[payload.entity + 'Font'][payload.what] = payload.bold
       if (payload.bold)
         state.presentation[payload.entity + 'Font'].bold = payload.bold
       if (payload.align)
@@ -68,6 +70,8 @@ export default {
         state.presentation[payload.entity + 'Font'].italic = payload.italic
       if (payload.colour)
         state.presentation[payload.entity + 'Font'].colour = payload.colour
+      if (payload.slideBgColour)
+        state.presentation[payload.entity + 'Font'].slideBgColour = payload.slideBgColour
 
       localStorage.setItem(
         payload.entity + 'Font',

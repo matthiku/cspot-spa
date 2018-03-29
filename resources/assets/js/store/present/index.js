@@ -2,7 +2,7 @@ export default {
   state: {
     presentation: {
       versesPerSlide: 5,
-      selectedTab: "1",
+      selectedTab: '1',
       numberOfSlides: 1,
       blankSlide: true,
       textTitleFont: {
@@ -25,14 +25,14 @@ export default {
         align: 'center',
         italic: 'normal',
         colour: '#ffffff',
-        slideBgColour: '#e1f5fe',
+        slideBgColour: '#455A64',
       },
       chordsFont: {
         size: 14,
         bold: 'normal',
         align: 'left',
         italic: 'normal',
-        colour: '#ffffff',
+        colour: '#000',
         slideBgColour: '#e1f5fe',
       },
       scriptureFont: {
@@ -40,25 +40,24 @@ export default {
         bold: 'normal',
         align: 'center',
         italic: 'normal',
-        colour: '#ffffff'
+        colour: '#ffffff',
       },
-      showFooter: true
-    }
+      showFooter: true,
+    },
   },
 
   // M U T A T I O N S  (commits)
   mutations: {
-
-    setPresentation (state, payload) {
+    setPresentation(state, payload) {
       state.presentation = payload
     },
 
-    setPresentationItem (state, payload) {
+    setPresentationItem(state, payload) {
       state.presentation[payload.item] = payload.value
       localStorage.setItem(payload.item, payload.value)
     },
 
-    setPresentationFont (state, payload) {
+    setPresentationFont(state, payload) {
       if (payload.bold)
         state.presentation[payload.entity + 'Font'].bold = payload.bold
       if (payload.align)
@@ -70,34 +69,46 @@ export default {
       if (payload.colour)
         state.presentation[payload.entity + 'Font'].colour = payload.colour
 
-      localStorage.setItem(payload.entity + 'Font', JSON.stringify(state.presentation.scriptureFont))
-    }
+      localStorage.setItem(
+        payload.entity + 'Font',
+        JSON.stringify(state.presentation[payload.entity + 'Font'])
+      )
+    },
   },
 
   // G E T T E R S
   getters: {
-
-    presentation (state) {
+    presentation(state) {
       if (localStorage.getItem('versesPerSlide')) {
-        state.presentation.versesPerSlide = parseInt(localStorage.getItem('versesPerSlide'))
+        state.presentation.versesPerSlide = parseInt(
+          localStorage.getItem('versesPerSlide')
+        )
       }
       if (localStorage.getItem('blankSlide')) {
-        state.presentation.blankSlide = localStorage.getItem('blankSlide') === 'true' ? true : false
+        state.presentation.blankSlide =
+          localStorage.getItem('blankSlide') === 'true' ? true : false
       }
       if (localStorage.getItem('lyricsFont')) {
-        state.presentation.lyricsFont = JSON.parse(localStorage.getItem('lyricsFont'))
+        state.presentation.lyricsFont = JSON.parse(
+          localStorage.getItem('lyricsFont')
+        )
       }
       if (localStorage.getItem('chordsFont')) {
-        state.presentation.chordsFont = JSON.parse(localStorage.getItem('chordsFont'))
+        state.presentation.chordsFont = JSON.parse(
+          localStorage.getItem('chordsFont')
+        )
       }
       if (localStorage.getItem('lyricsTitleFont')) {
-        state.presentation.lyricsTitleFont = JSON.parse(localStorage.getItem('lyricsTitleFont'))
+        state.presentation.lyricsTitleFont = JSON.parse(
+          localStorage.getItem('lyricsTitleFont')
+        )
       }
       if (localStorage.getItem('scriptureFont')) {
-        state.presentation.scriptureFont = JSON.parse(localStorage.getItem('scriptureFont'))
+        state.presentation.scriptureFont = JSON.parse(
+          localStorage.getItem('scriptureFont')
+        )
       }
       return state.presentation
-    }
-  }
-
+    },
+  },
 }

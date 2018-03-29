@@ -198,7 +198,7 @@ export default {
       activeTab: null,
       versesPerSlide: 0,
       blankSlide: null,
-      slideBgColour: '#e1f5fe'
+      slideBgColour: '#455A64'
     }
   },
 
@@ -215,7 +215,7 @@ export default {
   created () {
     this.versesPerSlide = this.presentation.versesPerSlide || 5
     this.blankSlide = this.presentation.blankSlide || false
-    this.slideBgColour = this.presentation.lyricsFont.slideBgColour || '#e1f5fe'
+    this.slideBgColour = this.presentation.slideBgColour || '#455A64'
   },
 
   // when the local data changes, reflect it back to the global store
@@ -231,6 +231,7 @@ export default {
     },
     slideBgColour (value) {
       this.$store.commit('setPresentationItem', {item: 'slideBgColour', value})
+      // TODO: also change this in the relevant lyricsFont or chordsFont entity!
     }
   }
 }

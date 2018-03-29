@@ -1,5 +1,8 @@
 <template>
-  <span>
+  <div
+      class="presentation-space"
+      :style="presentationStyle"
+    >
 
 
     <span v-if="presentationType==='present'">
@@ -9,7 +12,6 @@
           :currentItemSeqNo="currentItemSeqNo"
           :currentSlideNo="currentSlideNo"
           v-on:keyPressed="keyPressed"
-          :style="presentationStyle"
           :item="item"
         ></present-lyrics>
 
@@ -20,7 +22,6 @@
           v-on:keyPressed="keyPressed"
           :currentSlideNo="currentSlideNo"
           :currentItemSeqNo="currentItemSeqNo"
-          :style="presentationStyle"
           :item="item"
         ></present-scripture>
 
@@ -31,7 +32,6 @@
           v-on:keyPressed="keyPressed"
           :currentSlideNo="currentSlideNo"
           :currentItemSeqNo="currentItemSeqNo"
-          :style="presentationStyle"
           :item="item"
         ></present-text>
     </span>
@@ -40,12 +40,11 @@
     <span v-if="presentationType==='chords'">
       <present-chords
           v-if="item.type==='song'"
-          :style="presentationStyle"
           :item="item"
         ></present-chords>
     </span>
 
-  </span>
+  </div>
 </template>
 
 
@@ -67,21 +66,31 @@ export default {
 
   props: ['item', 'currentItemSeqNo', 'currentSlideNo', 'presentationType'],
 
+  data () {
+    return {
+      slideBgColour: '#000'
+    }
+  },
+
   computed: {
     presentation() {
       return this.$store.getters.presentation
     },
     presentationStyle () {
-      if (!this.presentation) return
-      // set background colour depending on presentation type
-      let type = 'lyricsFont' // default for the lyrics presentation
-      if (this.presentationType === 'chords') type = 'chordsFont'
-      if (this.presentationType === 'music') type = 'musicFont'
-      if (this.presentationType === 'lead') type = 'leadFont'
       return {
-        'background-color' : this.presentation[type].slideBgColour
+        'background-color' : this.presentation.slideBgColour
       }
     }    
+  },
+
+  created () {
+    // set background colour depending on presentation type
+    let type = 'lyricsFont' // default for the lyrics presentation
+    if (this.presentationType === 'chords') type = 'chordsFont'
+    if (this.presentationType === 'music') type = 'musicFont'
+    if (this.presentationType === 'lead') type = 'leadFont'
+    this.slideBgColour = this.presentation[type].slideBgColour
+    this.$store.commit('setPresentationItem', {item: 'slideBgColour', value: this.slideBgColour})
   },
 
   methods: {

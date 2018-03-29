@@ -65,9 +65,10 @@ export default {
           let lyrics = ''
           let chords = ''
           line.items.forEach((elem) => {
-            let lyLen = elem.lyrics.length + 1 // min. one space after the chords
-            let chLen = elem.chords.length
+            let lyLen = elem.lyrics.length
+            let chLen = elem.chords.length + 1
             let maxLen = Math.floor(lyLen, chLen)
+            if (lyLen <= chLen) maxLen += 1 // force at least one space between chords
             lyrics += elem.lyrics.padEnd(maxLen, ' -')
             chords += elem.chords.padEnd(maxLen)
           })

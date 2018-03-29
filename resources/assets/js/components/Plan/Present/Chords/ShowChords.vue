@@ -14,8 +14,8 @@
 
         <!-- showing notes -->
         <pre v-if="part.meta.code === 'm'"
-            color="red" class="title" 
-          >{{ part.meta.song }}</pre>
+            class="red--text title"
+          >{{ part.song }}</pre>
 
         <!-- showing actual chords/lyrics -->
         <div v-else v-for="(line, index) in part.song" :key="index">
@@ -31,10 +31,6 @@
 <style>
 .chords-line {
   color: red;
-  font-weight: bold;
-}
-.lyrics-line {
-  font-weight: normal;
 }
 </style>
 

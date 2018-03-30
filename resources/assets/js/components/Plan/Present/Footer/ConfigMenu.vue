@@ -11,7 +11,7 @@
         </v-tooltip>
       </v-btn>
 
-      <v-card style="min-height: 500px" dark>
+      <v-card style="min-height: 550px; min-width: 550px" dark>
 
         <v-tabs
             v-model="activeTab"
@@ -63,6 +63,25 @@
                 <v-container fluid px-0 class="mt-0 pt-0">
 
                   <font-setup entity="lyrics"></font-setup>
+
+                </v-container>
+              </v-card-text>
+
+              <v-card-actions class="pt-0">
+                <v-spacer></v-spacer>
+                <v-btn small @click="menu = false">OK</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-tab-item>
+
+
+          <!-- CHORDS TEXT configuration -->
+          <v-tab-item v-if="presentationType==='chords'">
+            <v-card flat>
+              <v-card-text class="pb-0 mb-0">
+                <v-container fluid px-0 class="mt-0 pt-0">
+
+                  <font-setup entity="chords"></font-setup>
 
                 </v-container>
               </v-card-text>

@@ -13,7 +13,7 @@
           >{{ part.meta.name }}:</h3>
 
         <!-- showing notes -->
-        <pre v-if="part.meta.code === 'm'"
+        <pre v-if="part.meta && part.meta.code === 'm'"
             class="red--text title"
           >{{ part.song }}</pre>
 

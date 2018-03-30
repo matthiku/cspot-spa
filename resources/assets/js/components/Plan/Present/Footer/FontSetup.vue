@@ -12,12 +12,22 @@
     <v-divider class="mt-1 mb-2"></v-divider>
 
     <v-layout row wrap justify-space-between>
-      <v-flex xs9>
+      <v-flex xs8>
         <span class="input-group input-group--slider">
           <label>Text Color:</label>
         </span>
       </v-flex>
       <v-flex xs2>
+        Basic
+        <swatches
+            v-model="colour"
+            colors="basic"
+            popover-to="left"
+            row-length="7"
+          ></swatches>
+      </v-flex>
+      <v-flex xs2>
+        Advanced
         <swatches
             v-model="colour"
             colors="material-light"

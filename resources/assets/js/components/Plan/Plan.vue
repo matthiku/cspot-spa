@@ -243,7 +243,7 @@ export default {
 
   methods: {
     loadCurrentPlan (reason) {
-      // console.log('loadCurrentPlan, reason:', reason)
+      console.log('loadCurrentPlan, reason:', reason)
       let plan
       // get plan depending on current route!
       if (this.$route && this.$route.name === 'nextsunday') {
@@ -314,7 +314,7 @@ export default {
       this.loadCurrentPlan('watching route')
     },
     plan (val) {
-      // console.log('watching plan', val.id)
+      console.log('watching plan', val.id)
       // check which expansion panel is open
       if (val instanceof Object) {
         if (this.pageStatus.hasOwnProperty(this.plan.id)) this.showDetails = this.pageStatus[this.plan.id].showDetails
@@ -330,13 +330,11 @@ export default {
     },
     plans (val) {
       if (val !== 'loading' && val instanceof Object) {
-        // console.log('reloading as PLANS have changed!')
         this.loadCurrentPlan('watching plans')
       }
     },
 
     healthStatus (val) {
-      // console.log(val)
       if (val===100) this.loadCurrentPlan('healthstatus OK')
     }
   },
@@ -352,9 +350,9 @@ export default {
   },
 
   updated () {
-    // console.log('updated', (new Date()).getMilliseconds(), 'updated', this.plans.length)
+    console.log('Plan.vue updated', (new Date()).getMilliseconds(), 'updated', this.plans.length)
     if (this.plans instanceof Array && this.plans.length) {
-      // this.loadCurrentPlan('component updated')
+      this.loadCurrentPlan('component updated')
       this.savePageStatus()
     }
   },

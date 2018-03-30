@@ -314,7 +314,7 @@ export default {
       this.loadCurrentPlan('watching route')
     },
     plan (val) {
-      console.log('watching plan', val.id)
+      // console.log('watching plan', val.id)
       // check which expansion panel is open
       if (val instanceof Object) {
         if (this.pageStatus.hasOwnProperty(this.plan.id)) this.showDetails = this.pageStatus[this.plan.id].showDetails
@@ -330,7 +330,7 @@ export default {
     },
     plans (val) {
       if (val !== 'loading' && val instanceof Object) {
-        this.loadCurrentPlan('watching plans')
+        this.loadCurrentPlan('plans have changed')
       }
     },
 
@@ -350,7 +350,7 @@ export default {
   },
 
   updated () {
-    console.log('Plan.vue updated', (new Date()).getMilliseconds(), 'updated', this.plans.length)
+    // console.log('Plan.vue updated', (new Date()).getMilliseconds(), 'updated', this.plans.length)
     if (this.plans instanceof Array && this.plans.length) {
       this.loadCurrentPlan('component updated')
       this.savePageStatus()

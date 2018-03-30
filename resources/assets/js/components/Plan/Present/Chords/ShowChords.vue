@@ -23,6 +23,16 @@
           <pre class="lyrics-line mb-1">{{ line.lyrics }}</pre>
         </div>
 
+        <!-- no chords available! -->
+        <div v-if="!item.sequence">
+          <h3 class="pl-3 mt-2">
+            Part {{ index + 1 }}
+          </h3>
+          <pre v-for="(line, idx) in part" :key="idx"
+              class="lyrics-line"
+            >{{ line }}</pre>
+        </div>
+
       </div>
   </div>  
 </template>

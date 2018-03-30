@@ -5,6 +5,9 @@
     >
 
 
+    <!-- 
+      LYRICS presentation
+     -->
     <span v-if="presentationType==='present'">
       <!-- SONG -->
       <present-lyrics
@@ -15,7 +18,6 @@
           :item="item"
         ></present-lyrics>
 
-
       <!-- READING -->
       <present-scripture 
           v-if="item.type==='read'"
@@ -25,8 +27,7 @@
           :item="item"
         ></present-scripture>
 
-
-      <!-- READING -->
+      <!-- GENERIC TEXT -->
       <present-text
           v-if="item.type==='text'"
           v-on:keyPressed="keyPressed"
@@ -37,16 +38,41 @@
     </span>
 
 
+    <!--
+      CHORDS presentation 
+    -->
     <span v-if="presentationType==='chords'">
       <chords-chords
           v-if="item.type==='song'"
           :item="item"
+          :presentationType="presentationType"
         ></chords-chords>
 
-      <chords-scripture
+      <plain-scripture
           v-if="item.type==='read'"
           :item="item"
-        ></chords-scripture>
+        ></plain-scripture>
+
+      <div v-show="item.type==='text'">
+        <h2>({{ item.title }})</h2>
+      </div>
+    </span>
+
+
+    <!--
+      LEADER's presentation 
+    -->
+    <span v-if="presentationType==='lead'">
+      <chords-chords
+          v-if="item.type==='song'"
+          :item="item"
+          :presentationType="presentationType"
+        ></chords-chords>
+
+      <plain-scripture
+          v-if="item.type==='read'"
+          :item="item"
+        ></plain-scripture>
 
       <div v-show="item.type==='text'">
         <h2>({{ item.title }})</h2>
@@ -61,7 +87,7 @@
 import presentText from './lyrics/ShowText.vue'
 import chordsChords from './chords/ShowChords.vue'
 import presentLyrics from './lyrics/ShowLyrics.vue'
-import chordsScripture from './chords/ShowScripture.vue'
+import plainScripture from './PlainScripture.vue'
 import presentScripture from './lyrics/ShowScripture.vue'
 
 export default {
@@ -69,7 +95,7 @@ export default {
 
   components: {
     presentScripture,
-    chordsScripture,
+    plainScripture,
     presentLyrics,
     chordsChords,
     presentText

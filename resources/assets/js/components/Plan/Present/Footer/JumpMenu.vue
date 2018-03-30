@@ -1,5 +1,5 @@
 <template>
-  <v-menu bottom left lazy dark nudge-left="55" transition="scale-transition">
+  <v-menu bottom left lazy dark nudge-left="55" origin="bottom center 0" transition="scale-transition">
 
     <v-btn icon slot="activator" dark
         title="jump to other items menu"

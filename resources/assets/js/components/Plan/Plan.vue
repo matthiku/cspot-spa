@@ -226,7 +226,8 @@ export default {
         activities: true
       },
       openDateEditingDlg: false,
-      editing: ''
+      editing: '',
+      readyState: false
     }
   },
 
@@ -241,7 +242,8 @@ export default {
   },
 
   methods: {
-    loadCurrentPlan () {
+    loadCurrentPlan (reason) {
+      console.log('loadCurrentPlan, reason:', reason)
       let plan
       // get plan depending on current route!
       if (this.$route && this.$route.name === 'nextsunday') {
@@ -309,10 +311,10 @@ export default {
 
   watch: {
     '$route' (to, from) {
-      this.loadCurrentPlan()
+      this.loadCurrentPlan('watching route')
     },
     plan (val) {
-      // console.log('watching plan', val)
+      console.log('watching plan', val.id)
       // check which expansion panel is open
       if (val instanceof Object) {
         if (this.pageStatus.hasOwnProperty(this.plan.id)) this.showDetails = this.pageStatus[this.plan.id].showDetails
@@ -329,17 +331,18 @@ export default {
     plans (val) {
       if (val !== 'loading' && val instanceof Object) {
         // console.log('reloading as PLANS have changed!')
-        this.loadCurrentPlan()
+        this.loadCurrentPlan('watching plans')
       }
+    },
+
+    healthStatus (val) {
+      console.log(val)
+      if (val===100) this.loadCurrentPlan('healthstatus OK')
     }
   },
   mounted () {
-    // console.log((new Date()).getMilliseconds(), 'mounted')
+    console.log((new Date()).getMilliseconds(), 'mounted')
     this.$store.commit('setRouteChanging', false)
-    // console.log('plan mounted')
-
-    // check if plan is already available, otherwise load it
-    if (!this.plan) this.loadCurrentPlan()
 
     // check which expansion panel should be open
     if (!this.plan || this.plan === undefined) return
@@ -349,17 +352,14 @@ export default {
   },
 
   updated () {
-    // console.log('updated', (new Date()).getMilliseconds(), 'updated', this.plans.length)
+    console.log('updated', (new Date()).getMilliseconds(), 'updated', this.plans.length)
     if (this.plans instanceof Array && this.plans.length) {
-      this.loadCurrentPlan()
+      // this.loadCurrentPlan('component updated')
       this.savePageStatus()
     }
   },
   beforeDestroy () {
     this.savePageStatus()
-  },
-  beforeRouteUpdate (to, from, next) {
-    console.log(to, from)
   }
 }
 </script>

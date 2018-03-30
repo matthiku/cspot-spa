@@ -3,6 +3,7 @@ import axios from 'axios'
 export default {
   state: {
     appName: 'c-SPOT-SPA',
+    healthStatus: 0,
     loading: false,
     routeChanging: false,
     message: '',
@@ -16,6 +17,9 @@ export default {
   },
 
   mutations: {
+    setHealthStatus (state, payload) {
+      state.healthStatus = payload
+    },
     setLoading(state, payload) {
       state.loading = payload
     },
@@ -159,35 +163,38 @@ export default {
   },
 
   getters: {
-    error(state) {
+    error (state) {
       return state.error
     },
-    message(state) {
+    message (state) {
       return state.message
     },
-    loading(state) {
+    loading (state) {
       return state.loading
     },
-    routeChanging(state) {
+    routeChanging (state) {
       return state.routeChanging
     },
-    search(state) {
+    search (state) {
       return state.search
     },
-    appName(state) {
+    appName (state) {
       return state.appName
     },
-    dialog(state) {
+    dialog (state) {
       return state.dialog
     },
-    dialogShow(state) {
+    dialogShow (state) {
       return state.dialogShow
     },
-    admin(state) {
+    admin (state) {
       return state.admin
     },
-    pageStatus(state) {
+    pageStatus (state) {
       return state.pageStatus
+    },
+    healthStatus (state) {
+      return state.healthStatus
     }
   }
 }

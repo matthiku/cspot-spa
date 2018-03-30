@@ -250,6 +250,12 @@ export default {
     }
   },
 
+  watch: {
+    overAllHealth () {
+      this.$store.commit('setHealthStatus', this.overAllHealth)
+    }
+  },
+
   mounted () {
     this.checkHealth()
   }

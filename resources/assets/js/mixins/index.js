@@ -38,6 +38,9 @@ export default {
     },
     search() {
       return this.$store.getters.search
+    },
+    healthStatus () {
+      return this.$store.getters.healthStatus
     }
   },
 

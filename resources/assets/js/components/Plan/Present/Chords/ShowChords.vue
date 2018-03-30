@@ -9,17 +9,22 @@
         <!-- showing song part names -->
         <h3 v-if="part.meta && part.meta.code !== 'm'"
             class="pl-3 mt-2"
-            :class="[parseInt(part.meta.code) ? 'primary' : 'info']"
+            :class="{
+              primary: parseInt(part.meta.code) && presentationType==='chords', 
+              info: isNaN(part.meta.code) && presentationType==='chords',
+              'blue--text': presentationType!=='chords'
+            }"
           >{{ part.meta.name }}:</h3>
 
         <!-- showing notes -->
-        <pre v-if="part.meta && part.meta.code === 'm'"
+        <pre v-if="part.meta && part.meta.code === 'm' && presentationType==='chords'"
             class="red--text title"
           >{{ part.song }}</pre>
 
         <!-- showing actual chords/lyrics -->
         <div v-else v-for="(line, index) in part.song" :key="index">
-          <pre class="chords-line">{{ line.chords }}</pre>
+          <pre v-if="presentationType==='chords'" 
+              class="chords-line">{{ line.chords }}</pre>
           <pre class="lyrics-line mb-1">{{ line.lyrics }}</pre>
         </div>
 
@@ -55,7 +60,12 @@ export default {
 
   mixins: [genericMixins, planMixins],
 
-  props: ['item', 'currentItemSeqNo', 'currentSlideNo'],
+  props: [
+    'item',
+    'currentItemSeqNo',
+    'currentSlideNo',
+    'presentationType'
+  ],
 
   data () {
     return {

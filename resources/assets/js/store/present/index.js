@@ -36,6 +36,14 @@ export default {
         colour: '#000',
         slideBgColour: '#e1f5fe',
       },
+      leadFont: {
+        size: 14,
+        bold: 'normal',
+        align: 'left',
+        italic: 'normal',
+        colour: '#000',
+        slideBgColour: '#e1f5fe',
+      },
       chordsScrFont: {
         size: 14,
         bold: 'normal',

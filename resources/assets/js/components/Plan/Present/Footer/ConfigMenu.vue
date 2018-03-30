@@ -19,19 +19,26 @@
             slider-color="yellow"
             show-arrows
           >
-          <v-tab ripple>Lyrics Title</v-tab>
+          <v-tab v-if="presentationType==='present'"
+              ripple>Lyrics Title</v-tab>
 
-          <v-tab ripple>Lyrics Text</v-tab>
+          <v-tab v-if="presentationType==='present'"
+              ripple>Lyrics Text</v-tab>
 
-          <v-tab ripple>Scripture Text</v-tab>
+          <v-tab v-if="presentationType==='present'"
+              ripple>Scripture Text</v-tab>
 
-          <v-tab ripple>Generic Text</v-tab>
+          <v-tab v-if="presentationType==='present'"
+              ripple>Generic Text</v-tab>
+
+          <v-tab v-if="presentationType==='chords'"
+              ripple>Chords Text</v-tab>
 
           <v-tab ripple>Screen Setup</v-tab>
 
 
           <!-- LYRICS TITLE configuration -->
-          <v-tab-item>
+          <v-tab-item v-if="presentationType==='present'">
             <v-card flat>
               <v-card-text class="pb-0 mb-0">
                 <v-container fluid px-0 class="mt-0 pt-0">
@@ -50,7 +57,7 @@
 
 
           <!-- LYRICS TEXT configuration -->
-          <v-tab-item>
+          <v-tab-item v-if="presentationType==='present'">
             <v-card flat>
               <v-card-text class="pb-0 mb-0">
                 <v-container fluid px-0 class="mt-0 pt-0">
@@ -69,7 +76,7 @@
 
 
           <!-- SCRIPTURE TEXT configuration -->
-          <v-tab-item>
+          <v-tab-item v-if="presentationType==='present'">
             <v-card flat>
               <v-card-text>
                 <v-container fluid px-0 class="my-0 py-0">
@@ -98,7 +105,7 @@
 
 
           <!-- GENERIC TEXT configuration -->
-          <v-tab-item>
+          <v-tab-item v-if="presentationType==='present'">
             <v-card flat>
               <v-card-text class="pb-0 mb-0">
                 <v-container fluid px-0 class="mt-0 pt-0">

@@ -1,5 +1,6 @@
 export default {
   state: {
+    slideBgColour: false,
     presentation: {
       versesPerSlide: 5,
       selectedTab: '1',
@@ -52,6 +53,10 @@ export default {
       state.presentation = payload
     },
 
+    setSlideBgColour (state, payload) {
+      state.slideBgColour = payload
+    },
+
     setPresentationItem(state, payload) {
       state.presentation[payload.item] = payload.value
       localStorage.setItem(payload.item, payload.value)
@@ -70,8 +75,10 @@ export default {
         state.presentation[payload.entity + 'Font'].italic = payload.italic
       if (payload.colour)
         state.presentation[payload.entity + 'Font'].colour = payload.colour
-      if (payload.slideBgColour)
+      if (payload.slideBgColour) {
+        state.slideBgColour = payload.slideBgColour
         state.presentation[payload.entity + 'Font'].slideBgColour = payload.slideBgColour
+      }
 
       localStorage.setItem(
         payload.entity + 'Font',
@@ -82,6 +89,9 @@ export default {
 
   // G E T T E R S
   getters: {
+    slideBgColour (state) {
+      return state.slideBgColour
+    },
     presentation(state) {
       if (localStorage.getItem('versesPerSlide')) {
         state.presentation.versesPerSlide = parseInt(

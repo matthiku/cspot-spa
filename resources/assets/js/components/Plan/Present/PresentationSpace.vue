@@ -66,19 +66,18 @@ export default {
 
   props: ['item', 'currentItemSeqNo', 'currentSlideNo', 'presentationType'],
 
-  data () {
-    return {
-      slideBgColour: '#000'
-    }
-  },
-
   computed: {
     presentation() {
       return this.$store.getters.presentation
     },
+
+    slideBgColour () {
+      return this.$store.getters.slideBgColour
+    },
+
     presentationStyle () {
       return {
-        'background-color' : this.presentation.slideBgColour
+        'background-color': this.slideBgColour
       }
     }    
   },
@@ -89,8 +88,7 @@ export default {
     if (this.presentationType === 'chords') type = 'chordsFont'
     if (this.presentationType === 'music') type = 'musicFont'
     if (this.presentationType === 'lead') type = 'leadFont'
-    this.slideBgColour = this.presentation[type].slideBgColour
-    this.$store.commit('setPresentationItem', {item: 'slideBgColour', value: this.slideBgColour})
+    this.$store.commit('setSlideBgColour', this.presentation[type].slideBgColour)
   },
 
   methods: {

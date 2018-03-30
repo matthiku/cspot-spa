@@ -38,10 +38,19 @@
 
 
     <span v-if="presentationType==='chords'">
-      <present-chords
+      <chords-chords
           v-if="item.type==='song'"
           :item="item"
-        ></present-chords>
+        ></chords-chords>
+
+      <chords-scripture
+          v-if="item.type==='read'"
+          :item="item"
+        ></chords-scripture>
+
+      <div v-show="item.type==='text'">
+        <h2>({{ item.title }})</h2>
+      </div>
     </span>
 
   </div>
@@ -50,8 +59,9 @@
 
 <script>
 import presentText from './lyrics/ShowText.vue'
+import chordsChords from './chords/ShowChords.vue'
 import presentLyrics from './lyrics/ShowLyrics.vue'
-import presentChords from './chords/ShowChords.vue'
+import chordsScripture from './chords/ShowScripture.vue'
 import presentScripture from './lyrics/ShowScripture.vue'
 
 export default {
@@ -59,8 +69,9 @@ export default {
 
   components: {
     presentScripture,
+    chordsScripture,
     presentLyrics,
-    presentChords,
+    chordsChords,
     presentText
   },
 

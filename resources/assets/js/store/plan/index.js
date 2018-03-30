@@ -433,6 +433,7 @@ export default {
             if (songs[action.song_id]) {
               obj.title = songs[action.song_id].title
               obj.lyrics = songs[action.song_id].lyrics
+              obj.chords = songs[action.song_id].chords
               obj.onsongs = onsongsObject(songs[action.song_id].onsongs)
               obj.sequence = songs[action.song_id].sequence
               obj.subtitle = songs[action.song_id].title_2

@@ -164,14 +164,20 @@ export default {
 
     let parts
     // if song has OnSong data, it needs to be prepared accordingly, provided we also have the helper data
-    if (this.item.onsongs && Object.keys(this.item.onsongs) && Object.keys(this.songParts) && this.item.sequence) {
+    if (this.item.onsongs && Object.keys(this.item.onsongs) && Object.keys(this.songParts)) {
       /*
         The sequence attribute of a song contains the codes for the individual onsong parts.
         It determines the order and repetition of the song parts in the lyrics presentation.
         These codes are the index (id) for the 'songParts' object in the Vuex store.
         The id number of those codes are the name for each individual Onsong object.
       */
-      let sequenceArr = this.item.sequence.split(',')
+      let sequenceArr
+      // if there is no predefined sequence, we try to deduct it from the onsong part ids
+      if (!this.item.sequence) {
+        sequenceArr = Object.keys(this.item.onsongs)
+      } else {
+        sequenceArr = this.item.sequence.split(',')
+      }
       sequenceArr.forEach(seq => {
         // intro, notes or meta parts must be ignored
         if ('smi'.indexOf(seq) >= 0) return

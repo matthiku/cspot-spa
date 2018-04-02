@@ -8,7 +8,8 @@
     <!-- 
       LYRICS presentation
      -->
-    <span v-if="presentationType==='present'">
+    <span v-if="presentationType==='present'"
+      v-show="!blankSlideActive">
       <!-- SONG -->
       <present-lyrics
           v-if="item.type==='song'"
@@ -101,7 +102,7 @@ export default {
     presentText
   },
 
-  props: ['item', 'currentItemSeqNo', 'currentSlideNo', 'presentationType'],
+  props: ['item', 'currentItemSeqNo', 'currentSlideNo', 'presentationType', 'blankSlideActive'],
 
   computed: {
     presentation() {
@@ -116,7 +117,7 @@ export default {
       return {
         'background-color': this.slideBgColour
       }
-    }    
+    },
   },
 
   created () {

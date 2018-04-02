@@ -40,6 +40,7 @@
       <!-- show the current item -->
       <presentation-space
           :item="item"
+          :blankSlideActive="blankSlideActive"
           :currentSlideNo="showSlideNo"
           :presentationType="presentationType"
           :currentItemSeqNo="presentation.showSeqNo"
@@ -104,7 +105,8 @@ export default {
   data () {
     return {
       showSlideNo: -1,
-      blankShowed: false
+      blankShowed: false,
+      blankSlideActive: false
     }
   },
 
@@ -161,7 +163,7 @@ export default {
 
   methods: {
     keyPressed (event, seqNo) {
-      console.log('keyPressed', event, seqNo)
+      // console.log('keyPressed', event, seqNo)
 
       if (event.code === 'ArrowRight') this.showNext()
       if (event.code === 'ArrowLeft') this.showNext(-1)
@@ -247,6 +249,7 @@ export default {
     },
 
 
+    // go to next/previous slide (or item, if necessary)
     showNext(dir) {
       // default direction is forward, -1 for backwards
       if (dir === undefined) dir = 1
@@ -263,15 +266,24 @@ export default {
 
       // check if this is still a valid slide number within the current item
       if (this.showSlideNo >= this.presentation.numberOfSlides || this.showSlideNo < 0) {
+        // first check if we need to show a blank slide now
+        if (this.presentationType === 'present' && this.presentation.blankSlide && !this.blankShowed) {
+          this.blankShowed = true
+          this.blankSlideActive = true
+          // reset the slide advancement
+          this.showSlideNo = this.showSlideNo - dir
+          return
+        }
+        this.blankShowed = false
         this.showSlideNo = 0
         activeSeqNo += dir
         this.gotoThisItem(activeSeqNo)
         return
       }
+      this.blankSlideActive = false
 
       // always set focus on the slide so that we can capture keyboard events
       let elem = document.getElementById('item-seqno-' + activeSeqNo)
-      // console.log('showNext -', activeSeqNo, elem)
       if (elem) elem.focus()
 
       // prepare ConfigMenu depending on current item type

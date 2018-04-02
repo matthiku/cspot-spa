@@ -74,7 +74,7 @@
     </v-slide-y-transition>
 
     <!-- provide dialog to add a scripture reference activity -->
-    <app-edit-plan-action-scripture-dialog></app-edit-plan-action-scripture-dialog>
+    <app-edit-plan-add-scripture-dialog></app-edit-plan-add-scripture-dialog>
 
   </span>  
 </template>

@@ -13,9 +13,9 @@
         <v-icon :color="firstVisibleItem ? '' : 'red'">playlist_add</v-icon>
       </v-btn>
 
-      <app-edit-plan-action-scripture-dialog
+      <app-edit-plan-add-scripture-dialog
           ref="addScrDlg"
-        ></app-edit-plan-action-scripture-dialog>
+        ></app-edit-plan-add-scripture-dialog>
 
       <select-song-dialog ref="addSongDlg"
         ></select-song-dialog>

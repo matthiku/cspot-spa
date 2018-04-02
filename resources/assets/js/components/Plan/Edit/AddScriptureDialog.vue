@@ -1,8 +1,7 @@
 <template>
   <v-layout row justify-center>
-    <v-dialog 
-        v-model="scriptureDialog"
-        max-width="700">
+
+    <v-bottom-sheet v-model="scriptureDialog">
 
       <v-card :dark="dark" v-if="bibleBooks instanceof Array">
 
@@ -81,7 +80,7 @@
           <v-btn color="green darken-1" :disabled="!version" @click.native="submit">Set</v-btn>
         </v-card-actions>
       </v-card>
-    </v-dialog>
+    </v-bottom-sheet>
   </v-layout>  
 </template>
 

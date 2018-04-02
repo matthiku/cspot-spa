@@ -20,7 +20,7 @@ import EditPlanStaffList from './components/Plan/Edit/StaffList'
 import EditPlanStaffSingle from './components/Plan/Edit/StaffSingle'
 import EditPlanActionList from './components/Plan/Edit/ActionList'
 import EditPlanActionButtons from './components/Plan/Edit/ActionButtons'
-import EditPlanActionScriptureDialog from './components/Plan/Edit/ActionScriptureDialog'
+import EditPlanAddScriptureDialog from './components/Plan/Edit/AddScriptureDialog'
 import DeletePlanDialog from './components/Plan/Edit/DeletePlanDialog'
 import ShowListOfPlans from './components/Plan/View/PlansList.vue'
 import ShowPlansCalendar from './components/Plan/View/Calendar.vue'
@@ -47,8 +47,8 @@ export default function sharedComponents() {
   Vue.component('app-toolbar', ToolbarCmp)
 
   Vue.component(
-    'app-edit-plan-action-scripture-dialog',
-    EditPlanActionScriptureDialog
+    'app-edit-plan-add-scripture-dialog',
+    EditPlanAddScriptureDialog
   )
   Vue.component('app-edit-plan-action-buttons', EditPlanActionButtons)
   Vue.component('app-edit-plan-action-list', EditPlanActionList)

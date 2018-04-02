@@ -2,12 +2,12 @@
   <div class="pl-1 pb-5 mb-5">
 
       <!-- show full song with chords on one page -->
-      <div v-for="(part, index) in verses" :key="index"
+      <span v-for="(part, index) in verses" :key="index"
           :class="slideClass"
           :style="chordsStyle"
         >
         <!-- showing song part names -->
-        <h3 v-if="part.meta && part.meta.code !== 'm'"
+        <h3 v-if="part.meta && part.meta.code !== 'm' && !part.meta.already"
             class="pl-3 mt-2"
             :class="{
               primary: parseInt(part.meta.code) && presentationType==='chords', 
@@ -22,11 +22,23 @@
           >{{ part.song }}</pre>
 
         <!-- showing actual chords/lyrics -->
-        <div v-else v-for="(line, index) in part.song" :key="index">
-          <pre v-if="presentationType==='chords'" 
+        <div v-else-if="part.meta && !part.meta.already" 
+            v-for="(line, index) in part.song" :key="index">
+          <pre v-if="presentationType==='chords' && line.chords.trim()" 
               class="chords-line">{{ line.chords }}</pre>
-          <pre class="lyrics-line mb-1">{{ line.lyrics }}</pre>
+          <pre class="lyrics-line mb-2">{{ line.lyrics }}</pre>
         </div>
+
+        <span v-else-if="part.meta" class="ml-3">repeat 
+          <v-chip small outline
+              :class="{
+                primary: parseInt(part.meta.code) && presentationType==='chords', 
+                info: isNaN(part.meta.code) && presentationType==='chords',
+                'blue--text': presentationType!=='chords'
+              }"
+            >
+            {{ part.meta.name }}
+          </v-chip>;</span>
 
         <!-- no chords available! -->
         <div v-if="!item.sequence">
@@ -38,7 +50,7 @@
             >{{ line }}</pre>
         </div>
 
-      </div>
+      </span>
   </div>  
 </template>
 
@@ -46,6 +58,10 @@
 <style>
 .chords-line {
   color: red;
+  line-height: 1
+}
+.lyrics-line {
+  line-height: 1
 }
 </style>
 
@@ -120,7 +136,6 @@ export default {
   mounted () {
     if (!this.item) return
 
-    let parts
     // if song has OnSong data, it needs to be prepared accordingly, provided we also have the helper data
     if (this.item.onsongs && Object.keys(this.item.onsongs) && Object.keys(this.songParts) && this.item.sequence) {
       /*
@@ -141,6 +156,8 @@ export default {
         })
       }
 
+      let partsUsed = [] // remember which song parts are already shown in the chords
+
       let sequenceArr = this.item.sequence.split(',')
       const parser = new ChordSheetJS.ChordProParser()
       sequenceArr.forEach(seq => {
@@ -151,10 +168,16 @@ export default {
         // skip sequences that are not found in the onsong data
         if (!this.item.onsongs.hasOwnProperty(partId)) return
 
+        // add attribute to indicate if a part has already been shown
+        let already = false
+        if (partsUsed.indexOf(seq) >= 0) already = true
+        partsUsed.push(seq)
+
         let obj = {
           meta: {
             name: this.songParts[seq].name,
-            code: this.songParts[seq].code
+            code: this.songParts[seq].code,
+            already
           }
         }
 

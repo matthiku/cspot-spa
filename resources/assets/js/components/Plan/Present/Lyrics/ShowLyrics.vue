@@ -1,10 +1,11 @@
 <template>
-  <span>
+  <transition-group name="fade">
 
       <!-- slide with just the song title -->
       <h3 class="presentation-slide"
           :style="lyricsTitleStyle"
           :class="slideClass"
+          key="h3"
           v-show="showSongTitle"
         >{{ item.title }}</h3>
 
@@ -37,10 +38,17 @@
         </div>
       </div>
 
-  </span>  
+  </transition-group>  
 </template>
 
 <style>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
 .lyrics-line {
   font-family: 'Raleway', sans-serif;
 }

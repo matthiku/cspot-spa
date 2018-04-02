@@ -1,8 +1,9 @@
 <template>
   <span>
 
-      <span v-for="(ref, index) in verseBlocks" :key="index"
-        >
+    <span v-for="(ref, index) in verseBlocks" :key="index">
+      <transition-group name="fader">
+
         <div v-for="(verseBlock, idx) in ref" :key="idx"
             v-show="showSlides[idx]"
             class="presentation-slide"
@@ -10,13 +11,24 @@
             :class="slideClass"
             v-html="verseBlock"
           ></div>
-      </span>
 
-  </span>  
+      </transition-group>
+    </span>
+
+  </span>
 </template>
 
+
 <style>
+.fader-enter-active, .fader-leave-active {
+  transition: opacity .5s;
+}
+.fader-enter, .fader-leave-to {
+  opacity: 0;
+}
+
 </style>
+
 
 
 <script>

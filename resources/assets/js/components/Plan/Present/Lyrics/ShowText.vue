@@ -1,5 +1,5 @@
 <template>
-  <span>
+  <transition name="fade">
 
       <!-- slide with just the title -->
       <h3 class="presentation-slide"
@@ -8,7 +8,7 @@
           v-show="showText"
         >{{ item.title }}</h3>
 
-  </span>  
+  </transition>  
 </template>
 
 

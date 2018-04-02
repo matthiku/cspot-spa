@@ -55,7 +55,8 @@ export default {
         fontSize: this.presentation.textTitleFont.size + 'px',
         textAlign: this.presentation.textTitleFont.align,
         fontStyle: this.presentation.textTitleFont.italic,
-        fontWeight: this.presentation.textTitleFont.bold
+        fontWeight: this.presentation.textTitleFont.bold,
+        lineHeight: 2
       }
     }
   }

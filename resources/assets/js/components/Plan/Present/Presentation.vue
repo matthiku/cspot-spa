@@ -19,7 +19,8 @@
   <v-container fluid
       v-if="plan instanceof Object && plan.hasOwnProperty('actionList')"
 
-      class="presentation-space pa-0"
+      class="pa-0"
+      :class="{'full-height': presentationType==='present'}"
     >
 
     <div v-for="item in actionList" :key="item.seqNo"
@@ -69,10 +70,6 @@
   width: 100%;
 }
 .full-height {
-  height: 100%;
-}
-.presentation-space {
-  width: 100%;
   height: 100%;
 }
 .presentation-slide {

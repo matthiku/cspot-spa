@@ -1,11 +1,13 @@
 <template>
   <div class="pl-1 pb-5 mb-5">
 
+
       <!-- show full song with chords on one page -->
       <span v-for="(part, index) in verses" :key="index"
           :class="slideClass"
           :style="chordsStyle"
         >
+
         <!-- showing song part names -->
         <h3 v-if="part.meta && part.meta.code !== 'm' && !part.meta.already"
             class="pl-3 mt-2"
@@ -16,10 +18,12 @@
             }"
           >{{ part.meta.name }}:</h3>
 
+
         <!-- showing notes -->
         <pre v-if="part.meta && part.meta.code === 'm' && presentationType==='chords'"
             class="red--text title"
           >{{ part.song }}</pre>
+
 
         <!-- showing actual chords/lyrics -->
         <div v-else-if="part.meta && !part.meta.already" 
@@ -29,7 +33,9 @@
           <pre class="lyrics-line mb-2">{{ line.lyrics }}</pre>
         </div>
 
-        <span v-else-if="part.meta" class="ml-3">repeat 
+
+        <!-- do not show repeating song parts, but just a reminder instead -->
+        <span v-else-if="part.meta" class="parts-repeat ml-3">repeat 
           <v-chip small outline
               :class="{
                 primary: parseInt(part.meta.code) && presentationType==='chords', 
@@ -40,8 +46,10 @@
             {{ part.meta.name }}
           </v-chip>;</span>
 
+
         <!-- no chords available! -->
         <div v-if="!item.sequence">
+          <span v-if="presentationType==='chords'">(no chords available!)</span>
           <h3 class="pl-3 mt-2">
             Part {{ index + 1 }}
           </h3>
@@ -62,6 +70,9 @@
 }
 .lyrics-line {
   line-height: 1
+}
+.parts-repeat {
+  font-weight: bold;
 }
 </style>
 

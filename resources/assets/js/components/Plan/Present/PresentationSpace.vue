@@ -1,6 +1,6 @@
 <template>
   <div
-      class="presentation-space"
+      :class="{'full-height': presentationType==='present'}"
       :style="presentationStyle"
     >
 
@@ -55,7 +55,7 @@
         ></plain-scripture>
 
       <div v-show="item.type==='text'">
-        <h2>({{ item.title }})</h2>
+        <h2 class="text-header">({{ item.title }})</h2>
       </div>
     </span>
 
@@ -76,12 +76,20 @@
         ></plain-scripture>
 
       <div v-show="item.type==='text'">
-        <h2>({{ item.title }})</h2>
+        <h2 class="text-header">({{ item.title }})</h2>
       </div>
     </span>
 
   </div>
 </template>
+
+<style>
+.text-header {
+  line-height: 2;
+  min-height: 250px;
+}
+</style>
+
 
 
 <script>

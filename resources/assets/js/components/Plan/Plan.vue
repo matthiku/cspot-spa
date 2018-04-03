@@ -342,8 +342,12 @@ export default {
     // console.log((new Date()).getMilliseconds(), 'mounted')
     this.$store.commit('setRouteChanging', false)
 
+    if (!this.plan || this.plan === undefined) {
+      this.loadCurrentPlan('mounted')
+      return
+    }
+
     // check which expansion panel should be open
-    if (!this.plan || this.plan === undefined) return
     if (this.pageStatus.hasOwnProperty(this.plan.id)) {
       this.showDetails = this.pageStatus[this.plan.id].showDetails
     }

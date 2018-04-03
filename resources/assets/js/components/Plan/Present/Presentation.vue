@@ -20,7 +20,7 @@
       v-if="plan instanceof Object && plan.hasOwnProperty('actionList')"
 
       class="pa-0"
-      :class="{'full-height': presentationType==='present'}"
+      :class="{'full-height': presentationType!=='lead'}"
     >
 
     <div v-for="item in actionList" :key="item.seqNo"

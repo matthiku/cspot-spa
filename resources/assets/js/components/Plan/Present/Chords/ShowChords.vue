@@ -1,65 +1,88 @@
 <template>
-  <div class="pl-1 pb-5 mb-5">
-
+  <v-container fluid grid-list-md class="mb-4">
+    <v-layout wrap justify-space-between class="pb-5 mb-2">
 
       <!-- show full song with chords on one page -->
-      <span v-for="(part, index) in verses" :key="index"
+      <v-flex :xs12="columns===1" :md6="columns===2" :lg4="columns===3" :xl3="columns===4"
+          v-for="(part, index) in verses" :key="index"
           :class="slideClass"
           :style="chordsStyle"
         >
 
-        <!-- showing song part names -->
-        <h3 v-if="part.meta && part.meta.code !== 'm' && !part.meta.already"
-            class="pl-3 mt-2"
-            :class="{
-              primary: parseInt(part.meta.code) && presentationType==='chords', 
-              info: isNaN(part.meta.code) && presentationType==='chords',
-              'blue--text': presentationType!=='chords'
-            }"
-          >{{ part.meta.name }}:</h3>
-
-
-        <!-- showing notes -->
-        <pre v-if="part.meta && part.meta.code === 'm' && presentationType==='chords'"
-            class="red--text title"
-          >{{ part.song }}</pre>
-
-
-        <!-- showing actual chords/lyrics -->
-        <div v-else-if="part.meta && !part.meta.already" 
-            v-for="(line, index) in part.song" :key="index">
-          <pre v-if="presentationType==='chords' && line.chords.trim()" 
-              class="chords-line">{{ line.chords }}</pre>
-          <pre class="lyrics-line mb-2">{{ line.lyrics }}</pre>
-        </div>
-
-
-        <!-- do not show repeating song parts, but just a reminder instead -->
-        <span v-else-if="part.meta" class="parts-repeat ml-3">repeat 
-          <v-chip small outline
+          <!-- show song part names -->
+          <span v-if="part.meta && part.meta.code !== 'm' && !part.meta.already"
+              class="title px-3 mt-2"
               :class="{
                 primary: parseInt(part.meta.code) && presentationType==='chords', 
                 info: isNaN(part.meta.code) && presentationType==='chords',
                 'blue--text': presentationType!=='chords'
               }"
+            >{{ part.meta.name 
+          }}:</span>
+
+
+          <show-chords-over-lyrics
+              v-if="presentationType==='chords' && part.meta && part.meta.code !== 'm' && !part.meta.already"
+              :part="part.songObj"
+              :code="part.meta.code"
+              :itemId="item.seqNo"
             >
-            {{ part.meta.name }}
-          </v-chip>;</span>
+          </show-chords-over-lyrics>
+
+          <!-- show notes -->
+          <span v-if="part.meta && part.meta.code === 'm' && presentationType==='chords'"
+              class="red--text"
+            >Note: {{ part.song 
+          }}</span>
 
 
-        <!-- no chords available! -->
-        <div v-if="!item.sequence">
-          <span v-if="presentationType==='chords'">(no chords available!)</span>
-          <h3 class="pl-3 mt-2">
-            Part {{ index + 1 }}
-          </h3>
-          <pre v-for="(line, idx) in part" :key="idx"
-              class="lyrics-line"
-            >{{ line }}</pre>
-        </div>
+          <!-- show just lyrics for Leader's script -->
+          <span v-else-if="presentationType==='lead' && part.meta && !part.meta.already" 
+              v-for="(line, index) in part.song" :key="index">
+            <div class="lyrics-line mb-2">{{ line.lyrics }}</div>
+          </span>
 
-      </span>
-  </div>  
+
+          <!-- do not show repeating song parts, but just a reminder instead -->
+          <span v-else-if="part.meta" class="parts-repeat ml-3">repeat 
+            <v-chip small outline
+                :class="{
+                  primary: parseInt(part.meta.code) && presentationType==='chords', 
+                  info: isNaN(part.meta.code) && presentationType==='chords',
+                  'blue--text': presentationType!=='chords'
+                }"
+              >
+              {{ part.meta.name }}
+            </v-chip>;
+          </span>
+
+
+          <!-- no chords available! show simple lyrics -->
+          <div v-if="!item.sequence">
+            <span v-if="presentationType==='chords'">(no chords available!)</span>
+            <h3 class="pl-3 mt-2">
+              Part {{ index + 1 }}
+            </h3>
+            <pre v-for="(line, idx) in part" :key="idx"
+                class="lyrics-line"
+              >{{ line }}</pre>
+          </div>
+
+      </v-flex>
+
+
+    </v-layout>
+    <hr>
+    <v-layout row justify-center>
+      <v-flex xs10 sm8 md6 lg4 xl3>
+        Set Columns:
+        <v-btn fab small @click.stop="columns=1" title="1"><v-icon>looks_one</v-icon></v-btn>
+        <v-btn fab small @click.stop="columns=2" title="2"><v-icon>pause</v-icon></v-btn>
+        <v-btn fab small @click.stop="columns=3" title="3"><v-icon>view_week</v-icon></v-btn>
+        <v-btn fab small @click.stop="columns=4" title="4"><v-icon>looks_4</v-icon></v-btn>
+      </v-flex>
+    </v-layout>
+  </v-container>  
 </template>
 
 
@@ -80,10 +103,15 @@
 <script>
 import genericMixins from '../../../../mixins/'
 import planMixins from '../../mixins'
+import showChordsOverLyrics from './ShowChordsOverLyrics'
 import ChordSheetJS from 'chordsheetjs'
 
 export default {
   name: 'PresentChords',
+
+  components: {
+    showChordsOverLyrics
+  },
 
   mixins: [genericMixins, planMixins],
 
@@ -96,7 +124,8 @@ export default {
 
   data () {
     return {
-      verses: []
+      verses: [],
+      columns: 4
     }
   },
 
@@ -147,6 +176,9 @@ export default {
   mounted () {
     if (!this.item) return
 
+    // for the leader's script, show lyrics in just one column by default
+    if (this.presentationType === 'lead') this.columns = 1
+
     // if song has OnSong data, it needs to be prepared accordingly, provided we also have the helper data
     if (this.item.onsongs && Object.keys(this.item.onsongs) && Object.keys(this.songParts) && this.item.sequence) {
       /*
@@ -195,6 +227,7 @@ export default {
         // extract lyrics only from the OnSong data
         let song = parser.parse(this.item.onsongs[partId].text)
         obj.song = this.combineChordsAndLyrcis(song)
+        obj.songObj = song
         this.verses.push(obj)
       })
     }

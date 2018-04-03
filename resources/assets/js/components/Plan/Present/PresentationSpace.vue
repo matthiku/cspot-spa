@@ -1,6 +1,6 @@
 <template>
   <div
-      :class="{'full-height': presentationType==='present'}"
+      :class="{'full-height': presentationType==='present' || presentationType==='chords'}"
       :style="presentationStyle"
     >
 

@@ -79,7 +79,6 @@ export default {
     currentItemSeqNo (showSeqNo) {
       // showSeqNo: the item with this SeqNo needs to become visible now
       if (showSeqNo == this.item.seqNo && this.currentSlideNo <= 0) {
-        console.log('show title of this component has the current show item. Slide No:', this.currentSlideNo)
         this.showSongTitle = true
         // publish the amount of slides for this PLAN ACTIVITY ITEM
         this.$store.commit('setPresentationItem', {item: 'numberOfSlides', value: this.showSlides.length})

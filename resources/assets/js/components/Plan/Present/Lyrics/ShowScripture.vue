@@ -65,6 +65,17 @@ export default {
   },
 
   watch: {
+    scriptureRefs (val) {
+      console.log('scriptureRefs changed!', val)
+      this.formatSlide()
+    },
+
+    dialog (val) {
+      console.log('dialog changed', val.item)
+      // if (val.item === 'scripture loaded')
+      this.formatSlide()
+    },
+
     'presentation.versesPerSlide' () {
       this.formatSlide()
     },
@@ -145,8 +156,10 @@ export default {
           }
           if (bucket > 1) {
             block.push(slide)
-            this.showSlides.push(false) // initially, set each block of verses as invisible
+            this.showSlides.push(false) // initially set each block of verses as invisible
           }
+        } else {
+          console.log('not found:', bRef)
         }
         this.verseBlocks.push(block)
       })

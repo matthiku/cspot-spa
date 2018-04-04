@@ -146,19 +146,17 @@ export default {
   watch: {
     // watch dialog to see if we need to save a newly selected song or reading
     dialog (val) {
-      // console.log('dialog', val)
       // watch if user added a new scripture ref via the dialog
       if ((val.field === 'scriptureRef' || val.field === 'songSelected') && val.value) {
         let obj = {
           planId: this.plan.id,
           type: val.field === 'scriptureRef' ? 'read' : 'song',
-          seqNo: (this.currentItemSeqNo || this.actionList.length) + 1,
+          seqNo: this.currentItemSeqNo + 0.8,  // insert new song right after current item
           value: val.value
         }
         this.$store.dispatch('addActionItemToPlan', obj)
         .then((data) => {
-          console.log(data.data, obj)
-          this.keyPressed({code: 'go', where: data.data.seq_no})
+          this.keyPressed({code: 'go', where: parseInt(data.data.seq_no)})
         })
       }
     }

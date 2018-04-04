@@ -490,6 +490,7 @@ export default {
             )
           }
           commit('addScriptureRef', { label: payload, text: block })
+          commit('setDialog', {item: 'scripture loaded'})
         })
     }
   },

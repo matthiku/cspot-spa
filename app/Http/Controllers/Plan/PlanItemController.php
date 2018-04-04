@@ -22,17 +22,19 @@ class PlanItemController extends Controller
     {
         // payload contains: value, seqNo and type
         // type can be: 'text', 'song' or 'read'  ==> need to add some Validation?
-        $item = new Item(
+        $item = $plan->items()->create(
             [
                 'seq_no' => $request->seqNo,
                 'song_id' => $request->type === 'song' ? $request->value : null,
                 'comment' => $request->type !== 'song' ? $request->value : null,
             ]
         );
-        $plan->items()->save($item);
 
-        // need to verify the all the sequence numbers are correct
+        // Make sure that all the sequence numbers are correct
         $this->updateSeqNos($request, $plan);
+
+        // get the corrected item again
+        $item = Item::find($item->id);
 
         return response($item->jsonSerialize(), Response::HTTP_OK);
     }

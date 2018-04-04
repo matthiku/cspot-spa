@@ -79,7 +79,7 @@ export default {
     currentItemSeqNo (showSeqNo) {
       // showSeqNo: the item with this SeqNo needs to become visible now
       if (showSeqNo == this.item.seqNo && this.currentSlideNo <= 0) {
-        // console.log('show title of this component has the current show item. Slide No:', this.currentSlideNo)
+        console.log('show title of this component has the current show item. Slide No:', this.currentSlideNo)
         this.showSongTitle = true
         // publish the amount of slides for this PLAN ACTIVITY ITEM
         this.$store.commit('setPresentationItem', {item: 'numberOfSlides', value: this.showSlides.length})
@@ -179,12 +179,11 @@ export default {
         These codes are the index (id) for the 'songParts' object in the Vuex store.
         The id number of those codes are the name for each individual Onsong object.
       */
-      let sequenceArr
+      let sequenceArr = this.item.sequence.split(',')
       // if there is no predefined sequence, we try to deduct it from the onsong part ids
-      if (!this.item.sequence) {
+      if (!sequenceArr.length) {
         sequenceArr = Object.keys(this.item.onsongs)
-      } else {
-        sequenceArr = this.item.sequence.split(',')
+        console.log('Song has OnSong data but no sequence! Seq. deducted:', sequenceArr)
       }
       sequenceArr.forEach(seq => {
         // intro, notes or meta parts must be ignored
@@ -208,12 +207,17 @@ export default {
 
     // song has only the plain-text lyrics
     else if (this.item.lyrics) {
+      console.log('Song has no OnSong data, just plain lyrics')
       // divide the lyrics into single lines first to find 
       // content which indicates a new slide (e.g. verses numbers or blank lines)
       let slides = this.splitByEmptyLine(this.item.lyrics)
-      slides.forEach(slide => this.verses.push(slide))
+      slides.forEach(slide => {
+        this.verses.push(slide)
+        this.showSlides.push(false)
+      })
     }
     if (!this.verses.length) {
+      console.warn('Song has no OnSong data or lyrics')
       this.verses.push(['- no lyrics found for this song! -'])
     }
   }

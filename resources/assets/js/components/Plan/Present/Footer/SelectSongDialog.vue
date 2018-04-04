@@ -36,9 +36,10 @@
                 <span>{{ props.item.title }}</span>
                 <span v-if="props.item.title_2">({{ props.item.title_2 }})</span>
 
-                <v-btn @click="addSelectedSongToPlan(props.item.id)"
-                    class="on-hover-only" small round fab color="primary"
-                    title="add this song to your plan"><v-icon>add</v-icon></v-btn>
+                <v-icon title="add this song to your plan"
+                    class="cursor-pointer" color="primary"
+                    @click="addSelectedSongToPlan(props.item.id)"
+                  >add_circle</v-icon>
               </td>
 
               <!-- these values are included but invisible, so that they can be searched -->

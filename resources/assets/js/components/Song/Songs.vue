@@ -70,7 +70,7 @@
                   <span v-else-if="props.item.title_2">({{ props.item.title_2 }})</span>
 
                   <v-btn v-if="addToPlan" @click="addSelectedSongToPlan(props.item.id)"
-                      class="on-hover-only" small round fab color="primary"
+                      class="on-hover-only pa-0 ma-0" small round fab color="primary"
                       title="add this song to your plan"><v-icon>add</v-icon></v-btn>
                 </td>
 

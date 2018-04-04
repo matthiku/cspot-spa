@@ -99,6 +99,7 @@ export default {
   // presentationType can be either 'present' (=default!), 'lead', 'chords' or 'music'
   props: ['seqNo', 'presentationType'],
 
+
   data () {
     return {
       showSlideNo: -1,
@@ -107,12 +108,14 @@ export default {
     }
   },
 
+
   computed: {
     firstVisibleItem () {
       if (this.plan && this.plan.actionList.find)
         return this.plan.actionList.find(item => !item.forLeadersEyesOnly)
     }
   },
+
 
   created () {
     // make sure we have a plan
@@ -134,6 +137,7 @@ export default {
     let page = document.getElementsByTagName('html')[0]
     page.style.overflowY = this.presentationType === 'present'? 'hidden' : 'auto'
   },
+
 
   mounted () {
     // plan has items, but none of them are 'showable'
@@ -157,6 +161,7 @@ export default {
       this.showNext()
     }, 500)
   },
+
 
   methods: {
     keyPressed (event, seqNo) {
@@ -294,9 +299,11 @@ export default {
     }    
   },
 
+
   watch: {
     'presentation.versesPerSlide' (niu, old) {
       if (niu === parseInt(old)) return
+      console.log(old, 'presentation.versesPerSlide changed', niu)
       // go back to first slide of an item when this number is being changed
       this.showSlideNo = -1
       this.showNext()

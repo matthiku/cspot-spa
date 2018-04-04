@@ -9,7 +9,7 @@
             <v-list-tile-content class="ml-4">
 
               <div class="health-status">
-                App {{ overAllHealth === 100 ? 'ready!' : 'loading' }}
+                {{ appLoadingStatus }}
                 <v-progress-circular
                     :size="90"
                     :width="15"
@@ -171,6 +171,10 @@
     text-align: center
   .progress-circular 
     vertical-align: top
+  .fade-enter-active, .fade-leave-active
+    transition: opacity .5s;
+  .fade-enter, .fade-leave-to
+    opacity: 0    
 </style>
 
 
@@ -233,6 +237,13 @@ export default {
     },
     usersUpdatedAt () {
       return this.$store.getters.usersUpdatedAt
+    },
+    appLoadingStatus () {
+      if (this.overAllHealth === 100) return 'All systems ready!'
+      if (this.overAllHealth < 20) return 'Charging batteries!'
+      if (this.overAllHealth < 40) return 'Starting engine!'
+      if (this.overAllHealth < 60) return 'Launching power!'
+      if (this.overAllHealth < 80) return 'Changing gears!'
     }
   },
 

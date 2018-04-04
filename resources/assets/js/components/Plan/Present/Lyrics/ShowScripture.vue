@@ -76,7 +76,7 @@ export default {
       this.formatSlide()
     },
 
-    'presentation.versesPerSlide' () {
+    'presentation.versesPerSlide' (val) {
       this.formatSlide()
     },
 
@@ -98,7 +98,7 @@ export default {
       // determines which slide needs to become visible
       // provided this is the right Plan Activity Item
       if (this.currentItemSeqNo === this.item.seqNo) {
-        console.log('curr. SeqNo', this.item.seqNo, 'showing next slide', slideNo)
+        console.log('ShowScripture: slide no changed', slideNo)
         // first, hide all slides
         this.showSongTitle = false
         // now hide all verses and parts
@@ -127,6 +127,8 @@ export default {
 
   methods: {
     formatSlide () {
+      // make sure we start from scratch
+      this.$store.commit('setPresentationItem', {item: 'numberOfSlides', value: 0})
       // get all relevent scripture Refs and divide them into blocks of verses
       // These blocks form the actual slides.
       this.verseBlocks = [] // containing the actual verse blocks
@@ -159,7 +161,7 @@ export default {
             this.showSlides.push(false) // initially set each block of verses as invisible
           }
         } else {
-          console.log('not found:', bRef)
+          console.warn('not found:', bRef)
         }
         this.verseBlocks.push(block)
       })

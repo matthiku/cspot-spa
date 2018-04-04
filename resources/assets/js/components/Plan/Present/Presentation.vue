@@ -303,10 +303,9 @@ export default {
   watch: {
     'presentation.versesPerSlide' (niu, old) {
       if (niu === parseInt(old)) return
-      console.log(old, 'presentation.versesPerSlide changed', niu)
       // go back to first slide of an item when this number is being changed
       this.showSlideNo = -1
-      this.showNext()
+      // this.showNext()
     },
   },
 

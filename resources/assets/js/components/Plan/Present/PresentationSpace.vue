@@ -128,6 +128,12 @@ export default {
     },
   },
 
+  watch: {
+    currentSlideNo (val) {
+      console.log('presentationSpace: currentSlideNo changed!', val)
+    }
+  },
+
   created () {
     // set background colour depending on presentation type
     let type = 'lyricsFont' // default for the lyrics presentation

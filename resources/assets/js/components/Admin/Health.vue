@@ -7,9 +7,8 @@
             flat class="transparent" height="150">
           <v-list>
             <v-list-tile-content class="ml-4">
-
               <div class="health-status">
-                {{ appLoadingStatus }}
+
                 <v-progress-circular
                     :size="90"
                     :width="15"
@@ -18,8 +17,10 @@
                     :color="overAllHealthColour"
                   >{{ overAllHealth }}%
                 </v-progress-circular>
-              </div>
 
+                {{ appLoadingStatus }}
+
+              </div>
             </v-list-tile-content>
           </v-list>
         </v-toolbar>
@@ -170,7 +171,8 @@
   .health-status
     text-align: center
   .progress-circular 
-    vertical-align: top
+    vertical-align: middle
+
   .fade-enter-active, .fade-leave-active
     transition: opacity .5s;
   .fade-enter, .fade-leave-to
@@ -239,11 +241,12 @@ export default {
       return this.$store.getters.usersUpdatedAt
     },
     appLoadingStatus () {
-      if (this.overAllHealth === 100) return 'All systems ready!'
       if (this.overAllHealth < 20) return 'Charging batteries!'
-      if (this.overAllHealth < 40) return 'Starting engine!'
-      if (this.overAllHealth < 60) return 'Launching power!'
+      if (this.overAllHealth < 40) return 'Checking instruments!'
+      if (this.overAllHealth < 60) return 'Starting engine!'
       if (this.overAllHealth < 80) return 'Changing gears!'
+      if (this.overAllHealth < 100) return 'Adding boosters!'
+      if (this.overAllHealth === 100) return 'All systems ready!'
     }
   },
 

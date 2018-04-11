@@ -128,11 +128,11 @@ export default {
     },
   },
 
-  watch: {
-    currentSlideNo (val) {
-      console.log('presentationSpace: currentSlideNo changed!', val)
-    }
-  },
+  // watch: {
+  //   currentSlideNo (val) {
+  //     console.log('presentationSpace: currentSlideNo changed!', val)
+  //   }
+  // },
 
   created () {
     // set background colour depending on presentation type

@@ -93,6 +93,8 @@ export default {
       // provided this is the right Plan Activity Item
       if (this.currentItemSeqNo === this.item.seqNo) {
         // console.log('curr. SeqNo', this.item.seqNo, 'showing next slide', slideNo)
+        // make sure we always have the correct number of slides registered for this item
+        this.$store.commit('setPresentationItem', {item: 'numberOfSlides', value: this.showSlides.length})
         // first, hide all slides
         this.showSongTitle = false
         // now hide all verses and parts

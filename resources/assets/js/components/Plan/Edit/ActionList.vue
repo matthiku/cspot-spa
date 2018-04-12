@@ -251,6 +251,13 @@
           }
           this.$store.dispatch('updateActionItem', obj)
         }
+        if (action === 'editSong') {
+          this.$store.commit('setSearch', {
+            for: 'editSong',
+            searchString: activity.title
+          })
+          this.$router.push({name: 'songs'})
+        }
       },
 
       updateActivityText (event) {

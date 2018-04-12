@@ -400,6 +400,7 @@
         return songs
       }
     },
+
     watch: {
       upcomingPlans () {
         this.createPlanList()
@@ -420,8 +421,6 @@
         this.pageTitle = 'Select a Song to add to your Plan:'
         this.addToPlan = true
       }
-
-      this.createPlanList()
     },
 
     methods: {
@@ -466,6 +465,13 @@
 
     mounted () {
       this.$store.commit('setRouteChanging', false)
+
+      if (this.search.for === 'editSong') {
+        this.searchString = this.search.searchString
+        this.$store.commit('setSearch', {})
+      }
+
+      this.createPlanList()
     }
   }
 </script>

@@ -7,7 +7,7 @@
       <v-list id="activities-list" two-line dense>
 
         <!-- loop through all plan action items -->
-        <template v-for="(item, index) in plan.actionList">
+        <template v-for="(item, index) in plan.actionList" class="single-activity-item">
 
           <v-list-tile v-show="insertBefore===item.seqNo-1"
               :key="item.key + 'a'"
@@ -26,6 +26,7 @@
               @dragover="dragover"
               @dragend="dragend"
               avatar
+              class="single-activity-item"
             >
             <v-list-tile-action title="drag items to re-arrange sequence"
                 :id="'drop-item-' + item.key"
@@ -130,13 +131,16 @@
 
             <v-list-tile-action v-if="!item.warning">
               <!-- menu options -->
-              <v-menu offset-x open-on-hover full-width>
+              <v-menu offset-y nudge-left="150px" lazy open-on-hover full-width>
                 <v-btn icon ripple slot="activator">
                   <v-icon>menu</v-icon>
                 </v-btn>
                 <v-list>
                   <v-list-tile v-for="mItem in menuItems" :key="mItem.title" @click="mSelect(mItem, item)">
                     <v-list-tile-title>{{ mItem.title }}</v-list-tile-title>
+                  </v-list-tile>
+                  <v-list-tile v-if="item.type==='song'" @click="mSelect('editSong', item)">
+                    <v-list-tile-title>Edit Song</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
               </v-menu>
@@ -183,6 +187,9 @@
     background-color:maroon;
     height: 0.5em;
     line-height: 0.7;
+  }
+  .single-activity-item:hover {
+    background: #eee;
   }
 </style>
 

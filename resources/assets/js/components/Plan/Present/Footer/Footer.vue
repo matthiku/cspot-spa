@@ -92,6 +92,7 @@
       <jump-menu
           :plan="plan"
           :currentItemSeqNo="currentItemSeqNo"
+          :presentationType="presentationType"
           v-on:keyPressed="keyPressed"
         ></jump-menu>
 

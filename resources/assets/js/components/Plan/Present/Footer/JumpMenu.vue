@@ -52,7 +52,7 @@
 
 <script>
 export default {
-  props: ['plan', 'currentItemSeqNo'],
+  props: ['plan', 'currentItemSeqNo', 'presentationType'],
 
   data () {
     return {
@@ -68,6 +68,9 @@ export default {
 
   watch: {
     plan () {
+      this.createMenu() // re-create the menu when plan has changed
+    },
+    presentationType () {
       this.createMenu() // re-create the menu when plan has changed
     }
   },
@@ -99,7 +102,11 @@ export default {
           })
       })
       // now add the basic menu items as well (at the end!)
-      this.baseMenuItems.forEach(item => this.menuItems.push(item))
+      this.baseMenuItems.forEach(item => {
+        // don't add menu item for switching to the current type
+        if (item.action !== this.presentationType)
+          this.menuItems.push(item)
+      })
     },
 
     go (where) {

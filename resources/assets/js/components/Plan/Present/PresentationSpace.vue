@@ -1,6 +1,6 @@
 <template>
   <div
-      :class="{'full-height': presentationType==='present' || presentationType==='chords'}"
+      :class="{'full-height': presentationType==='lyrics' || presentationType==='chords'}"
       :style="presentationStyle"
     >
 
@@ -8,7 +8,7 @@
     <!-- 
       LYRICS presentation
      -->
-    <span v-if="presentationType==='present'"
+    <span v-if="presentationType==='lyrics'"
       v-show="!blankSlideActive">
       <!-- SONG -->
       <present-lyrics

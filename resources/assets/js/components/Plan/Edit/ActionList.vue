@@ -104,7 +104,7 @@
             <v-list-tile-action v-if="!item.warning && !item.forLeadersEyesOnly && item.type!=='text'">
               <v-tooltip bottom>
                 <v-btn icon ripple slot="activator" @click="startPresentation(item.seqNo)"
-                    ><v-icon>airplay</v-icon>
+                    ><v-icon>{{ presentation.icons.lyrics }}</v-icon>
                 </v-btn>
                 <span>start presentation here</span>
               </v-tooltip>

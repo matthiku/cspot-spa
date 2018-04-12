@@ -95,19 +95,10 @@
 export default {
   props: ['plan', 'types', 'pageTitle', 'userIsAdmin'],
 
-  data () {
-    return {
-      planMenuItems: [
-        { icon: 'airplay', action: 'present', title: 'Present', title2: 'Full Presentation', color: 'green' },
-        { icon: 'account_circle', action: 'lead', title: 'Lead', title2: 'Leader\'s Script', color: 'indigo' },
-        { icon: 'queue_music', action: 'chords', title: 'Chords', title2: 'Chords', color: 'lime' },
-        { icon: 'music_video', action: 'music', title: 'Music', title2: 'Sheetmusic', color: 'red' }
-      ],
-      fab: false      
-    }
-  },
-
   computed: {
+    presentation() {
+      return this.$store.getters.presentation
+    },
     planType () {
       if (this.plan && this.plan.id) {
         if (this.types instanceof Object) {
@@ -118,6 +109,38 @@ export default {
       }
       return 'Loading Plan...'
     }    
+  },
+
+  data () {
+    return {
+      planMenuItems: [],
+      fab: false      
+    }
+  },
+
+  mounted () {
+    this.planMenuItems = [
+      { icon: this.presentation.icons.lyrics,
+        action: 'present',
+        title: 'Present',
+        title2: 'Full Presentation',
+        color: 'green' },
+      { icon: this.presentation.icons.lead,
+        action: 'lead',
+        title: 'Lead',
+        title2: 'Leader\'s Script',
+        color: 'indigo' },
+      { icon: this.presentation.icons.chords,
+        action: 'chords',
+        title: 'Chords',
+        title2: 'Chords',
+        color: 'lime' },
+      { icon: this.presentation.icons.music,
+        action: 'music',
+        title: 'Music',
+        title2: 'Sheetmusic',
+        color: 'red' }
+    ]
   },
 
   methods: {

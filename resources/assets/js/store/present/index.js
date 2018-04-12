@@ -60,6 +60,12 @@ export default {
         colour: '#ffffff',
       },
       showFooter: true,
+      icons: {
+        lyrics: 'airplay',
+        chords: 'queue_music',
+        music: 'music_video',
+        lead: 'account_circle',
+      },
     },
   },
 
@@ -69,7 +75,7 @@ export default {
       state.presentation = payload
     },
 
-    setSlideBgColour (state, payload) {
+    setSlideBgColour(state, payload) {
       state.slideBgColour = payload
     },
 
@@ -93,7 +99,8 @@ export default {
         state.presentation[payload.entity + 'Font'].colour = payload.colour
       if (payload.slideBgColour) {
         state.slideBgColour = payload.slideBgColour
-        state.presentation[payload.entity + 'Font'].slideBgColour = payload.slideBgColour
+        state.presentation[payload.entity + 'Font'].slideBgColour =
+          payload.slideBgColour
       }
 
       localStorage.setItem(
@@ -105,7 +112,7 @@ export default {
 
   // G E T T E R S
   getters: {
-    slideBgColour (state) {
+    slideBgColour(state) {
       return state.slideBgColour
     },
     presentation(state) {

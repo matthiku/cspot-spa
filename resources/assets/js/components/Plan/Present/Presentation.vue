@@ -148,16 +148,16 @@ export default {
 
     // start with the seqNo provided in the URL param or with the first showable item if omitted
     if (this.seqNo) {
-      // console.log('mounted - show specific item', this.seqNo)
+      console.log('mounted - show specific item', this.seqNo)
       this.setPresentationSlide(this.seqNo)
     } else {
-      // console.log('mounted - show firstVisibleItem', this.firstVisibleItem.seqNo)
+      console.log('mounted - show firstVisibleItem', this.firstVisibleItem.seqNo)
       this.setPresentationSlide(this.firstVisibleItem.seqNo)
     }
     // within the item, now un-hide the first slide
     // but wait until document is ready!
     setTimeout(() => {
-      // console.log('delayed showNext')
+      console.log('delayed showNext')
       this.showNext()
     }, 500)
   },
@@ -180,6 +180,10 @@ export default {
         this.gotoThisItem(this.presentation.showSeqNo + 1)
       if (event.code === 'go') {
         if (event.where === 'back') this.exitPresentation()
+        if (event.where === 'lyrics') this.switchPresentation('present')
+        if (event.where === 'chords') this.switchPresentation(event.where)
+        if (event.where === 'music') this.switchPresentation(event.where)
+        if (event.where === 'lead') this.switchPresentation(event.where)
         if (event.where === 'nextSlide') this.showNext()
         if (event.where === 'prevSlide') this.showNext(-1)
         if (event.where === 'nextItem') this.gotoThisItem(this.presentation.showSeqNo + 1)
@@ -205,8 +209,13 @@ export default {
 
     exitPresentation () {
       this.showSlideNo = 0
-      this.$router.go(-1) // go back to previous page
+      this.$router.push({name: 'plan', params: {planId: this.plan.id}}) // go back to plan page
     },
+
+    switchPresentation (to) {
+        this.$router.push({name: 'present', params: {seqNo: this.presentation.showSeqNo, presentationType: to}})
+    },
+
     emptyPlan () {      
       console.warn('Document readyState -', document.readyState, ' - No showable items found in this plan!', this.plan.actionList)
       this.$store.commit('setError', 'no showable items found in this plan')
@@ -307,13 +316,16 @@ export default {
       this.showSlideNo = -1
       // this.showNext()
     },
+    presentationType () {
+        this.gotoThisItem(this.seqNo)      
+    }
   },
 
   destroyed () {
     // enable the scrollbar again - TODO: only remove the 'overflow' attribute!
     let page = document.getElementsByTagName('html')[0]
     page.removeAttribute('style')
-    // console.log('presentation component destroyed');
+    console.log('presentation component destroyed');
     
   }
 

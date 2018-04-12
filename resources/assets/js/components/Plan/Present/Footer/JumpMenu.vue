@@ -56,21 +56,32 @@ export default {
 
   data () {
     return {
-      baseMenuItems: [
-        { divider: true },
-        { header: true, title: 'Back to Plan (Esc)', action: 'back', icon: 'exit_to_app' }
-      ],
-      menuItems: []      
+      baseMenuItems: [],
+      menuItems: []
     }
+  },
+  computed: {
+    presentation() {
+      return this.$store.getters.presentation
+    },
   },
 
   watch: {
     plan () {
-      this.createMenu() // re-create the menu when plan is changed
+      this.createMenu() // re-create the menu when plan has changed
     }
   },
 
   mounted () {
+    this.baseMenuItems = [
+      { divider: true },
+      { header: true, action: 'back', icon: 'exit_to_app', title: 'Back to Plan (Esc)' },
+      { divider: true },
+      { header: true, action: 'lyrics', icon: this.presentation.icons.lyrics, title: 'Switch to Lyrics Presentation' },
+      { header: true, action: 'chords', icon: this.presentation.icons.chords, title: 'Switch to Chords View' },
+      { header: true, action: 'music', icon: this.presentation.icons.music, title: 'Switch to Music View' },
+      { header: true, action: 'lead', icon: this.presentation.icons.lead, title: 'Switch to Leader`s Script' },
+    ]
     this.createMenu() // create the presentation navigation menu
   },
 

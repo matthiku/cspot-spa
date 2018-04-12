@@ -128,24 +128,31 @@ export default {
     },
   },
 
-  // watch: {
-  //   currentSlideNo (val) {
-  //     console.log('presentationSpace: currentSlideNo changed!', val)
-  //   }
-  // },
+  watch: {
+    currentSlideNo (val) {
+      // console.log('presentationSpace: currentSlideNo changed!', val)
+    },
+    presentationType () {
+      console.log('presentationSpace: presentationType changed')
+      this.setBGcolour()
+    }
+  },
 
   created () {
-    // set background colour depending on presentation type
-    let type = 'lyricsFont' // default for the lyrics presentation
-    if (this.presentationType === 'chords') type = 'chordsFont'
-    if (this.presentationType === 'music') type = 'musicFont'
-    if (this.presentationType === 'lead') type = 'leadFont'
-    this.$store.commit('setSlideBgColour', this.presentation[type].slideBgColour)
+    this.setBGcolour()
   },
 
   methods: {
     keyPressed (what) {
       this.$emit('keyPressed', what)
+    },
+    setBGcolour () {
+      // set background colour depending on presentation type
+      let type = 'lyricsFont' // default for the lyrics presentation
+      if (this.presentationType === 'chords') type = 'chordsFont'
+      if (this.presentationType === 'music') type = 'musicFont'
+      if (this.presentationType === 'lead') type = 'leadFont'
+      this.$store.commit('setSlideBgColour', this.presentation[type].slideBgColour)
     }
   }
 }

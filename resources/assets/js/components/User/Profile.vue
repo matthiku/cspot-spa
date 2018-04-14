@@ -161,7 +161,7 @@
       }
     },
 
-    mounted () {
+    created () {
       this.createRolesArrays()
     },
 

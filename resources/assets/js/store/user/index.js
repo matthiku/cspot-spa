@@ -87,7 +87,7 @@ export default {
               })
               .catch(error => console.warn(error))
           } else if (updateDate === undefined) {
-            console.warn('could not get USERS update date!')
+            console.warn('could not get USERS update date! Authentication expired?')
           }
         })
         .catch(error => {

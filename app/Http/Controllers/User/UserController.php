@@ -58,17 +58,6 @@ class UserController extends Controller
         return response($latest, Response::HTTP_OK);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request the HTTP request
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -90,6 +79,7 @@ class UserController extends Controller
         }
         return;
     }
+
 
     /**
      * Remove the specified resource from storage.

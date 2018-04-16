@@ -155,6 +155,9 @@
         // when moving from any user's profile to your own, we neet to do:
         this.createRolesArrays()
         // (as 'mounted()' won't trigger!)
+      },
+      roles () {
+        this.createRolesArrays()
       }
     },
 

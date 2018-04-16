@@ -3,15 +3,15 @@
  * 
  * Starting point for Lyrics/Chords/Music or Leader presentations
  * 
- * Imported SFCs:
- *    Presentation Space  - the actual presentation space
- *    Presentation Footer - shows titles and provides controls for items and slides
+ * using Single File Components:
+ *    PresentationSpace  - the actual presentation space
+ *    PresentationFooter - shows titles and provides controls for items and slides
  *
  * All plan items are immediately rendered, but not shown yet, only the first one
  * Or, if the presentation was started with a specific Item sequence number, that item will be shown first
  * 
  * The imported Single File Components (SFCs) will receive the seq.no. of the currently
- * visible Item respective the number of the currently visible slide within that item
+ * visible item respective the number of the currently visible slide within that item
  * 
  * The SFCs can emit an event ('keyPressed') to control the progress of the presentation
  */
@@ -96,7 +96,7 @@ export default {
   mixins: [genericMixins, planMixins],
 
   // seqNo            the sequence number of the Activity Item that should be presented first
-  // presentationType can be either 'present' (=default!), 'lead', 'chords' or 'music'
+  // presentationType can either be 'lyrics' (=default!), 'lead', 'chords' or 'music'
   props: ['seqNo', 'presentationType'],
 
 
@@ -135,7 +135,7 @@ export default {
 
     // remove the scrollbar on the right side, but only for the Lyrics presentation
     let page = document.getElementsByTagName('html')[0]
-    page.style.overflowY = this.presentationType === 'present'? 'hidden' : 'auto'
+    page.style.overflowY = this.presentationType === 'lyrics' ? 'hidden' : 'auto'
   },
 
 
@@ -180,7 +180,7 @@ export default {
         this.gotoThisItem(this.presentation.showSeqNo + 1)
       if (event.code === 'go') {
         if (event.where === 'back') this.exitPresentation()
-        if (event.where === 'lyrics') this.switchPresentation('present')
+        if (event.where === 'lyrics') this.switchPresentation(event.where)
         if (event.where === 'chords') this.switchPresentation(event.where)
         if (event.where === 'music') this.switchPresentation(event.where)
         if (event.where === 'lead') this.switchPresentation(event.where)
@@ -278,7 +278,7 @@ export default {
       // check if this is still a valid slide number within the current item
       if (this.showSlideNo >= this.presentation.numberOfSlides || this.showSlideNo < 0) {
         // first check if we need to show a blank slide now
-        if (this.presentationType === 'present' && this.presentation.blankSlide && !this.blankShowed) {
+        if (this.presentationType === 'lyrics' && this.presentation.blankSlide && !this.blankShowed) {
           this.blankShowed = true
           this.blankSlideActive = true
           // reset the slide advancement

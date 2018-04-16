@@ -19,16 +19,16 @@
             slider-color="yellow"
             show-arrows
           >
-          <v-tab v-if="presentationType==='present'"
+          <v-tab v-if="presentationType==='lyrics'"
               ripple>Lyrics Title</v-tab>
 
-          <v-tab v-if="presentationType==='present'"
+          <v-tab v-if="presentationType==='lyrics'"
               ripple>Lyrics Text</v-tab>
 
-          <v-tab v-if="presentationType==='present'"
+          <v-tab v-if="presentationType==='lyrics'"
               ripple>Scripture Text</v-tab>
 
-          <v-tab v-if="presentationType==='present'"
+          <v-tab v-if="presentationType==='lyrics'"
               ripple>Generic Text</v-tab>
 
           <v-tab v-if="presentationType==='chords'"
@@ -38,7 +38,7 @@
 
 
           <!-- LYRICS TITLE configuration -->
-          <v-tab-item v-if="presentationType==='present'">
+          <v-tab-item v-if="presentationType==='lyrics'">
             <v-card flat>
               <v-card-text class="pb-0 mb-0">
                 <v-container fluid px-0 class="mt-0 pt-0">
@@ -57,7 +57,7 @@
 
 
           <!-- LYRICS TEXT configuration -->
-          <v-tab-item v-if="presentationType==='present'">
+          <v-tab-item v-if="presentationType==='lyrics'">
             <v-card flat>
               <v-card-text class="pb-0 mb-0">
                 <v-container fluid px-0 class="mt-0 pt-0">
@@ -95,7 +95,7 @@
 
 
           <!-- SCRIPTURE TEXT configuration -->
-          <v-tab-item v-if="presentationType==='present'">
+          <v-tab-item v-if="presentationType==='lyrics'">
             <v-card flat>
               <v-card-text>
                 <v-container fluid px-0 class="my-0 py-0">
@@ -124,7 +124,7 @@
 
 
           <!-- GENERIC TEXT configuration -->
-          <v-tab-item v-if="presentationType==='present'">
+          <v-tab-item v-if="presentationType==='lyrics'">
             <v-card flat>
               <v-card-text class="pb-0 mb-0">
                 <v-container fluid px-0 class="mt-0 pt-0">
@@ -261,7 +261,6 @@ export default {
       this.$store.commit('setPresentationItem', {item: 'slideBgColour', value})
       // also change this in the relevant lyricsFont or chordsFont entity!
       let entity = this.presentationType
-      if (this.presentationType === 'present') entity = 'lyrics'
       this.$store.commit('setPresentationFont', {entity, slideBgColour: value})
     }
   }

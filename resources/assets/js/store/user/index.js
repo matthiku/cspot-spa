@@ -35,6 +35,7 @@ export default {
   },
 
   actions: {
+    // refresh the local USERS table
     refreshUsers({ state, commit, dispatch }, payload) {
       // first get date of latest update to USERS table
       axios
@@ -86,10 +87,23 @@ export default {
               })
               .catch(error => console.warn(error))
           } else if (updateDate === undefined) {
-            console.warn('could not get USERS update date!')
+            console.warn('could not get USERS update date! Authentication expired?')
           }
         })
-        .catch(error => console.warn(error))
+        .catch(error => {
+          console.warn(error.response)
+          let errorStatus
+          if (!error.response) {
+            // network error
+            errorStatus = 'Error: Network Error (e.g. Server offline)';
+          } else {
+            errorStatus = error.response
+            if (errorStatus.status) {
+              errorStatus = error.response.statusText
+            }
+          }
+          console.warn(errorStatus)
+        })
     },
 
     // update user record
